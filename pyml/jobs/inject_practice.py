@@ -20,6 +20,8 @@ try:
             if line:
                 sc = json.loads(line)
                 age = mode.findall(sc['age'])
+                if len(age) ==0:
+                    age = [100]
                 usersql = 'insert into jobs_uinfo (userid, age, degree, gender, major) values ("%s", %d, %d, "%s", "%s")' % (sc['id'], int(age[0]), sc['degree'], sc['gender'], sc['major'])
                 print usersql
                 cur.execute(usersql)
