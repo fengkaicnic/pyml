@@ -27,6 +27,7 @@ try:
                 cur.execute(usersql)
             else:
                 break
+    conn.commit()
     conn.close()
     
 except Exception as e:
