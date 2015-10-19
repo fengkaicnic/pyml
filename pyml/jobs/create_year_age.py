@@ -34,7 +34,7 @@ try:
             start_year = start_date.split('-')
             bstart_year = int(start_year[0]) - 1968
             start_age = age + int(start_year[0]) - 2015
-            asqll = 'update jobs_uinfo set start_age = %d , bstart_year = %d' % (start_age, bstart_year)
+            asqll = 'update jobs_uinfo set start_age = %d , bstart_year = %d where userid = "%s"' % (start_age, bstart_year, nowuser)
             cur.execute(asqll)
             nowuser = userd[0]
             age = userd[1]
