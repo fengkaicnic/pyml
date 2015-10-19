@@ -37,6 +37,7 @@ try:
             asqll = 'update jobs_uinfo set start_age = %d , bstart_year = %d' % (start_age, bstart_year)
             cur.execute(asqll)
             nowuser = userd[0]
+            age = userd[1]
             start_date = userd[2]
         #print userd[0] 
         
