@@ -32,7 +32,7 @@ try:
             age = userd[1]
             start_date = userd[2]
         if nowuser == userd[0]:
-            if start_date < userd[2] and userd[2] != 'None':
+            if userd[2] < start_date and userd[2] != 'None':
                 start_date = userd[2]
         if nowuser != userd[0]:
             start_year = start_date.split('-')
@@ -43,9 +43,12 @@ try:
             nowuser = userd[0]
             age = userd[1]
             start_date = userd[2]
-            print userd[0]
         #print userd[0] 
-        
+    start_year = start_date.split('-')
+    bstart_year = int(start_year[0]) - 1968
+    start_age = age + int(start_year[0]) - 2015
+    asql2 = 'update jobs_uinfo set start_age = %d , bstart_year = %d where userid = "%s"' % (start_age, bstart_year, nowuser)
+    cur.execute(asql2)
     conn.commit()
     conn.close()
     end = time.clock()
