@@ -1,7 +1,8 @@
 import json
 import re
 import MySQLdb
-
+import time
+start = time.clock()
 try:
     conn = MySQLdb.connect(host='localhost', user='root', passwd='123456', db='jobs', use_unicode=True, charset='utf8')
     cur = conn.cursor()
@@ -34,6 +35,8 @@ try:
                 break
     conn.commit()
     conn.close()
+    end = time.clock()
+    print (end - start)
 except Exception as e:
     conn.commit()
     conn.close()
