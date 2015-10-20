@@ -2,6 +2,7 @@
 import os
 import json
 import sys
+
 import re
 import MySQLdb
 import time
@@ -30,6 +31,9 @@ try:
             nowuser = userd[0]
             age = userd[1]
             start_date = userd[2]
+        if nowuser == userd[0]:
+            if start_date < userd[2] and userd[2] != 'None':
+                start_date = userd[2]
         if nowuser != userd[0]:
             start_year = start_date.split('-')
             bstart_year = int(start_year[0]) - 1968
@@ -39,6 +43,7 @@ try:
             nowuser = userd[0]
             age = userd[1]
             start_date = userd[2]
+            print userd[0]
         #print userd[0] 
         
     conn.commit()
@@ -46,6 +51,8 @@ try:
     end = time.clock()
     print (end-start)
 except Exception as e:
+    conn.commit()
     conn.close()
+    print nowuser
     print e
     
