@@ -20,14 +20,16 @@ try:
                 sc = json.loads(line)
                 uuid = sc['id']
                 workexperiencelst = sc['workExperienceList']
+                i = 1
                 for workdct in workexperiencelst:
                     if workdct is None:
                         continue
                     print workdct
-                    worksql = 'insert into workexperiencetest (userid, department, end_date, industry, position_name, salary, size, start_date, type) values \
-                    ("%s", "%s", "%s", "%s", "%s", %d, %d, "%s", "%s")' % (uuid, workdct['department'], workdct['end_date'], workdct['industry'], workdct['position_name'], workdct['salary'], workdct['size'], workdct['start_date'], workdct['type'])
+                    worksql = 'insert into workexperiencetest (userid, department, end_date, industry, position_name, salary, size, start_date, type, num) values \
+                    ("%s", "%s", "%s", "%s", "%s", %d, %d, "%s", "%s", %d)' % (uuid, workdct['department'], workdct['end_date'], workdct['industry'], workdct['position_name'], workdct['salary'], workdct['size'], workdct['start_date'], workdct['type'], i)
                     print worksql
                     cur.execute(worksql)
+                    i += 1
             else:
                 break
     conn.commit()
