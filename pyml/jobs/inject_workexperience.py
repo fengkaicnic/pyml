@@ -21,7 +21,7 @@ try:
                 uuid = sc['id']
                 workexperiencelst = sc['workExperienceList']
                 i = 1
-                for workdct in workexperiencelst:
+                for workdct in workexperiencelst[::-1]:
                     if workdct is None:
                         continue
                     print workdct
