@@ -1,3 +1,4 @@
+#what's the fuck
 #coding:gb2312
 import os
 import json
