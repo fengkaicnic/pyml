@@ -6,8 +6,10 @@ import sys
 import re
 import MySQLdb
 import time
+import codecs
 reload(sys)
 start = time.clock()
+sys.setdefaultencoding('utf8')
 try:
     
     conn = MySQLdb.connect(host='localhost', user='root', passwd='123456', db='jobs', use_unicode=True, charset='utf8')
@@ -18,12 +20,15 @@ try:
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
     #sql = 'select userid from jobs_uinfotest'
-    with open('position_meta.txt') as file:
+    import pdb
+    pdb.set_trace()
+    with codecs.open('position_meta.txt') as file:
         lines = file.readlines()
         for linet in lines:
-            line = linet[:-1]
-            sql = 'insert into metadata(name, type,) values ("%s", "%s")' % (line, 'potision_meta')
-            cur.executesql
+            line = linet[:-2]
+            uline = unicode(line)
+            sql = 'insert into metadata(name, type) values ("%s", "%s")' % (uline, 'potision_meta')
+            cur.execute(sql)
     
     conn.commit()
     conn.close()
