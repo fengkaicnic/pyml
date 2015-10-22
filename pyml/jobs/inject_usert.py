@@ -5,7 +5,7 @@ import re
 import MySQLdb
 try:
     
-    conn = MySQLdb.connect(host='localhost', user='root', passwd='123456', db='jobs', use_unicode=True, charset='utf8')
+    conn = MySQLdb.connect(host='localhost', user='root', passwd='123456', db='jobs', use_unicode=True, charset='gbk')
     cur = conn.cursor()
     cur.execute('set character_set_client=utf8')
     cur.execute('set character_set_connection=utf8')
