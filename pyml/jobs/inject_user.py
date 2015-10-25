@@ -22,7 +22,7 @@ try:
                 age = mode.findall(sc['age'])
                 if len(age) ==0:
                     age = [100]
-                usersql = 'insert into jobs_uinfo (userid, age, gender, major) values ("%s", %d, "%s", "%s")' % (sc['id'], int(age[0]), sc['gender'], sc['major'])
+                usersql = 'insert into jobs_uinfo (userid, age, gender, major, degree) values ("%s", %d, "%s", "%s")' % (sc['id'], int(age[0]), sc['gender'], sc['major'], int(sc['degree']))
                 print usersql
                 cur.execute(usersql)
             else:
