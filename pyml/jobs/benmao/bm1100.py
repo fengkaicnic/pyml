@@ -30,7 +30,6 @@ try:
     file = open('d:/jobs/bm1100.csv', 'w+')
     useridlst = cur.fetchall()
     file.write('userid,age,gender,major,start_age,start_salary,bstart_year,degree\n')
-    pdb.set_trace()
     for userid in useridlst:
         print userid
         userid = map(long2str, userid)
