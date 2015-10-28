@@ -6,7 +6,7 @@ import sys
 from math import log
 import operator
 from numpy import mean
-
+import pdb
 
 def get_labels(train_file):
     '''
@@ -238,6 +238,7 @@ def run(train_file,test_file):
         if label == test_data[-1]:
             correct += 1
     print "准确率: ",correct/float(n)
+
 
 #############################################################
 if __name__ == '__main__':
