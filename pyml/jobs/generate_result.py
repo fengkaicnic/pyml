@@ -21,7 +21,7 @@ try:
     file.write('id,degree,size,salary,position_name\n')
     for userid in useridlst:
         print userid[0] 
-        strs = userid[0] + u',2,5,6,项目经理\n'
+        strs = userid[0] + u',1,3,2,销售专员\n'
         file.write(strs.encode('utf-8'))
         
     conn.commit()
