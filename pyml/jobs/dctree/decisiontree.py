@@ -15,7 +15,7 @@ def get_labels(train_file):
     '''
     labels = []
     for index,line in enumerate(open(train_file,'rU').readlines()):
-        label = line.strip().split(',')[-1]
+        label = line.strip().split(',')[0]
         labels.append(label)
     return labels
 
@@ -27,10 +27,10 @@ def format_data(dataset_file):
     for index,line in enumerate(open(dataset_file,'rU').readlines()):
         line = line.strip()
         fea_and_label = line.split(',')
-        dataset.append([float(fea_and_label[i]) for i in range(len(fea_and_label)-1)]+[fea_and_label[len(fea_and_label)-1]])
+        dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length（花萼长度）、sepal width（花萼宽度）、petal length（花瓣长度）、petal width（花瓣宽度）
-    features = ['sepal_length','sepal_width','petal_length','petal_width']
+    features = ['age','start_age','bstart_year','gender','start_salary','start_size']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
@@ -65,7 +65,7 @@ def cal_entropy(dataset):
     n = len(dataset)    
     label_count = {}
     for data in dataset:
-        label = data[-1]
+        label = data[0]
         if label_count.has_key(label):
             label_count[label] += 1
         else:
@@ -77,6 +77,53 @@ def cal_entropy(dataset):
     #print 'entropy:',entropy
     return entropy
 
+def cal_entropy_f(dataset, index):
+    n = len(dataset)    
+    label_count = {}
+    for data in dataset:
+        label = data[index]
+        if label_count.has_key(label):
+            label_count[label] += 1
+        else:
+            label_count[label] = 1
+    entropy = 0
+    for label in label_count:
+        prob = float(label_count[label])/n
+        entropy -= prob*log(prob,2)
+    #print 'entropy:',entropy
+    return entropy
+
+def cal_entropy_dct(datadct, count):
+    entropy = 0.0
+    for key in datadct.keys():
+        num = datadct[key]
+        prob = float(num)/count
+        entropy -= prob*log(prob,2)
+
+    return entropy
+
+def cal_info_gain_new(dataset, feature_index, base_entropy):
+    datasets = []
+    for data in dataset:
+        datasets.append(data[1:7])
+    feature_dct = {}
+    for data in dataset:
+        if feature_dct.has_key(data[feature_index]):
+            feature_dct[data[feature_index]]['count'] += 1
+            if feature_dct[data[feature_index]]['dct'].has_key(data[0]):
+                feature_dct[data[feature_index]]['dct'][data[0]] += 1
+            else:
+                feature_dct[data[feature_index]]['dct'][data[0]] = 1
+        else:
+            feature_dct[data[feature_index]]['count'] = 1
+            feature_dct[data[feature_index]]['dct'] = {}
+            feature_dct[data[feature_index]]['dct'][data[0]] = 1
+    info_gain = 0.0
+    for item in feature_dct.iteritems():
+        info_gain += (float(item['count'])/len(dataset))*cal_entropy_dct(item['dct'], item['count'])
+    
+    return base_entropy - info_gain
+    
 def cal_info_gain(dataset,feature_index,base_entropy):
     '''
     计算指定特征对数据集的信息增益值
@@ -85,7 +132,7 @@ def cal_info_gain(dataset,feature_index,base_entropy):
     '''
     datasets = []
     for data in dataset:
-        datasets.append(data[0:4])
+        datasets.append(data[0:6])
     #print datasets
     mean_value = mean(datasets,axis = 0)[feature_index]    #计算指定特征的所有数据集值的平均值
     #print mean_value
@@ -105,12 +152,12 @@ def cal_info_gain_ratio(dataset,feature_index):
     '''
     计算信息增益比  gr(D,F) = g(D,F)/H(D)
     '''    
-    base_entropy = cal_entropy(dataset)
+    base_entropy = cal_entropy_f(dataset, feature_index)
     '''
     if base_entropy == 0:
         return 1
     '''
-    info_gain = cal_info_gain(dataset,feature_index,base_entropy)
+    info_gain = cal_info_gain_new(dataset,feature_index,base_entropy)
     info_gain_ratio = info_gain/base_entropy
     return info_gain_ratio
     
@@ -121,9 +168,10 @@ def choose_best_fea_to_split(dataset,features):
     #base_entropy = cal_entropy(dataset)
     split_fea_index = -1
     max_info_gain_ratio = 0.0
-    for i in range(len(features)):
+    for i in range(len(features)-1):
         #info_gain = cal_info_gain(dataset,i,base_entropy)
         #info_gain_ratio = info_gain/base_entropy
+        i += 1
         info_gain_ratio = cal_info_gain_ratio(dataset,i)
         if info_gain_ratio > max_info_gain_ratio:
             max_info_gain_ratio = info_gain_ratio
@@ -246,6 +294,6 @@ if __name__ == '__main__':
     #if len(sys.argv) != 3:
     #    print "please use: python decision.py train_file test_file"
     #    sys.exit()
-    train_file = 'irisTrain.txt'
-    test_file = 'irisTest.txt'
+    train_file = 'd:/jobs/dctree/dct-train.csv'
+    test_file = 'd:/jobs/dctree/dct-test.csv'
     run(train_file,test_file)
