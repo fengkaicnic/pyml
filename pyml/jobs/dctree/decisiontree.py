@@ -1,6 +1,4 @@
 #-*- coding:utf-8 -*-
-#Author:Jorbe
-#Date:2014.06.14 16:10
 
 import sys
 from math import log
@@ -218,10 +216,18 @@ def build_tree(dataset,labels,features):
     #若划分特征的信息增益比小于阈值,则返回数据集中出现次数最多的label
     if cal_info_gain_ratio(dataset,split_feature_index) < 0.3:
         return most_occur_label(labels)
-    del(features[split_feature_index])
-    dataset_less,dataset_greater,labels_less,labels_greater = split_dataset(dataset,split_feature_index,labels)
-    decesion_tree[split_feature]['<='] = build_tree(dataset_less,labels_less,features)
-    decesion_tree[split_feature]['>'] = build_tree(dataset_greater,labels_greater,features)
+    split_feature_dct = {}
+    for data in dataset:
+        if split_feature_dct.has_key(data[split_feature_index]):
+            split_feature_dct[data[split_feature_index]].append(data)
+        else:
+            split_feature_dct[data[split_feature_index]] = [data]
+    for key in split_feature_dct.keys():
+        decesion_tree[split_feature][key] = build_tree(split_feature_dct[key], labels, features)
+    #del(features[split_feature_index])
+    #dataset_less,dataset_greater,labels_less,labels_greater = split_dataset(dataset,split_feature_index,labels)
+    #decesion_tree[split_feature]['<='] = build_tree(dataset_less,labels_less,features)
+    #decesion_tree[split_feature]['>'] = build_tree(dataset_greater,labels_greater,features)
     return decesion_tree
 
 def store_tree(decesion_tree,filename):
