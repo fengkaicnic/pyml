@@ -153,6 +153,8 @@ def cal_info_gain_ratio(dataset,feature_index):
     计算信息增益比  gr(D,F) = g(D,F)/H(D)
     '''    
     base_entropy = cal_entropy_f(dataset, feature_index)
+    if base_entropy == 0:
+        return 0
     '''
     if base_entropy == 0:
         return 1
