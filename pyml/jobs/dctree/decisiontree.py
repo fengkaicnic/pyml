@@ -19,6 +19,12 @@ def get_labels(train_file):
         labels.append(label)
     return labels
 
+def get_tlabels(train_data):
+    labels = []
+    for data in train_data:
+        labels.append(data[0])
+    return labels
+
 def format_data(dataset_file):
     '''
     返回dataset(列表集合)和features(列表)
@@ -30,7 +36,7 @@ def format_data(dataset_file):
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length（花萼长度）、sepal width（花萼宽度）、petal length（花瓣长度）、petal width（花瓣宽度）
-    features = ['age','start_age','bstart_year','gender','start_salary','start_size']
+    features = ['degree', 'age','start_age','bstart_year','gender','start_salary','start_size']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
@@ -215,10 +221,11 @@ def build_tree(dataset,labels,features):
     if cal_entropy(dataset) == 0:
         return most_occur_label(labels)
     split_feature_index = choose_best_fea_to_split(dataset,features)
+    split_feature_index = split_feature_index - 1 
     split_feature = features[split_feature_index]
     decesion_tree = {split_feature:{}}
     #若划分特征的信息增益比小于阈值,则返回数据集中出现次数最多的label
-    if cal_info_gain_ratio(dataset,split_feature_index) < 0.01:
+    if cal_info_gain_ratio(dataset,split_feature_index) < 0.0016:
         return most_occur_label(labels)
     split_feature_dct = {}
     for data in dataset:
@@ -227,7 +234,8 @@ def build_tree(dataset,labels,features):
         else:
             split_feature_dct[data[split_feature_index]] = [data]
     for key in split_feature_dct.keys():
-        decesion_tree[split_feature][key] = build_tree(split_feature_dct[key], labels, features)
+        train_labs = get_tlabels(split_feature_dct[key])
+        decesion_tree[split_feature][key] = build_tree(split_feature_dct[key], train_labs, features)
     #del(features[split_feature_index])
     #dataset_less,dataset_greater,labels_less,labels_greater = split_dataset(dataset,split_feature_index,labels)
     #decesion_tree[split_feature]['<='] = build_tree(dataset_less,labels_less,features)
