@@ -7,6 +7,7 @@ from numpy import mean
 import numpy as np
 import pdb
 import time
+import types
 start = time.clock()
 
 def get_labels(train_file):
@@ -278,6 +279,15 @@ def classify(decesion_tree,features,test_data,mean_values):
         else:
             return sub_tree
 
+def classify_t(decesion_tree, features, test_data, mean_values=None):
+    first_fea = decesion_tree.keys()[0]
+    fea_index = features.index(first_fea)
+    if type(decesion_tree[first_fea][test_data[fea_index]]) is types.DictType:
+            classify_t(decesion_tree[first_fea][test_data[fea_index]], features, test_data)
+    else:
+        return decesion_tree[first_fea]
+        
+        
 def get_means(train_dataset):
     '''
     获取训练数据集各个属性的数据平均值
@@ -310,6 +320,14 @@ def run(train_file,test_file):
     #        correct += 1
     #print "准确率: ",correct/float(n)
 
+def test(test_file, decesion_tree):
+    test_dataset,test_features = format_data(test_file)
+    n = len(test_dataset)
+    result = []
+    for data in test_dataset:
+        label = classify_t(decesion_tree, test_features, data)
+        result.append(label)
+    print label
 
 #############################################################
 if __name__ == '__main__':
