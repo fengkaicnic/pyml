@@ -6,6 +6,8 @@ import operator
 from numpy import mean
 import numpy as np
 import pdb
+import time
+start = time.clock()
 
 def get_labels(train_file):
     '''
@@ -101,11 +103,11 @@ def cal_entropy_dct(datadct, count):
     return entropy
 
 def cal_info_gain_new(dataset, feature_index, base_entropy):
-    datasets = []
-    for data in dataset:
-        datasets.append(data[1:7])
+    #for data in dataset:
+    #    datasets.append(data[1:7])
     feature_dct = {}
     for data in dataset:
+    #    print data
         if feature_dct.has_key(data[feature_index]):
             feature_dct[data[feature_index]]['count'] += 1
             if feature_dct[data[feature_index]]['dct'].has_key(data[0]):
@@ -113,13 +115,13 @@ def cal_info_gain_new(dataset, feature_index, base_entropy):
             else:
                 feature_dct[data[feature_index]]['dct'][data[0]] = 1
         else:
-            feature_dct[data[feature_index]]['count'] = 1
+            feature_dct[data[feature_index]] = {'count':1}
             feature_dct[data[feature_index]]['dct'] = {}
             feature_dct[data[feature_index]]['dct'][data[0]] = 1
     info_gain = 0.0
     for item in feature_dct.iteritems():
-        info_gain += (float(item['count'])/len(dataset))*cal_entropy_dct(item['dct'], item['count'])
-    
+        info_gain += (float(item[1]['count'])/len(dataset))*cal_entropy_dct(item[1]['dct'], item[1]['count'])
+    print info_gain
     return base_entropy - info_gain
     
 def cal_info_gain(dataset,feature_index,base_entropy):
@@ -150,15 +152,17 @@ def cal_info_gain_ratio(dataset,feature_index):
     '''
     计算信息增益比  gr(D,F) = g(D,F)/H(D)
     '''    
-    base_entropy = cal_entropy_f(dataset, feature_index)
-    if base_entropy == 0:
+    base_entropy = cal_entropy_f(dataset, 0)
+    feature_entropy = cal_entropy_f(dataset, feature_index)
+    if feature_entropy == 0:
         return 0
     '''
     if base_entropy == 0:
         return 1
     '''
     info_gain = cal_info_gain_new(dataset,feature_index,base_entropy)
-    info_gain_ratio = info_gain/base_entropy
+    info_gain_ratio = info_gain/feature_entropy
+    print info_gain_ratio
     return info_gain_ratio
     
 def choose_best_fea_to_split(dataset,features):
@@ -214,7 +218,7 @@ def build_tree(dataset,labels,features):
     split_feature = features[split_feature_index]
     decesion_tree = {split_feature:{}}
     #若划分特征的信息增益比小于阈值,则返回数据集中出现次数最多的label
-    if cal_info_gain_ratio(dataset,split_feature_index) < 0.3:
+    if cal_info_gain_ratio(dataset,split_feature_index) < 0.01:
         return most_occur_label(labels)
     split_feature_dct = {}
     for data in dataset:
@@ -280,21 +284,23 @@ def run(train_file,test_file):
     '''
     主函数
     '''
+    #pdb.set_trace()
     labels = get_labels(train_file)
     train_dataset,train_features = format_data(train_file)
+    pdb.set_trace()
     decesion_tree = build_tree(train_dataset,labels,train_features)
     print 'decesion_tree :',decesion_tree
     store_tree(decesion_tree,'decesion_tree')
-    mean_values = get_means(train_dataset)
-    test_dataset,test_features = format_data(test_file)
-    n = len(test_dataset)
-    correct = 0
-    for test_data in test_dataset:
-        label = classify(decesion_tree,test_features,test_data,mean_values)
-        #print 'classify_label  correct_label:',label,test_data[-1]
-        if label == test_data[-1]:
-            correct += 1
-    print "准确率: ",correct/float(n)
+    #mean_values = get_means(train_dataset)
+    #test_dataset,test_features = format_data(test_file)
+    #n = len(test_dataset)
+    #correct = 0
+    #for test_data in test_dataset:
+    #    label = classify(decesion_tree,test_features,test_data,mean_values)
+    #    #print 'classify_label  correct_label:',label,test_data[-1]
+    #    if label == test_data[-1]:
+    #        correct += 1
+    #print "准确率: ",correct/float(n)
 
 
 #############################################################
@@ -305,3 +311,5 @@ if __name__ == '__main__':
     train_file = 'd:/jobs/dctree/dct-train.csv'
     test_file = 'd:/jobs/dctree/dct-test.csv'
     run(train_file,test_file)
+end = time.clock()
+print (end - start)
