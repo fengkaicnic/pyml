@@ -188,6 +188,7 @@ def choose_best_fea_to_split(dataset,features):
             max_info_gain_ratio = info_gain_ratio
             split_fea_index = i
     return split_fea_index
+    
 
 def most_occur_label(labels):
     '''
@@ -282,10 +283,12 @@ def classify(decesion_tree,features,test_data,mean_values):
 def classify_t(decesion_tree, features, test_data, mean_values=None):
     first_fea = decesion_tree.keys()[0]
     fea_index = features.index(first_fea)
+    if not decesion_tree[first_fea].has_key(test_data[fea_index]):
+        return 1
     if type(decesion_tree[first_fea][test_data[fea_index]]) is types.DictType:
-            classify_t(decesion_tree[first_fea][test_data[fea_index]], features, test_data)
+            return classify_t(decesion_tree[first_fea][test_data[fea_index]], features, test_data)
     else:
-        return decesion_tree[first_fea]
+        return decesion_tree[first_fea][test_data[fea_index]]
         
         
 def get_means(train_dataset):
@@ -320,14 +323,16 @@ def run(train_file,test_file):
     #        correct += 1
     #print "准确率: ",correct/float(n)
 
-def test(test_file, decesion_tree):
+def test(test_file):
+    decesion_tree = read_tree('decesion_tree')
     test_dataset,test_features = format_data(test_file)
-    n = len(test_dataset)
+    pdb.set_trace()
     result = []
     for data in test_dataset:
         label = classify_t(decesion_tree, test_features, data)
         result.append(label)
-    print label
+    pdb.set_trace()
+    print result
 
 #############################################################
 if __name__ == '__main__':
@@ -336,6 +341,7 @@ if __name__ == '__main__':
     #    sys.exit()
     train_file = 'd:/jobs/dctree/dct-train.csv'
     test_file = 'd:/jobs/dctree/dct-test.csv'
-    run(train_file,test_file)
+#    run(train_file,test_file)
+    test(test_file)
 end = time.clock()
 print (end - start)
