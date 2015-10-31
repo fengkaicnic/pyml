@@ -331,6 +331,7 @@ def test(test_file):
     for data in test_dataset:
         label = classify_t(decesion_tree, test_features, data)
         result.append(label)
+    store_tree(label)
     pdb.set_trace()
     print result
 
@@ -341,7 +342,7 @@ if __name__ == '__main__':
     #    sys.exit()
     train_file = 'd:/jobs/dctree/dct-train.csv'
     test_file = 'd:/jobs/dctree/dct-test.csv'
-#    run(train_file,test_file)
+    #run(train_file,test_file)
     test(test_file)
 end = time.clock()
 print (end - start)
