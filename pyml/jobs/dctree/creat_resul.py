@@ -5,16 +5,11 @@ import sys
 import re
 import MySQLdb
 import time
+from jobs import utils
 reload(sys)
 import pdb
 sys.setdefaultencoding('utf8')
 start = time.clock()
-
-def read_tree(filename):
-
-    import pickle
-    reader = open(filename,'rU')
-    return pickle.load(reader)
 
 try:
     
@@ -31,7 +26,9 @@ try:
     cur.execute(sql)
     file = open('d:/jobs/dctree/result.csv', 'w+')
     useridlst = cur.fetchall()
-    rsultlabel = read_tree('result.txt')
+    rsultlabel = utils.read_rst('result.txt')
+    pdb.set_trace()
+    wsresult = utils.read_rst('wsresult.txt')
     rsultlabel = map(str, rsultlabel)
     file.write('id,degree,size,salary,position_name\n')
     i = 0
@@ -42,12 +39,22 @@ try:
         result.append(userid[0])
         print i
         if rsultlabel[i] == '0':
-            result.append(u'0,4,1,销售经理\n')
+            result.append('0')
+            result.append(wsresult[i][0])
+            result.append(wsresult[i][1])
+            result.append(u'销售经理\n')
         if rsultlabel[i] == '1':
-            result.append(u'1,4,1,销售经理\n')
+            result.append('1')
+            result.append(wsresult[i][0])
+            result.append(wsresult[i][1])
+            result.append(u'销售经理\n')
         if rsultlabel[i] == '2':
-            result.append(u'2,5,6,项目经理\n')
+            result.append('2')
+            result.append(wsresult[i][0])
+            result.append(wsresult[i][1])
+            result.append(u'项目经理\n')
   #      print userid[0] 
+        result = map(str, result)
         strs = ','.join(result)
         file.write(strs.encode('utf-8'))
         i += 1                
