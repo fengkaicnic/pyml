@@ -38,7 +38,9 @@ try:
             resultst.append([random.randint(worklst[0], worklst[1]), random.randint(salarylst[0], salarylst[1])])
             worklst = [work_size[1]]
             salarylst = [work_size[2]]
-    
+    worklst = sorted(worklst)
+    salarylst = sorted(salarylst)
+    resultst.append([random.randint(worklst[0], worklst[1]), random.randint(salarylst[0], salarylst[1])])
     pdb.set_trace()
     utils.store_rst(resultst, 'wsresult.txt')
     conn.commit()

@@ -48,6 +48,12 @@ try:
             else:
                 result.append('test')
             positions = [position[0]]
+    if position_dct.has_key(positions[0]):
+        result.append(positions[0])
+    elif position_dct.has_key(positions[1]):
+        result.append(positions[1])
+    else:
+        result.append('test')
     
     utils.store_rst(result, 'position.txt')
     
