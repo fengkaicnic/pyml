@@ -332,7 +332,7 @@ def test(test_file):
         label = classify_t(decesion_tree, test_features, data)
         result.append(label)
     pdb.set_trace()
-    print result
+    store_tree(result, 'result.txt')
 
 #############################################################
 if __name__ == '__main__':

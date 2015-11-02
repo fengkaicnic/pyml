@@ -29,6 +29,7 @@ try:
     rsultlabel = utils.read_rst('result.txt')
     pdb.set_trace()
     wsresult = utils.read_rst('wsresult.txt')
+    posresult = utils.read_rst('position.txt')
     rsultlabel = map(str, rsultlabel)
     file.write('id,degree,size,salary,position_name\n')
     i = 0
@@ -38,21 +39,29 @@ try:
         result = []
         result.append(userid[0])
         print i
-        if rsultlabel[i] == '0':
-            result.append('0')
-            result.append(wsresult[i][0])
-            result.append(wsresult[i][1])
+        result.append(rsultlabel[i])
+        result.append(wsresult[i][0])
+        result.append(wsresult[i][1])
+        if posresult[i] == 'test':
             result.append(u'销售经理\n')
-        if rsultlabel[i] == '1':
-            result.append('1')
-            result.append(wsresult[i][0])
-            result.append(wsresult[i][1])
-            result.append(u'销售经理\n')
-        if rsultlabel[i] == '2':
-            result.append('2')
-            result.append(wsresult[i][0])
-            result.append(wsresult[i][1])
-            result.append(u'项目经理\n')
+        else:
+            result.append(posresult[i])
+            result.append('\n')
+        #if rsultlabel[i] == '0':
+        #    result.append('0')
+        #    result.append(wsresult[i][0])
+        #    result.append(wsresult[i][1])
+        #    result.append(u'销售经理\n')
+        #if rsultlabel[i] == '1':
+        #    result.append('1')
+        #    result.append(wsresult[i][0])
+        #    result.append(wsresult[i][1])
+        #    result.append(u'销售经理\n')
+        #if rsultlabel[i] == '2':
+        #    result.append('2')
+        #    result.append(wsresult[i][0])
+        #    result.append(wsresult[i][1])
+        #    result.append(u'项目经理\n')
   #      print userid[0] 
         result = map(str, result)
         strs = ','.join(result)
