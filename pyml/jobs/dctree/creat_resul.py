@@ -30,6 +30,7 @@ try:
     pdb.set_trace()
     wsresult = utils.read_rst('wsresult.txt')
     posresult = utils.read_rst('position.txt')
+    degreelst = utils.read_rst('degree.txt')
     rsultlabel = map(str, rsultlabel)
     file.write('id,degree,size,salary,position_name\n')
     i = 0
@@ -39,14 +40,13 @@ try:
         result = []
         result.append(userid[0])
         print i
-        result.append(rsultlabel[i])
+        result.append(degreelst[i])
         result.append(wsresult[i][0])
         result.append(wsresult[i][1])
         if posresult[i] == 'test':
             result.append(u'销售经理\n')
         else:
-            result.append(posresult[i])
-            result.append('\n')
+            result.append(posresult[i]+'\n')
         #if rsultlabel[i] == '0':
         #    result.append('0')
         #    result.append(wsresult[i][0])
