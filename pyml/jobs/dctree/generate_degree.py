@@ -8,6 +8,7 @@ import time
 import random
 from jobs import utils
 import pdb
+pdb.set_trace()
 reload(sys)
 sys.setdefaultencoding('utf8')
 start = time.clock()
@@ -29,7 +30,6 @@ try:
     resultlst = []
     for major in majorlst:
         majordct[major[0]] = [major[1], major[2], major[3]]
-    
     sq = 'select userid, major from jobs_uinfotest'    
     cur.execute(sq)
     usertst = cur.fetchall()
@@ -38,14 +38,23 @@ try:
         if majordct.has_key(user[1]):
             majorat = majordct[user[1]]
             mnu = max(majorat)
-            if mnu >= 0.8:
-                index = majorat.index(mnu)
-                resultlst.append(index)
-            else:
-                resultlst.append(treelst[i])
+            index = majorat.index(mnu)
+            resultlst.append(index)
         else:
-            resultlst.append(treelst[i])
+            resultlst.append(0)
         i = i + 1
+#     for user in usertst:
+#         if majordct.has_key(user[1]):
+#             majorat = majordct[user[1]]
+#             mnu = max(majorat)
+#             if mnu >= 0.8:
+#                 index = majorat.index(mnu)
+#                 resultlst.append(index)
+#             else:
+#                 resultlst.append(treelst[i])
+#         else:
+#             resultlst.append(treelst[i])
+#         i = i + 1
     utils.store_rst(resultlst, 'degree.txt')
     conn.commit()
     conn.close()

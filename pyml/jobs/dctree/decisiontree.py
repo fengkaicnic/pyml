@@ -37,7 +37,7 @@ def format_data(dataset_file):
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length（花萼长度）、sepal width（花萼宽度）、petal length（花瓣长度）、petal width（花瓣宽度）
-    features = ['degree', 'age','start_age','bstart_year','gender','start_salary','start_size']
+    features = ['degree', 'age','start_age','bstart_year','gender','start_salary','start_size','major']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
@@ -155,7 +155,7 @@ def cal_info_gain(dataset,feature_index,base_entropy):
     #print 'info_gain:',base_entropy - condition_entropy
     return base_entropy - condition_entropy 
 
-def cal_info_gain_ratio(dataset,feature_index):
+def cal_info_gain_ratio(dataset, feature_index, features):
     '''
     计算信息增益比  gr(D,F) = g(D,F)/H(D)
     '''    
@@ -169,6 +169,7 @@ def cal_info_gain_ratio(dataset,feature_index):
     '''
     info_gain = cal_info_gain_new(dataset,feature_index,base_entropy)
     info_gain_ratio = info_gain/feature_entropy
+    print features[feature_index]
     print info_gain_ratio
     return info_gain_ratio
     
@@ -183,7 +184,7 @@ def choose_best_fea_to_split(dataset,features):
         #info_gain = cal_info_gain(dataset,i,base_entropy)
         #info_gain_ratio = info_gain/base_entropy
         i += 1
-        info_gain_ratio = cal_info_gain_ratio(dataset,i)
+        info_gain_ratio = cal_info_gain_ratio(dataset, i, features)
         if info_gain_ratio > max_info_gain_ratio:
             max_info_gain_ratio = info_gain_ratio
             split_fea_index = i
@@ -223,11 +224,11 @@ def build_tree(dataset,labels,features):
     if cal_entropy(dataset) == 0:
         return most_occur_label(labels)
     split_feature_index = choose_best_fea_to_split(dataset,features)
-    split_feature_index = split_feature_index - 1 
+    split_feature_index = split_feature_index 
     split_feature = features[split_feature_index]
     decesion_tree = {split_feature:{}}
     #若划分特征的信息增益比小于阈值,则返回数据集中出现次数最多的label
-    if cal_info_gain_ratio(dataset,split_feature_index) < 0.0016:
+    if cal_info_gain_ratio(dataset, split_feature_index, features) < 0.025:
         return most_occur_label(labels)
     split_feature_dct = {}
     for data in dataset:
@@ -311,7 +312,7 @@ def run(train_file,test_file):
     pdb.set_trace()
     decesion_tree = build_tree(train_dataset,labels,train_features)
     print 'decesion_tree :',decesion_tree
-    store_tree(decesion_tree,'decesion_tree')
+    store_tree(decesion_tree,'major_decesion_tree')
     #mean_values = get_means(train_dataset)
     #test_dataset,test_features = format_data(test_file)
     #n = len(test_dataset)
@@ -324,7 +325,7 @@ def run(train_file,test_file):
     #print "准确率: ",correct/float(n)
 
 def test(test_file):
-    decesion_tree = read_tree('decesion_tree')
+    decesion_tree = read_tree('major_decesion_tree')
     test_dataset,test_features = format_data(test_file)
     pdb.set_trace()
     result = []
@@ -339,9 +340,9 @@ if __name__ == '__main__':
     #if len(sys.argv) != 3:
     #    print "please use: python decision.py train_file test_file"
     #    sys.exit()
-    train_file = 'd:/jobs/dctree/dct-train.csv'
-    test_file = 'd:/jobs/dctree/dct-test.csv'
-#    run(train_file,test_file)
+    train_file = 'd:/jobs/dctree/maj-train.csv'
+    test_file = 'd:/jobs/dctree/maj-test.csv'
+    #run(train_file,test_file)
     test(test_file)
 end = time.clock()
 print (end - start)

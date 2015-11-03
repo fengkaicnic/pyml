@@ -24,13 +24,14 @@ try:
                                         from jobs_uinfotest as jb left join workexperiencetest as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/result.csv', 'w+')
+    file = open('d:/jobs/dctree/majresult.csv', 'w+')
     useridlst = cur.fetchall()
     rsultlabel = utils.read_rst('result.txt')
     pdb.set_trace()
     wsresult = utils.read_rst('wsresult.txt')
     posresult = utils.read_rst('position.txt')
-    degreelst = utils.read_rst('degree.txt')
+    #degreelst = utils.read_rst('degree.txt')
+    degreelst = utils.read_rst('result.txt')
     rsultlabel = map(str, rsultlabel)
     file.write('id,degree,size,salary,position_name\n')
     i = 0
