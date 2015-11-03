@@ -5,6 +5,6 @@ import pdb
 reload(sys)
 sys.setdefaultencoding('utf8')
 pdb.set_trace()
-seg_lst = jieba.cut(u'机电工程师')
+seg_lst = jieba.cut(u'品质工程师（QE）')
 for letter in seg_lst:
     print letter
