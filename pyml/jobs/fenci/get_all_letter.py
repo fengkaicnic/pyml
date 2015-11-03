@@ -1,4 +1,4 @@
-#coding:gb2312
+#coding:utf8
 import os
 import sys
 import re
@@ -12,7 +12,6 @@ start = time.clock()
 
 def read_tree(filename):
     '''
-    从文件中读取决策树，返回决策树
     '''
     import pickle
     reader = open(filename,'rU')
@@ -27,10 +26,10 @@ try:
     cur.execute('set character_set_database=utf8')
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
-    sql = 'select distinct(major) from jobs_uinfotest'
+    sql = 'select distinct(major) from jobs_uinfo'
     cur.execute(sql)
     
-    file = open('d:/jobs/dctree/majortest.csv', 'w+')
+#     file = open('d:/jobs/dctree/majortest.csv', 'w+')
     positionlst = cur.fetchall()
     i = 0
     pdb.set_trace()
@@ -45,15 +44,22 @@ try:
     positions = letterdct.keys()
     positions_num = []
     for letter in positions:
-        positions_num.append(letter + ':' + str(letterdct[letter]))
-    strss = '\n'.join(positions_num)
-    file.write(strss)
+#         positions_num.append(letter + ':' + str(letterdct[letter]))
+        print letter
+        if letter == '\\':
+            continue
+        sq = 'insert into letter(name, type, num) values ("%s", "%s", %d)' % (letter, 'major', letterdct[letter])
+        print sq
+        cur.execute(sq)
+#     strss = '\n'.join(positions_num)
+#     file.write(strss)
     conn.commit()
     conn.close()
-    file.close()
+#     file.close()
 except Exception as e:
-    file.close()
+#     file.close()
     conn.close()
+    print letter
     print e
 end = time.clock()
 print (end - start)
