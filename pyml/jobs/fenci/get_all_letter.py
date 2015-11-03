@@ -27,10 +27,10 @@ try:
     cur.execute('set character_set_database=utf8')
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
-    sql = 'select distinct(position_name) from workexperiencetest'
+    sql = 'select distinct(major) from jobs_uinfotest'
     cur.execute(sql)
     
-    file = open('d:/jobs/dctree/lettertest.csv', 'w+')
+    file = open('d:/jobs/dctree/majortest.csv', 'w+')
     positionlst = cur.fetchall()
     i = 0
     pdb.set_trace()
