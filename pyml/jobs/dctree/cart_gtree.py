@@ -90,6 +90,22 @@ def cal_entropy_f(dataset, index):
     #print 'entropy:',entropy
     return entropy
 
+def cal_entropy_lst(dataset):
+    n = len(dataset)    
+    label_count = {}
+    for data in dataset:
+        label = data
+        if label_count.has_key(label):
+            label_count[label] += 1
+        else:
+            label_count[label] = 1
+    entropy = 0
+    for label in label_count:
+        prob = float(label_count[label])/n
+        entropy -= prob*log(prob,2)
+    #print 'entropy:',entropy
+    return entropy
+
 def cal_entropy_dct(datadct, count):
     entropy = 0.0
     for key in datadct.keys():
@@ -233,6 +249,8 @@ def build_tree(dataset, labels, features, chose_index):
         return labels[0]
     if len(features) == 0:
         return most_occur_label(labels)
+    if cal_entropy_lst(labels) == 0:
+        return labels[0]
     if cal_entropy(dataset) == 0:
         return most_occur_label(labels)
     split_feature_index = choose_best_fea_to_split(dataset, features, chose_index)
@@ -336,7 +354,7 @@ def run(train_file, test_file):
     #print "׼ȷ��: ",correct/float(n)
 
 def test(test_file):
-    decesion_tree = read_tree('major_decesion_tree')
+    decesion_tree = read_tree('cart_decesion_tree')
     test_dataset,test_features = format_data(test_file)
     pdb.set_trace()
     result = []
