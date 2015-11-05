@@ -11,7 +11,6 @@ import pdb
 sys.setdefaultencoding('utf8')
 start = time.clock()
 
-
 try:
     
     conn = MySQLdb.connect(host='localhost', user='root', passwd='123456', db='jobs', use_unicode=True, charset='utf8')
