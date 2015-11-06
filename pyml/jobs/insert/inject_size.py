@@ -14,7 +14,7 @@ try:
     conn.commit()
     with open('d:/jobs/practice.json') as file:
         lines = file.readlines()
-        linelst = lines[35622:]
+        linelst = lines[:]
         for line in linelst:
             if line:
                 sc = json.loads(line)
