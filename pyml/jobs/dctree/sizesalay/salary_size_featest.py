@@ -19,12 +19,12 @@ try:
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
     sql = 'select jb.age,jb.start_age,jb.bstart_year,jb.gender,jb.major \
-                                        from jobs_uinfo as jb left join workexperience as wk on \
+                                        from jobs_uinfotest as jb left join workexperiencetest as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/sal-train.csv', 'w+')
+    file = open('d:/jobs/dctree/sal-test.csv', 'w+')
     useridlst = cur.fetchall()
-    sqlze = 'select userid, size, salary from work_size'
+    sqlze = 'select userid, size, salary from work_sizetest'
     cur.execute(sqlze)
     sizelst = cur.fetchall()
     sq = 'select name from major where degreer0 >=0.6'
@@ -46,12 +46,12 @@ try:
     degreer2dct = {}
     for degree in degreer2lst:
         degreer2dct[degree[0]] = 1
-    file.write('age,start_age,bstart_year,gender,major,size1,size2,salary1,salary2,size\n')
+    file.write('degree,age,start_age,bstart_year,gender,major,size1,size2,salary1,salary2,size\n')
     pdb.set_trace()
     i = 0
     for userid in useridlst:
-        sizes = sizelst[i:i+3]
-        i += 3
+        sizes = sizelst[i:i+2]
+        i += 2
         print userid
         userid = list(userid)
         if int(userid[1]) <= 20:
@@ -71,10 +71,10 @@ try:
             userid.pop(-1)
             userid.append(3)
         userid.append(sizes[0][1])
-        userid.append(sizes[2][1])
+        userid.append(sizes[1][1])
         userid.append(sizes[0][2])
-        userid.append(sizes[2][2])
         userid.append(sizes[1][2])
+        userid.append(0)
         userlst = map(str, userid)
         strs = ','.join(userlst) + '\n'
         file.write(strs)
