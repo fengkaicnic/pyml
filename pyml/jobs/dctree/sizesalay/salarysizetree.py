@@ -33,7 +33,7 @@ def format_data(dataset_file):
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length�����೤�ȣ���sepal width�������ȣ���petal length�����곤�ȣ���petal width�������ȣ�
-    features = ['age','start_age','bstart_year','gender','major','size1','size2','salary1','salary2']
+    features = ['age','bstart_year','gender','major','size1','size2']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
@@ -291,15 +291,15 @@ def test(test_file):
         label = classify_t(decesion_tree, test_features, data)
         result.append(label)
     pdb.set_trace()
-    store_tree(result, 'sizeresult.txt')
+    store_tree(result, 'salaryresult.txt')
 
 #############################################################
 if __name__ == '__main__':
     #if len(sys.argv) != 3:
     #    print "please use: python decision.py train_file test_file"
     #    sys.exit()
-    train_file = 'd:/jobs/dctree/ss-train.csv'
-    test_file = 'd:/jobs/dctree/ss-test.csv'
+    train_file = 'd:/jobs/dctree/sal-train.csv'
+    test_file = 'd:/jobs/dctree/sal-test.csv'
     #run(train_file,test_file)
     test(test_file)
 end = time.clock()

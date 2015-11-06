@@ -18,11 +18,11 @@ try:
     cur.execute('set character_set_database=utf8')
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
-    sql = 'select jb.age,jb.start_age,jb.bstart_year,jb.gender,jb.major \
+    sql = 'select jb.age,jb.bstart_year,jb.gender,jb.major \
                                         from jobs_uinfotest as jb left join workexperiencetest as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/sal-test.csv', 'w+')
+    file = open('d:/jobs/dctree/ss-test.csv', 'w+')
     useridlst = cur.fetchall()
     sqlze = 'select userid, size, salary from work_sizetest'
     cur.execute(sqlze)
@@ -46,7 +46,7 @@ try:
     degreer2dct = {}
     for degree in degreer2lst:
         degreer2dct[degree[0]] = 1
-    file.write('degree,age,start_age,bstart_year,gender,major,size1,size2,salary1,salary2,size\n')
+    file.write('age,bstart_year,gender,major,size1,size2,size\n')
     pdb.set_trace()
     i = 0
     for userid in useridlst:
@@ -58,13 +58,13 @@ try:
             userid[1] = '18'
         elif int(userid[1]) >= 60:
             userid[1] = '60'
-        if degreer0dct.has_key(userid[4]):
+        if degreer0dct.has_key(userid[3]):
             userid.pop(-1)
             userid.append(0)
-        elif degreer1dct.has_key(userid[4]):
+        elif degreer1dct.has_key(userid[3]):
             userid.pop(-1)
             userid.append(1)
-        elif degreer2dct.has_key(userid[4]):
+        elif degreer2dct.has_key(userid[3]):
             userid.pop(-1)
             userid.append(2)
         else:
@@ -72,8 +72,9 @@ try:
             userid.append(3)
         userid.append(sizes[0][1])
         userid.append(sizes[1][1])
-        userid.append(sizes[0][2])
-        userid.append(sizes[1][2])
+        #userid.append(sizes[0][2])
+        #userid.append(sizes[1][2])
+        #userid.append(sizes[1][2])
         userid.append(0)
         userlst = map(str, userid)
         strs = ','.join(userlst) + '\n'
