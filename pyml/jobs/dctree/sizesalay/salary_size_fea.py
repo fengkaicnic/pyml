@@ -22,7 +22,7 @@ try:
                                         from jobs_uinfo as jb left join workexperience as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/sal-train.csv', 'w+')
+    file = open('d:/jobs/dctree/ss-train.csv', 'w+')
     useridlst = cur.fetchall()
     sqlze = 'select userid, size, salary from work_size'
     cur.execute(sqlze)
@@ -46,7 +46,7 @@ try:
     degreer2dct = {}
     for degree in degreer2lst:
         degreer2dct[degree[0]] = 1
-    file.write('age,start_age,bstart_year,gender,major,size1,size2,size\n')
+    #file.write('age,start_age,bstart_year,gender,major,size1,size2,size\n')
     pdb.set_trace()
     i = 0
     for userid in useridlst:
@@ -72,9 +72,9 @@ try:
             userid.append(3)
         #userid.append(sizes[0][1])
         #userid.append(sizes[2][1])
-        userid.append(sizes[0][2])
-        userid.append(sizes[2][2])
-        userid.append(sizes[1][2])
+        userid.append(sizes[0][1])
+        userid.append(sizes[2][1])
+        userid.append(sizes[1][1])
         userlst = map(str, userid)
         strs = ','.join(userlst) + '\n'
         file.write(strs)

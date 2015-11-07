@@ -22,7 +22,7 @@ try:
                                         from jobs_uinfotest as jb left join workexperiencetest as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/ss-test.csv', 'w+')
+    file = open('d:/jobs/dctree/sal-test.csv', 'w+')
     useridlst = cur.fetchall()
     sqlze = 'select userid, size, salary from work_sizetest'
     cur.execute(sqlze)
@@ -70,8 +70,8 @@ try:
         else:
             userid.pop(-1)
             userid.append(3)
-        userid.append(sizes[0][1])
-        userid.append(sizes[1][1])
+        userid.append(sizes[0][2])
+        userid.append(sizes[1][2])
         #userid.append(sizes[0][2])
         #userid.append(sizes[1][2])
         #userid.append(sizes[1][2])

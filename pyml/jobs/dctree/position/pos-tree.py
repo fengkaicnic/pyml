@@ -1,5 +1,4 @@
-#-*- coding:utf-8 -*-
-
+#coding:utf8
 import sys
 from math import log
 import operator
@@ -9,7 +8,8 @@ import pdb
 import time
 import types
 start = time.clock()
-
+reload(sys)
+sys.setdefaultencoding('utf8')
 def get_labels(train_file):
     pdb.set_trace()
     labels = []
@@ -33,7 +33,7 @@ def format_data(dataset_file):
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length�����೤�ȣ���sepal width�������ȣ���petal length�����곤�ȣ���petal width�������ȣ�
-    features = ['age','bstart_year','gender','major','size1','size2']
+    features = ['industry1','industry2','pos1','pos2']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
@@ -198,7 +198,7 @@ def build_tree(dataset,labels,features):
     split_feature = features[split_feature_index]
     decesion_tree = {split_feature:{}}
     #��������������Ϣ�����С����ֵ,�򷵻���ݼ��г��ִ�������label
-    if cal_info_gain_ratio(dataset, split_feature_index, features) < 0.025:
+    if cal_info_gain_ratio(dataset, split_feature_index, features) < 0.1:
         return most_occur_label(labels)
     split_feature_dct = {}
     for data in dataset:
@@ -248,7 +248,7 @@ def classify_t(decesion_tree, features, test_data, mean_values=None):
     first_fea = decesion_tree.keys()[0]
     fea_index = features.index(first_fea)
     if not decesion_tree[first_fea].has_key(test_data[fea_index]):
-        return 1
+        return u'销售经理'
     if type(decesion_tree[first_fea][test_data[fea_index]]) is types.DictType:
             return classify_t(decesion_tree[first_fea][test_data[fea_index]], features, test_data)
     else:
@@ -269,8 +269,8 @@ def run(train_file,test_file):
     train_dataset,train_features = format_data(train_file)
     pdb.set_trace()
     decesion_tree = build_tree(train_dataset,labels,train_features)
-    print 'decesion_tree :',decesion_tree
-    store_tree(decesion_tree,'salary_size_tree')
+    #print 'decesion_tree :',decesion_tree
+    store_tree(decesion_tree,'position_size_tree')
     #mean_values = get_means(train_dataset)
     #test_dataset,test_features = format_data(test_file)
     #n = len(test_dataset)
@@ -283,7 +283,7 @@ def run(train_file,test_file):
     #print "׼ȷ��: ",correct/float(n)
 
 def test(test_file):
-    decesion_tree = read_tree('salary_size_tree')
+    decesion_tree = read_tree('position_size_tree')
     test_dataset,test_features = format_data(test_file)
     pdb.set_trace()
     result = []
@@ -291,15 +291,15 @@ def test(test_file):
         label = classify_t(decesion_tree, test_features, data)
         result.append(label)
     pdb.set_trace()
-    store_tree(result, 'salaryresult.txt')
+    store_tree(result, 'posresult.txt')
 
 #############################################################
 if __name__ == '__main__':
     #if len(sys.argv) != 3:
     #    print "please use: python decision.py train_file test_file"
     #    sys.exit()
-    train_file = 'd:/jobs/dctree/sal-train.csv'
-    test_file = 'd:/jobs/dctree/sal-test.csv'
+    train_file = 'd:/jobs/dctree/pos-train.csv'
+    test_file = 'd:/jobs/dctree/pos-test.csv'
     #run(train_file,test_file)
     test(test_file)
 end = time.clock()

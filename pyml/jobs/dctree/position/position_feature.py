@@ -1,4 +1,4 @@
-#coding:gb2312
+#coding:utf8
 import os
 import json
 import sys
@@ -19,12 +19,12 @@ try:
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
     sql = 'select jb.age,jb.bstart_year,jb.gender,jb.major \
-                                        from jobs_uinfotest as jb left join workexperiencetest as wk on \
+                                        from jobs_uinfo as jb left join workexperience as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/ss-test.csv', 'w+')
+    file = open('d:/jobs/dctree/pos-train.csv', 'w+')
     useridlst = cur.fetchall()
-    sqlze = 'select userid, size, salary from work_sizetest'
+    sqlze = 'select userid, size, salary, inudstry, position_name from work_size'
     cur.execute(sqlze)
     sizelst = cur.fetchall()
     sq = 'select name from major where degreer0 >=0.6'
@@ -46,12 +46,12 @@ try:
     degreer2dct = {}
     for degree in degreer2lst:
         degreer2dct[degree[0]] = 1
-    #file.write('age,bstart_year,gender,major,size1,size2,size\n')
+    file.write('age,start_age,bstart_year,gender,major,size1,size2,size\n')
     pdb.set_trace()
     i = 0
     for userid in useridlst:
-        sizes = sizelst[i:i+2]
-        i += 2
+        sizes = sizelst[i:i+3]
+        i += 3
         print userid
         userid = list(userid)
         if int(userid[1]) <= 20:
@@ -70,12 +70,11 @@ try:
         else:
             userid.pop(-1)
             userid.append(3)
-        userid.append(sizes[0][1])
-        userid.append(sizes[1][1])
-        #userid.append(sizes[0][2])
-        #userid.append(sizes[1][2])
-        #userid.append(sizes[1][2])
-        userid.append(0)
+        #userid.append(sizes[0][1])
+        #userid.append(sizes[2][1])
+        userid.append(sizes[0][2])
+        userid.append(sizes[2][2])
+        userid.append(sizes[1][2])
         userlst = map(str, userid)
         strs = ','.join(userlst) + '\n'
         file.write(strs)

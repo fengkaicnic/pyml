@@ -24,14 +24,14 @@ try:
                                         from jobs_uinfotest as jb left join workexperiencetest as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/szyresult.csv', 'w+')
+    file = open('d:/jobs/dctree/pszyresult.csv', 'w+')
     useridlst = cur.fetchall()
     rsultlabel = utils.read_rst('result.txt')
     pdb.set_trace()
     #wsresult = utils.read_rst('wsresult.txt')
     sizeresult = utils.read_rst('sizeresult.txt')
     salaryresult = utils.read_rst('salaryresult.txt')
-    posresult = utils.read_rst('position.txt')
+    posresult = utils.read_rst('posresult.txt')
     #degreelst = utils.read_rst('degree.txt')
     degreelst = utils.read_rst('result.txt')
     rsultlabel = map(str, rsultlabel)
@@ -39,6 +39,7 @@ try:
     i = 0
     print rsultlabel
     pdb.set_trace()
+    j = 0
     for userid in useridlst:
         result = []
         result.append(userid[0])
@@ -46,8 +47,9 @@ try:
         result.append(degreelst[i])
         result.append(sizeresult[i])
         result.append(salaryresult[i])
-        if posresult[i] == 'test':
+        if posresult[i] == '':
             result.append(u'销售经理\n')
+            j += 1
         else:
             result.append(posresult[i]+'\n')
         #if rsultlabel[i] == '0':
@@ -71,6 +73,7 @@ try:
         file.write(strs.encode('utf-8'))
         i += 1                
     conn.commit()
+    print j
     conn.close()
     file.close()
 except Exception as e:
