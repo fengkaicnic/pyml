@@ -55,7 +55,7 @@ try:
         print userid
         userid = list(userid)
         if int(userid[1]) <= 20:
-            userid[1] = '18'
+            userid[1] = '20'
         elif int(userid[1]) >= 60:
             userid[1] = '60'
         if degreer0dct.has_key(userid[3]):

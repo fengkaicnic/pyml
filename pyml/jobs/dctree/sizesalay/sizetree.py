@@ -33,7 +33,7 @@ def format_data(dataset_file):
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length�����೤�ȣ���sepal width�������ȣ���petal length�����곤�ȣ���petal width�������ȣ�
-    features = ['age','bstart_year','gender','major','salary1','salary2']
+    features = ['age','bstart_year','gender','major','size1','size2']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
@@ -198,7 +198,7 @@ def build_tree(dataset,labels,features):
     split_feature = features[split_feature_index]
     decesion_tree = {split_feature:{}}
     #��������������Ϣ�����С����ֵ,�򷵻���ݼ��г��ִ�������label
-    if cal_info_gain_ratio(dataset, split_feature_index, features) < 0.035:
+    if cal_info_gain_ratio(dataset, split_feature_index, features) < 0.025:
         return most_occur_label(labels)
     split_feature_dct = {}
     for data in dataset:
@@ -270,7 +270,7 @@ def run(train_file,test_file):
     pdb.set_trace()
     decesion_tree = build_tree(train_dataset,labels,train_features)
     print 'decesion_tree :',decesion_tree
-    store_tree(decesion_tree,'salary_tree')
+    store_tree(decesion_tree,'size_tree')
     #mean_values = get_means(train_dataset)
     #test_dataset,test_features = format_data(test_file)
     #n = len(test_dataset)
@@ -283,7 +283,7 @@ def run(train_file,test_file):
     #print "׼ȷ��: ",correct/float(n)
 
 def test(test_file):
-    decesion_tree = read_tree('salary_tree')
+    decesion_tree = read_tree('size_tree')
     test_dataset,test_features = format_data(test_file)
     pdb.set_trace()
     result = []
@@ -291,16 +291,16 @@ def test(test_file):
         label = classify_t(decesion_tree, test_features, data)
         result.append(label)
     pdb.set_trace()
-    store_tree(result, 'salaryresult.txt')
+    store_tree(result, 'sizeresult.txt')
 
 #############################################################
 if __name__ == '__main__':
     #if len(sys.argv) != 3:
     #    print "please use: python decision.py train_file test_file"
     #    sys.exit()
-    train_file = 'd:/jobs/dctree/sal-train.csv'
-    test_file = 'd:/jobs/dctree/sal-test.csv'
-    run(train_file,test_file)
-    #test(test_file)
+    train_file = 'd:/jobs/dctree/ss-train.csv'
+    test_file = 'd:/jobs/dctree/ss-test.csv'
+    #run(train_file,test_file)
+    test(test_file)
 end = time.clock()
 print (end - start)
