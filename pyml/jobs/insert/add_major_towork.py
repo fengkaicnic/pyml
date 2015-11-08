@@ -22,7 +22,7 @@ try:
     cur.execute(majorsql)
     majorlst = cur.fetchall()
     for major in majorlst:
-        sql = 'update workexperiencetest set major = "%s" where userid = "%s"' % (major[1], major[0])
+        sql = 'update work_sizetest set major = "%s" where userid = "%s"' % (major[1], major[0])
         cur.execute(sql)
     conn.commit()
     conn.close()

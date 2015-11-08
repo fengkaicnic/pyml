@@ -198,7 +198,7 @@ def build_tree(dataset,labels,features):
     split_feature = features[split_feature_index]
     decesion_tree = {split_feature:{}}
     #��������������Ϣ�����С����ֵ,�򷵻���ݼ��г��ִ�������label
-    if cal_info_gain_ratio(dataset, split_feature_index, features) < 0.035:
+    if cal_info_gain_ratio(dataset, split_feature_index, features) < 0.05:
         return most_occur_label(labels)
     split_feature_dct = {}
     for data in dataset:

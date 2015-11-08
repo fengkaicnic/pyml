@@ -60,6 +60,10 @@ try:
                 pre2 += 1
             else:
                 flag = False
+                pos_name = utils.get_key_position(postdct, positions)
+                if pos_name:
+                    result.append(pos_name)
+                    flag = True
 #                 for key in postdct.keys():   
 #                     if key in positions[0]:
 #                         if u'总监' in positions[0] or u'主管' in positions[0]:
@@ -98,7 +102,7 @@ try:
             flag = False
             positions = [position[0]]
             industrys = [position[1]]
-    if position_dct.has_key(positions[0]):
+    if position_dct.has_key(positions[0]): #handle the last 
         result.append(positions[0])
     elif position_dct.has_key(positions[1]):
         result.append(positions[1])
