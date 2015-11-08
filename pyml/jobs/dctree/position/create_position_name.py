@@ -59,27 +59,28 @@ try:
                 flag = True
                 pre2 += 1
             else:
-                for key in postdct.keys():   
-                    if key in positions[0]:
-                        if u'总监' in positions[0] or u'主管' in positions[0]:
-                            result.append(postdct[key][2])
-                        elif u'经理' in positions[0] or u'主任' in positions[0]:
-                            result.append(postdct[key][1])
-                        else:
-                            result.append(postdct[key][0])
-                        flag = True
-                        post1 += 1
-                        break
-                    elif key in positions[1]:
-                        if u'总监' in positions[1] or u'主管' in positions[1]:
-                            result.append(postdct[key][2])
-                        elif u'经理' in positions[1] or u'主任' in positions[1]:
-                            result.append(postdct[key][1])
-                        else:
-                            result.append(postdct[key][0])
-                        flag = True
-                        post2 += 1
-                        break
+                flag = False
+#                 for key in postdct.keys():   
+#                     if key in positions[0]:
+#                         if u'总监' in positions[0] or u'主管' in positions[0]:
+#                             result.append(postdct[key][2])
+#                         elif u'经理' in positions[0] or u'主任' in positions[0]:
+#                             result.append(postdct[key][1])
+#                         else:
+#                             result.append(postdct[key][0])
+#                         flag = True
+#                         post1 += 1
+#                         break
+#                     elif key in positions[1]:
+#                         if u'总监' in positions[1] or u'主管' in positions[1]:
+#                             result.append(postdct[key][2])
+#                         elif u'经理' in positions[1] or u'主任' in positions[1]:
+#                             result.append(postdct[key][1])
+#                         else:
+#                             result.append(postdct[key][0])
+#                         flag = True
+#                         post2 += 1
+#                         break
                 if not flag:
                     if industryr.has_key(industrys[0]):
                         ratio1 = industryr[industrys[0]][1]

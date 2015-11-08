@@ -18,11 +18,11 @@ try:
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
     #sql = 'select userid from jobs_uinfotest'
-    majorsql = 'select userid, major from jobs_uinfo '
+    majorsql = 'select userid, shortmar from jobs_uinfotest '
     cur.execute(majorsql)
     majorlst = cur.fetchall()
     for major in majorlst:
-        sql = 'update workexperience set major = "%s" where userid = "%s"' % (major[1], major[0])
+        sql = 'update workexperiencetest set major = "%s" where userid = "%s"' % (major[1], major[0])
         cur.execute(sql)
     conn.commit()
     conn.close()
