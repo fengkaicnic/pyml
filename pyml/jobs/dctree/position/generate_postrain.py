@@ -7,6 +7,7 @@ import MySQLdb
 import codecs
 import time
 from jobs.utils import read_rst
+from jobs.utils import get_key_positionsingle
 reload(sys)
 sys.setdefaultencoding('utf8')
 import pdb
@@ -69,8 +70,8 @@ try:
         #userid.append(sizes[2][0])
         userid.append(sizes[0][1])
         userid.append(sizes[2][1])
-        userid.append(sizes[0][2])
-        userid.append(sizes[2][2])
+        userid.append(get_key_positionsingle(sizes[0][2]))
+        userid.append(get_key_positionsingle(sizes[2][2]))
         userid.append(sizes[1][2])
         userlst = map(str, userid)
         strs = ','.join(userlst) + '\n'

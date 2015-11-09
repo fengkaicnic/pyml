@@ -24,7 +24,7 @@ try:
                                         from jobs_uinfotest as jb left join workexperiencetest as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/pszyresult.csv', 'w+')
+    file = open('d:/jobs/dctree/newresults.csv', 'w+')
     useridlst = cur.fetchall()
     rsultlabel = utils.read_rst('result.txt')
     pdb.set_trace()
@@ -47,7 +47,7 @@ try:
         result.append(degreelst[i])
         result.append(sizeresult[i])
         result.append(salaryresult[i])
-        if posresult[i] == '':
+        if posresult[i] == 'test':
             result.append(u'销售经理\n')
             j += 1
         else:

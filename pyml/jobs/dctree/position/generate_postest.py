@@ -8,6 +8,7 @@ import codecs
 import time
 from jobs.utils import read_rst
 reload(sys)
+from jobs.utils import get_key_positionsingle
 sys.setdefaultencoding('utf8')
 import pdb
 start = time.clock()
@@ -68,8 +69,8 @@ try:
 #         userid.append(sizes[1][0])
         userid.append(sizes[0][1])
         userid.append(sizes[1][1])
-        userid.append(sizes[0][2])
-        userid.append(sizes[1][2])
+        userid.append(get_key_positionsingle(sizes[0][2]))
+        userid.append(get_key_positionsingle(sizes[1][2]))
         userlst = map(str, userid)
         strs = ','.join(userlst) + '\n'
         file.write(strs)

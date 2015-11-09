@@ -57,49 +57,48 @@ try:
                 flag = True
             else:
                 flag = False
-                pos_name = utils.get_key_position_old(postdct, positions)
-                if pos_name:
-                    result.append(pos_name)
-                    flag = True
-#                 for key in postdct.keys():   
-#                     if key in positions[0]:
-#                         if u'总监' in positions[0] or u'主管' in positions[0]:
-#                             result.append(postdct[key][2])
-#                         elif u'经理' in positions[0] or u'主任' in positions[0]:
-#                             result.append(postdct[key][1])
-#                         else:
-#                             result.append(postdct[key][0])
-#                         flag = True
-#                         post1 += 1
-#                         break
-#                     elif key in positions[1]:
-#                         if u'总监' in positions[1] or u'主管' in positions[1]:
-#                             result.append(postdct[key][2])
-#                         elif u'经理' in positions[1] or u'主任' in positions[1]:
-#                             result.append(postdct[key][1])
-#                         else:
-#                             result.append(postdct[key][0])
-#                         flag = True
-#                         post2 += 1
-#                         break
+#                 pos_name = utils.get_key_position_old(postdct, positions)
+#                 if pos_name:
+#                     result.append(pos_name)
+#                     flag = True
+                for key in postdct.keys():   
+                    if key in positions[0]:
+                        if u'总监' in positions[0] or u'主管' in positions[0]:
+                            result.append(postdct[key][2])
+                        elif u'经理' in positions[0] or u'主任' in positions[0]:
+                            result.append(postdct[key][1])
+                        else:
+                            result.append(postdct[key][0])
+                        flag = True
+                        break
+                    elif key in positions[1]:
+                        if u'总监' in positions[1] or u'主管' in positions[1]:
+                            result.append(postdct[key][2])
+                        elif u'经理' in positions[1] or u'主任' in positions[1]:
+                            result.append(postdct[key][1])
+                        else:
+                            result.append(postdct[key][0])
+                        flag = True
+                        break
                 if not flag:
-                    position = get_industry_position(industryr, industrys, position_dct, postdct)
-                    result.append(position)
-#                     if industryr.has_key(industrys[0]):
-#                         ratio1 = industryr[industrys[0]][1]
-#                     else:
-#                         ratio1 = 0
-#                     if industryr.has_key(industrys[1]):
-#                         ratio2 = industryr[industrys[1]][1]
-#                     else:
-#                         ratio2 = 0
-#                     if ratio1 >= ratio2:
-#                         if industryr.has_key(industrys[0]):
-#                             result.append(industryr[industrys[0]][0])
-#                         else:
-#                             result.append('test')
-#                     else:
-#                         result.append(industryr[industrys[1]][0])
+#                     result.append('test')
+#                     position = get_industry_position(industryr, industrys, position_dct, postdct)
+#                     result.append(position)
+                    if industryr.has_key(industrys[0]):
+                        ratio1 = industryr[industrys[0]][1]
+                    else:
+                        ratio1 = 0
+                    if industryr.has_key(industrys[1]):
+                        ratio2 = industryr[industrys[1]][1]
+                    else:
+                        ratio2 = 0
+                    if ratio1 >= ratio2:
+                        if industryr.has_key(industrys[0]):
+                            result.append(industryr[industrys[0]][0])
+                        else:
+                            result.append('test')
+                    else:
+                        result.append(industryr[industrys[1]][0])
             flag = False
             positions = [position[0]]
             industrys = [position[1]]
