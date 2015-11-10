@@ -11,6 +11,7 @@ import types
 start = time.clock()
 
 def get_labels(train_file, ind):
+    #pdb.set_trace()
     labels = []
     for index,line in enumerate(open(train_file,'rU').readlines()):
         label = line.strip().split(',')[ind]
@@ -32,7 +33,7 @@ def format_data(dataset_file):
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length�����೤�ȣ���sepal width�������ȣ���petal length�����곤�ȣ���petal width�������ȣ�
-    features = ['age','bstart_year','gender','major','size1','size2']
+    features = ['age','bstart_year','gender','major','salary1','salary2']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
@@ -264,11 +265,11 @@ def get_means(train_dataset):
 
 def run(train_file,test_file,weight):
     #pdb.set_trace()
-    labels = get_labels(train_file,6)
+    labels = get_labels(train_file, 6)
     train_dataset,train_features = format_data(train_file)
     decesion_tree = build_tree(train_dataset,labels,train_features,weight)
     print 'decesion_tree :',decesion_tree
-    store_tree(decesion_tree,'size_tree')
+    store_tree(decesion_tree,'salary_tree')
     #mean_values = get_means(train_dataset)
     #test_dataset,test_features = format_data(test_file)
     #n = len(test_dataset)
@@ -280,8 +281,8 @@ def run(train_file,test_file,weight):
     #        correct += 1
     #print "׼ȷ��: ",correct/float(n)
 
-def test(train_file, test_file, rstname):
-    decesion_tree = read_tree('size_tree')
+def test(train_file,test_file,rstname):
+    decesion_tree = read_tree('salary_tree')
     test_dataset,test_features = format_data(test_file)
     result = []
     for data in test_dataset:
@@ -294,8 +295,8 @@ if __name__ == '__main__':
     #if len(sys.argv) != 3:
     #    print "please use: python decision.py train_file test_file"
     #    sys.exit()
-    train_file = 'd:/jobs/dctree/size/train.csv'
-    test_file = 'd:/jobs/dctree/size/test.csv'
+    train_file = 'd:/jobs/dctree/sal-train.csv'
+    test_file = 'd:/jobs/dctree/sal-test.csv'
     run(train_file,test_file)
     #test(test_file)
 end = time.clock()
