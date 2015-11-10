@@ -2,6 +2,7 @@
 import pickle
 import sys
 reload(sys)
+import pdb
 sys.setdefaultencoding('utf8')
 def store_rst(decesion_tree,filename):
 
@@ -101,3 +102,23 @@ def get_industry_position(industryr, industrys, position_dct, postdct):
             if position:
                 return position
     return 'test'
+
+def get_labels(train_file, ind):
+
+    labels = []
+    for index,line in enumerate(open(train_file,'rU').readlines()):
+        print index
+        label = line.strip().split(',')[ind]
+        labels.append(label)
+    return labels
+
+def format_data(dataset_file):
+    dataset = []
+    for index,line in enumerate(open(dataset_file,'rU').readlines()):
+        line = line.strip()
+        fea_and_label = line.split(',')
+        dataset.append(fea_and_label)
+    #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
+    #sepal length�����೤�ȣ���sepal width�������ȣ���petal length�����곤�ȣ���petal width�������ȣ�
+    features = ['degree', 'age','start_age','bstart_year','gender','start_salary','start_size','major']
+    return dataset,features
