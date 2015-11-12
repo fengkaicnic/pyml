@@ -46,7 +46,7 @@ try:
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
     file = open('d:/jobs/dctree/position/train.csv', 'w+')
-    sql = 'select userid, shortmar from jobs_uinfo'
+    sql = 'select userid, age, bstart_year, gender, shortmar from jobs_uinfo'
     cur.execute(sql)
     userdlst = cur.fetchall()
     sqlze = 'select wk.salary, wk.industry, wk.position_name from work_size as wk'
@@ -60,12 +60,20 @@ try:
         i += 3
         if not position_dct.has_key(sizes[1][2]):
             continue
-        print userd
+#         print userd
         userid = []
-        if major_dct.has_key(userd[1]):
-            userid.append(userd[1])
-        else:
-            userid.append('None')
+        userd = list(userd)
+        if int(userd[1]) <= 20:
+            userd[1] = '18'
+        elif int(userd[1]) >= 60:
+            userd[1] = '60'
+        userid.append(userd[1])
+        userid.append(userd[2])
+        userid.append(userd[3])
+#         if major_dct.has_key(userd[1]):
+#             userid.append(userd[1])
+#         else:
+#             userid.append('None')
         
         #userid.append(sizes[0][1])
         #userid.append(sizes[2][1])

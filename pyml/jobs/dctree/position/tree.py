@@ -32,7 +32,8 @@ def format_data(dataset_file):
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length�����೤�ȣ���sepal width�������ȣ���petal length�����곤�ȣ���petal width�������ȣ�
-    features = ['industry1', 'industry2', 'pos1', 'pos2']
+    features = ['age', 'bstart_year', 'gender', 'industry1', 'industry2', 'pos1', 'pos2']
+    #features = ['industry1', 'industry2', 'pos1', 'pos2']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
@@ -249,7 +250,7 @@ def classify_t(decesion_tree, features, test_data, mean_values=None):
     first_fea = decesion_tree.keys()[0]
     fea_index = features.index(first_fea)
     if not decesion_tree[first_fea].has_key(test_data[fea_index]):
-        return 1
+        return 'test'
     if type(decesion_tree[first_fea][test_data[fea_index]]) is types.DictType:
             return classify_t(decesion_tree[first_fea][test_data[fea_index]], features, test_data)
     else:
@@ -266,7 +267,7 @@ def get_means(train_dataset):
 
 def run(train_file,test_file,weight):
     #pdb.set_trace()
-    labels = get_labels(train_file,4)
+    labels = get_labels(train_file,7)
     train_dataset,train_features = format_data(train_file)
     decesion_tree = build_tree(train_dataset,labels,train_features,weight)
     print 'decesion_tree :',decesion_tree
@@ -298,7 +299,7 @@ if __name__ == '__main__':
     #    sys.exit()
     train_file = 'd:/jobs/dctree/position/train.csv'
     test_file = 'd:/jobs/dctree/position/test.csv'
-    run(train_file,test_file)
-    #test(test_file)
+    #run(train_file, test_file, 0.35)
+    test(train_file, test_file, 'position.txt')
 end = time.clock()
 print (end - start)

@@ -46,10 +46,10 @@ try:
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
     file = open('d:/jobs/dctree/position/test.csv', 'w+')
-    sql = 'select userid, shortmar from jobs_uinfotest'
+    sql = 'select userid, age, bstart_year, gender, shortmar from jobs_uinfotest '
     cur.execute(sql)
     userdlst = cur.fetchall()
-    sqlze = 'select wk.salary, wk.industry, wk.position_name from work_sizetest as wk'
+    sqlze = 'select wk.salary, wk.industry, wk.position_name from work_sizetest as wk '
     position_dct = get_position_meta()
     major_dct = read_rst('sharemajor')
     cur.execute(sqlze)
@@ -58,13 +58,23 @@ try:
     for userd in userdlst:
         sizes = sizelst[i:i+2]
         i += 2
+#         if not position_dct.has_key(sizes[1][2]):
+#             continue
         print userd
         userid = []
-        if major_dct.has_key(userd[1]):
-            userid.append(userd[1])
-        else:
-            userid.append('None')
-        
+        userd = list(userd)
+        if int(userd[1]) <= 20:
+            userd[1] = '18'
+        elif int(userd[1]) >= 60:
+            userd[1] = '60'
+        userid.append(userd[1])
+        userid.append(userd[2])
+        userid.append(userd[3])
+#         if major_dct.has_key(userd[1]):
+#             userid.append(userd[1])
+#         else:
+#             userid.append('None')
+#         
         #userid.append(sizes[0][1])
         #userid.append(sizes[2][1])
         #userid.append(sizes[0][0])

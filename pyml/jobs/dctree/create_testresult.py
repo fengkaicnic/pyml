@@ -47,9 +47,9 @@ try:
 #         result.append(degreelst[i])
 #         result.append(sizeresult[i])
 #         result.append(salaryresult[i])
-        result.append(8)
-        result.append(8)
-        result.append(8)
+        result.append(1)
+        result.append(1)
+        result.append(1)
         if posresult[i] == 'test':
             result.append(u'销售经理\n')
             j += 1

@@ -1,4 +1,4 @@
-#coding:gb2312
+#coding:utf8
 import os
 import json
 import sys
@@ -48,25 +48,26 @@ try:
         result.append(sizeresult[i])
         result.append(salaryresult[i])
         if posresult[i] == 'test':
-            result.append(u'销售经理\n')
+            result.append(u'閿�鍞粡鐞哱n')
             j += 1
         else:
-            result.append(posresult[i]+'\n')
+            print posresult[i]
+            result.append(str(posresult[i])+'\n')
         #if rsultlabel[i] == '0':
         #    result.append('0')
         #    result.append(wsresult[i][0])
         #    result.append(wsresult[i][1])
-        #    result.append(u'销售经理\n')
+        #    result.append(u'锟斤拷锟桔撅拷锟斤拷\n')
         #if rsultlabel[i] == '1':
         #    result.append('1')
         #    result.append(wsresult[i][0])
         #    result.append(wsresult[i][1])
-        #    result.append(u'销售经理\n')
+        #    result.append(u'锟斤拷锟桔撅拷锟斤拷\n')
         #if rsultlabel[i] == '2':
         #    result.append('2')
         #    result.append(wsresult[i][0])
         #    result.append(wsresult[i][1])
-        #    result.append(u'项目经理\n')
+        #    result.append(u'锟斤拷目锟斤拷锟斤拷\n')
   #      print userid[0] 
         result = map(str, result)
         strs = ','.join(result)
