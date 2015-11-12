@@ -18,7 +18,7 @@ try:
     cur.execute('set character_set_database=utf8')
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
-    sql = 'select jb.age,jb.bstart_year,jb.gender,jb.major \
+    sql = 'select jb.age,jb.gender,jb.major \
                                         from jobs_uinfo as jb left join workexperience as wk on \
                                         jb.userid = wk.userid and wk.num = 1 limit 60000'
     cur.execute(sql)
@@ -48,22 +48,23 @@ try:
     #file.write('age,start_age,bstart_year,gender,major,size1,size2,size\n')
 
     i = 0
+    pdb.set_trace()
     for userid in useridlst:
         sizes = sizelst[i:i+3]
         i += 3
         print userid
         userid = list(userid)
-        if int(userid[1]) <= 20:
-            userid[1] = '20'
-        elif int(userid[1]) >= 60:
-            userid[1] = '60'
-        if degreer0dct.has_key(userid[3]):
+        if int(userid[0]) <= 20:
+            userid[0] = '20'
+        elif int(userid[0]) >= 60:
+            userid[0] = '60'
+        if degreer0dct.has_key(userid[2]):
             userid.pop(-1)
             userid.append(0)
-        elif degreer1dct.has_key(userid[3]):
+        elif degreer1dct.has_key(userid[2]):
             userid.pop(-1)
             userid.append(1)
-        elif degreer2dct.has_key(userid[3]):
+        elif degreer2dct.has_key(userid[2]):
             userid.pop(-1)
             userid.append(2)
         else:

@@ -32,7 +32,7 @@ def format_data(dataset_file):
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length�����೤�ȣ���sepal width�������ȣ���petal length�����곤�ȣ���petal width�������ȣ�
-    features = ['age','bstart_year','gender','major','size1','size2']
+    features = ['age','gender','major','size1','size2']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
@@ -264,7 +264,7 @@ def get_means(train_dataset):
 
 def run(train_file,test_file,weight):
     #pdb.set_trace()
-    labels = get_labels(train_file,6)
+    labels = get_labels(train_file,5)
     train_dataset,train_features = format_data(train_file)
     decesion_tree = build_tree(train_dataset,labels,train_features,weight)
     print 'decesion_tree :',decesion_tree

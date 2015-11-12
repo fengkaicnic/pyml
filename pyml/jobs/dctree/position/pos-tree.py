@@ -33,7 +33,7 @@ def format_data(dataset_file):
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length�����೤�ȣ���sepal width�������ȣ���petal length�����곤�ȣ���petal width�������ȣ�
-    features = ['industry1','industry2','pos1','pos2']
+    features = ['major', 'industry1', 'industry2', 'pos1', 'pos2']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
@@ -198,7 +198,7 @@ def build_tree(dataset,labels,features):
     split_feature = features[split_feature_index]
     decesion_tree = {split_feature:{}}
     #��������������Ϣ�����С����ֵ,�򷵻���ݼ��г��ִ�������label
-    if cal_info_gain_ratio(dataset, split_feature_index, features) < 0.1:
+    if cal_info_gain_ratio(dataset, split_feature_index, features) < 0.05:
         return most_occur_label(labels)
     split_feature_dct = {}
     for data in dataset:
@@ -298,8 +298,8 @@ if __name__ == '__main__':
     #if len(sys.argv) != 3:
     #    print "please use: python decision.py train_file test_file"
     #    sys.exit()
-    train_file = 'd:/jobs/dctree/pos-train.csv'
-    test_file = 'd:/jobs/dctree/pos-test.csv'
+    train_file = 'd:/jobs/dctree/position/train.csv'
+    test_file = 'd:/jobs/dctree/position/test.csv'
     #run(train_file,test_file)
     test(test_file)
 end = time.clock()

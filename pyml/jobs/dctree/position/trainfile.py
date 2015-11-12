@@ -45,34 +45,37 @@ try:
     cur.execute('set character_set_database=utf8')
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
-    file = open('d:/jobs/dctree/position/test.csv', 'w+')
-    sql = 'select userid, shortmar from jobs_uinfotest'
+    file = open('d:/jobs/dctree/position/train.csv', 'w+')
+    sql = 'select userid, shortmar from jobs_uinfo limit 50000'
     cur.execute(sql)
     userdlst = cur.fetchall()
-    sqlze = 'select wk.salary, wk.industry, wk.position_name from work_sizetest as wk'
+    sqlze = 'select wk.salary, wk.industry, wk.position_name from work_size as wk limit 150000'
     position_dct = get_position_meta()
     major_dct = read_rst('sharemajor')
     cur.execute(sqlze)
     sizelst = cur.fetchall()
     i = 0
     for userd in userdlst:
-        sizes = sizelst[i:i+2]
-        i += 2
+        sizes = sizelst[i:i+3]
+        i += 3
+        if not position_dct.has_key(sizes[1][2]):
+            continue
         print userd
         userid = []
-        if major_dct.has_key(userd[1]):
-            userid.append(userd[1])
-        else:
-            userid.append('None')
+#         if major_dct.has_key(userd[1]):
+#             userid.append(userd[1])
+#         else:
+#             userid.append('None')
         
         #userid.append(sizes[0][1])
         #userid.append(sizes[2][1])
         #userid.append(sizes[0][0])
         #userid.append(sizes[2][0])
         userid.append(sizes[0][1])
-        userid.append(sizes[1][1])
+        userid.append(sizes[2][1])
         userid.append(get_key_positionsingle(postpropertydct, position_dct, sizes[0][2]))
-        userid.append(get_key_positionsingle(postpropertydct, position_dct, sizes[1][2]))
+        userid.append(get_key_positionsingle(postpropertydct, position_dct, sizes[2][2]))
+        userid.append(sizes[1][2])
         userlst = map(str, userid)
         strs = ','.join(userlst) + '\n'
         file.write(strs)

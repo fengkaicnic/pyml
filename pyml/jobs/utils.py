@@ -15,7 +15,10 @@ def read_rst(filename):
     reader = open(filename,'rU')
     return pickle.load(reader)
 
-def get_key_positionsingle(postdct, position): 
+def get_key_positionsingle(postdct, position_dct, position): 
+    if position_dct.has_key(position):
+        return position
+    
     for key in postdct.keys():   
         if key in position:
             if u'总监' in position or u'主管' in position:

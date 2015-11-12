@@ -9,6 +9,7 @@ import time
 from jobs.utils import read_rst
 from jobs.utils import get_key_positionsingle
 reload(sys)
+from jobs.majorposition import get_position
 sys.setdefaultencoding('utf8')
 import pdb
 start = time.clock()
@@ -33,6 +34,8 @@ def get_share_mar():
             major_dct[uline] = '1'
     return major_dct
 
+postpropertydct = get_position.get_pos()
+
 try:
     
     conn = MySQLdb.connect(host='localhost', user='root', passwd='123456', db='jobs', use_unicode=True, charset='utf8')
@@ -42,7 +45,7 @@ try:
     cur.execute('set character_set_database=utf8')
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
-    file = open('d:/jobs/dctree/pos-train.csv', 'w+')
+    file = open('d:/jobs/dctree/position/train.csv', 'w+')
     sql = 'select userid, shortmar from jobs_uinfo'
     cur.execute(sql)
     userdlst = cur.fetchall()
@@ -59,10 +62,10 @@ try:
             continue
         print userd
         userid = []
-#         if major_dct.has_key(userd[1]):
-#             userid.append(userd[1])
-#         else:
-#             userid.append('None')
+        if major_dct.has_key(userd[1]):
+            userid.append(userd[1])
+        else:
+            userid.append('None')
         
         #userid.append(sizes[0][1])
         #userid.append(sizes[2][1])
@@ -70,8 +73,8 @@ try:
         #userid.append(sizes[2][0])
         userid.append(sizes[0][1])
         userid.append(sizes[2][1])
-        userid.append(get_key_positionsingle(sizes[0][2]))
-        userid.append(get_key_positionsingle(sizes[2][2]))
+        userid.append(get_key_positionsingle(postpropertydct, position_dct, sizes[0][2]))
+        userid.append(get_key_positionsingle(postpropertydct, position_dct, sizes[2][2]))
         userid.append(sizes[1][2])
         userlst = map(str, userid)
         strs = ','.join(userlst) + '\n'

@@ -198,7 +198,7 @@ def build_tree(dataset,labels,features):
     split_feature = features[split_feature_index]
     decesion_tree = {split_feature:{}}
     #��������������Ϣ�����С����ֵ,�򷵻���ݼ��г��ִ�������label
-    if cal_info_gain_ratio(dataset, split_feature_index, features) < 0.035:
+    if cal_info_gain_ratio(dataset, split_feature_index, features) < 0.058:
         return most_occur_label(labels)
     split_feature_dct = {}
     for data in dataset:
@@ -300,7 +300,7 @@ if __name__ == '__main__':
     #    sys.exit()
     train_file = 'd:/jobs/dctree/ss-train.csv'
     test_file = 'd:/jobs/dctree/ss-test.csv'
-    run(train_file,test_file)
-    #test(test_file)
+    #run(train_file,test_file)
+    test(test_file)
 end = time.clock()
 print (end - start)

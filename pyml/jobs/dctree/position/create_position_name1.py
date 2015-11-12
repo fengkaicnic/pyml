@@ -43,7 +43,6 @@ try:
     flag = False
     i = 0
     for position in positionlst:
-        print i 
         i += 1
         if len(positions) < 2:
             positions.append(position[0])
@@ -81,6 +80,7 @@ try:
                         flag = True
                         break
                 if not flag:
+                    print positions[0]
 #                     result.append('test')
 #                     position = get_industry_position(industryr, industrys, position_dct, postdct)
 #                     result.append(position)

@@ -32,7 +32,7 @@ def format_data(dataset_file):
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length�����೤�ȣ���sepal width�������ȣ���petal length�����곤�ȣ���petal width�������ȣ�
-    features = ['age','gender','major','size1','size2']
+    features = ['industry1', 'industry2', 'pos1', 'pos2']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
@@ -58,8 +58,6 @@ def cal_entropy(dataset, index):
 
     n = len(dataset)    
     label_count = {}
-    
-    #pdb.set_trace()
     for data in dataset:
         label = data[index]
         if label_count.has_key(label):
@@ -246,7 +244,7 @@ def classify(decesion_tree,features,test_data,mean_values):
             return sub_tree
 
 def classify_t(decesion_tree, features, test_data, mean_values=None):
-    if type(decesion_tree) is not types.DictType:
+    if type(decesion_tree) is not types.DictionaryType:
         return decesion_tree
     first_fea = decesion_tree.keys()[0]
     fea_index = features.index(first_fea)
@@ -268,11 +266,11 @@ def get_means(train_dataset):
 
 def run(train_file,test_file,weight):
     #pdb.set_trace()
-    labels = get_labels(train_file,5)
+    labels = get_labels(train_file,4)
     train_dataset,train_features = format_data(train_file)
     decesion_tree = build_tree(train_dataset,labels,train_features,weight)
     print 'decesion_tree :',decesion_tree
-    store_tree(decesion_tree,'size_tree')
+    store_tree(decesion_tree,'position_tree')
     #mean_values = get_means(train_dataset)
     #test_dataset,test_features = format_data(test_file)
     #n = len(test_dataset)
@@ -283,23 +281,9 @@ def run(train_file,test_file,weight):
     #    if label == test_data[-1]:
     #        correct += 1
     #print "׼ȷ��: ",correct/float(n)
-    
-def rand(train_set, features, labels, weight):
-    #pdb.set_trace()
-    decesion_tree = build_tree(train_set, labels, features, weight)
-    #print 'decesion_tree :',decesion_tree
-    return decesion_tree
-    
-def rand_test(test_dataset, test_features, decesion_tree):
-    result = []
-    for data in test_dataset:
-        label = classify_t(decesion_tree, test_features, data)
-        result.append(label)
-    return result
-
 
 def test(train_file, test_file, rstname):
-    decesion_tree = read_tree('size_tree')
+    decesion_tree = read_tree('position_tree')
     test_dataset,test_features = format_data(test_file)
     result = []
     for data in test_dataset:
@@ -312,8 +296,8 @@ if __name__ == '__main__':
     #if len(sys.argv) != 3:
     #    print "please use: python decision.py train_file test_file"
     #    sys.exit()
-    train_file = 'd:/jobs/dctree/size/train.csv'
-    test_file = 'd:/jobs/dctree/size/test.csv'
+    train_file = 'd:/jobs/dctree/position/train.csv'
+    test_file = 'd:/jobs/dctree/position/test.csv'
     run(train_file,test_file)
     #test(test_file)
 end = time.clock()
