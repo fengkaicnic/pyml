@@ -283,7 +283,7 @@ def run(train_file,test_file):
     #print "׼ȷ��: ",correct/float(n)
 
 def test(test_file):
-    decesion_tree = read_tree('size_tree')
+    decesion_tree = read_tree('prun-tree')
     test_dataset,test_features = format_data(test_file)
     pdb.set_trace()
     result = []
