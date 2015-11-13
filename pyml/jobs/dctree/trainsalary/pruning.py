@@ -64,19 +64,20 @@ def lst_tdct(prunlst, prundct):
 def prun(tree_dct, features, dataset, prunlst = None):
     if prunlst is None:
         prunlst = []
-    prundct = {}
-    
+#     prundct = {}
     for key in tree_dct.iterkeys():
         if type(tree_dct[key]) is types.DictionaryType:
             prunlst.append(key)
             tree_dct[key] = prun(tree_dct[key], features, dataset, prunlst)
-            print prunlst
-            print prunlst.pop()
+#             print prunlst
+            prunlst.pop()
         else:
             continue
 #     pdb.set_trace()
-    prundct = lst_tdct(copy.deepcopy(prunlst), prundct)
-
+    if prunlst[-1] in features:
+        prunlst.pop()
+    prundct = lst_tdct(copy.deepcopy(prunlst), {})
+    
     testdata = []
     if len(prundct) != 0:
         for data in dataset:
@@ -85,7 +86,9 @@ def prun(tree_dct, features, dataset, prunlst = None):
                 testdata.append(testd)
     else:
         testdata = dataset
-
+#     pdb.set_trace()
+    print prundct
+    print len(testdata)
     labels = get_tlabels(testdata)
     label_pre, label = label_error(labels)
     
