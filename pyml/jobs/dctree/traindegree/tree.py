@@ -11,7 +11,7 @@ start = time.clock()
 
 def get_labels(train_file):
     '''
-    ·µ»ØËùÓÐÊý¾Ý¼¯labels(ÁÐ±í)
+    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½labels(ï¿½Ð±ï¿½)
     '''
     labels = []
     for index,line in enumerate(open(train_file,'rU').readlines()):
@@ -27,7 +27,7 @@ def get_tlabels(train_data):
 
 def format_data(dataset_file):
     '''
-    ·µ»Ødataset(ÁÐ±í¼¯ºÏ)ºÍfeatures(ÁÐ±í)
+    ï¿½ï¿½ï¿½ï¿½dataset(ï¿½Ð±?ï¿½ï¿½)ï¿½ï¿½features(ï¿½Ð±ï¿½)
     '''
     dataset = []
     for index,line in enumerate(open(dataset_file,'rU').readlines()):
@@ -35,17 +35,17 @@ def format_data(dataset_file):
         fea_and_label = line.split(',')
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
-    #sepal length£¨»¨Ýà³¤¶È£©¡¢sepal width£¨»¨Ýà¿í¶È£©¡¢petal length£¨»¨°ê³¤¶È£©¡¢petal width£¨»¨°ê¿í¶È£©
+    #sepal lengthï¿½ï¿½ï¿½ï¿½ï¿½à³¤ï¿½È£ï¿½ï¿½ï¿½sepal widthï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½ï¿½ï¿½petal lengthï¿½ï¿½ï¿½ï¿½ï¿½ê³¤ï¿½È£ï¿½ï¿½ï¿½petal widthï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½
     features = ['degree', 'age','start_age','bstart_year','gender','start_salary','start_size','major']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
     '''
-    °´Ö¸¶¨feature»®·ÖÊý¾Ý¼¯£¬·µ»ØËÄ¸öÁÐ±í:
-    @dataset_less:Ö¸¶¨ÌØÕ÷ÏîµÄÊôÐÔÖµ£¼=¸ÃÌØÕ÷ÏîÆ½¾ùÖµµÄ×ÓÊý¾Ý¼¯
-    @dataset_greater:Ö¸¶¨ÌØÕ÷ÏîµÄÊôÐÔÖµ£¾¸ÃÌØÕ÷ÏîÆ½¾ùÖµµÄ×ÓÊý¾Ý¼¯
-    @label_less:°´Ö¸¶¨ÌØÕ÷ÏîµÄÊôÐÔÖµ£¼=¸ÃÌØÕ÷ÏîÆ½¾ùÖµÇÐ¸îºó×Ó±êÇ©¼¯
-    @label_greater:°´Ö¸¶¨ÌØÕ÷ÏîµÄÊôÐÔÖµ£¾¸ÃÌØÕ÷ÏîÆ½¾ùÖµÇÐ¸îºó×Ó±êÇ©¼¯
+    ï¿½ï¿½Ö¸ï¿½ï¿½featureï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½Ð±ï¿½:
+    @dataset_less:Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½=ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½
+    @dataset_greater:Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½
+    @label_less:ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½=ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½Öµï¿½Ð¸ï¿½ï¿½ï¿½Ó±ï¿½Ç©ï¿½ï¿½
+    @label_greater:ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½Öµï¿½Ð¸ï¿½ï¿½ï¿½Ó±ï¿½Ç©ï¿½ï¿½
     '''
     dataset_less = []
     dataset_greater = []
@@ -54,7 +54,7 @@ def split_dataset(dataset,feature_index,labels):
     datasets = []
     for data in dataset:
         datasets.append(data[0:4])
-    mean_value = mean(datasets,axis = 0)[feature_index]   #Êý¾Ý¼¯ÔÚ¸ÃÌØÕ÷ÏîµÄËùÓÐÈ¡ÖµµÄÆ½¾ùÖµ
+    mean_value = mean(datasets,axis = 0)[feature_index]   #ï¿½ï¿½Ý¼ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡Öµï¿½ï¿½Æ½ï¿½ï¿½Öµ
     for data in dataset:
         if data[feature_index] > mean_value:
             dataset_greater.append(data)
@@ -66,7 +66,7 @@ def split_dataset(dataset,feature_index,labels):
 
 def cal_entropy(dataset):
     '''
-    ¼ÆËãÊý¾Ý¼¯µÄìØ´óÐ¡
+    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½ï¿½Ø´ï¿½Ð¡
     '''
     n = len(dataset)    
     label_count = {}
@@ -132,7 +132,7 @@ def cal_info_gain_new(dataset, feature_index, base_entropy):
     
 def cal_info_gain(dataset,feature_index,base_entropy):
     '''
-    ¼ÆËãÖ¸¶¨ÌØÕ÷¶ÔÊý¾Ý¼¯µÄÐÅÏ¢ÔöÒæÖµ
+    ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½Öµ
     g(D,F) = H(D)-H(D/F) = entropy(dataset) - sum{1,k}(len(sub_dataset)/len(dataset))*entropy(sub_dataset)
     @base_entropy = H(D)
     '''
@@ -140,7 +140,7 @@ def cal_info_gain(dataset,feature_index,base_entropy):
     for data in dataset:
         datasets.append(data[0:6])
     #print datasets
-    mean_value = mean(datasets,axis = 0)[feature_index]    #¼ÆËãÖ¸¶¨ÌØÕ÷µÄËùÓÐÊý¾Ý¼¯ÖµµÄÆ½¾ùÖµ
+    mean_value = mean(datasets,axis = 0)[feature_index]    #ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½Öµï¿½ï¿½Æ½ï¿½ï¿½Öµ
     #print mean_value
     dataset_less = []
     dataset_greater = []
@@ -149,14 +149,14 @@ def cal_info_gain(dataset,feature_index,base_entropy):
             dataset_greater.append(data)
         else:
             dataset_less.append(data)
-    #Ìõ¼þìØ H(D/F)
+    #ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ H(D/F)
     condition_entropy = float(len(dataset_less))/len(dataset)*cal_entropy(dataset_less) + float(len(dataset_greater))/len(dataset)*cal_entropy(dataset_greater)
     #print 'info_gain:',base_entropy - condition_entropy
     return base_entropy - condition_entropy 
 
 def cal_info_gain_ratio(dataset, feature_index, features):
     '''
-    ¼ÆËãÐÅÏ¢ÔöÒæ±È  gr(D,F) = g(D,F)/H(D)
+    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½  gr(D,F) = g(D,F)/H(D)
     '''    
     base_entropy = cal_entropy_f(dataset, 0)
     feature_entropy = cal_entropy_f(dataset, feature_index)
@@ -174,7 +174,7 @@ def cal_info_gain_ratio(dataset, feature_index, features):
     
 def choose_best_fea_to_split(dataset,features):
     '''
-    ¸ù¾ÝÃ¿¸öÌØÕ÷µÄÐÅÏ¢ÔöÒæ±È´óÐ¡£¬·µ»Ø×î¼Ñ»®·ÖÊý¾Ý¼¯µÄÌØÕ÷Ë÷Òý
+    ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½È´ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ»ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     '''
     #base_entropy = cal_entropy(dataset)
     split_fea_index = -1
@@ -192,7 +192,7 @@ def choose_best_fea_to_split(dataset,features):
 
 def most_occur_label(labels):
     '''
-    ·µ»ØÊý¾Ý¼¯ÖÐ³öÏÖ´ÎÊý×î¶àµÄlabel
+    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½Ð³ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½label
     '''
     label_count = {}
     for label in labels:
@@ -205,28 +205,28 @@ def most_occur_label(labels):
 
 def build_tree(dataset,labels,features):
     '''
-           ´´½¨¾ö²ßÊ÷
-    @dataset:ÑµÁ·Êý¾Ý¼¯
-    @labels:Êý¾Ý¼¯ÖÐ°üº¬µÄËùÓÐlabel(¿ÉÖØ¸´)
-    @features:¿É½øÐÐ»®·ÖµÄÌØÕ÷¼¯
+           ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    @dataset:Ñµï¿½ï¿½ï¿½ï¿½Ý¼ï¿½
+    @labels:ï¿½ï¿½Ý¼ï¿½ï¿½Ð°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½label(ï¿½ï¿½ï¿½Ø¸ï¿½)
+    @features:ï¿½É½ï¿½ï¿½Ð»ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     '''
-    #ÈôÊý¾Ý¼¯Îª¿Õ,·µ»ØNULL
+    #ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½Îªï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½NULL
     if len(labels) == 0:
         return 'NULL'
-    #ÈôÊý¾Ý¼¯ÖÐÖ»ÓÐÒ»ÖÖlabel,·µ»Ø¸Ãlabel
+    #ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ò»ï¿½ï¿½label,ï¿½ï¿½ï¿½Ø¸ï¿½label
     if len(labels) == len(labels[0]):
         return labels[0]
-    #ÈôÃ»ÓÐ¿É»®·ÖµÄÌØÕ÷¼¯,Ôò·µ»ØÊý¾Ý¼¯ÖÐ³öÏÖ´ÎÊý×î¶àµÄlabel
+    #ï¿½ï¿½Ã»ï¿½Ð¿É»ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ò·µ»ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½Ð³ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½label
     if len(features) == 0:
         return most_occur_label(labels)
-    #ÈôÊý¾Ý¼¯Ç÷ÓÚÎÈ¶¨£¬Ôò·µ»ØÊý¾Ý¼¯ÖÐ³öÏÖ´ÎÊý×î¶àµÄlabel
+    #ï¿½ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¶ï¿½ï¿½ï¿½ï¿½ò·µ»ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½Ð³ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½label
     if cal_entropy(dataset) == 0:
         return most_occur_label(labels)
     split_feature_index = choose_best_fea_to_split(dataset,features)
     split_feature_index = split_feature_index 
     split_feature = features[split_feature_index]
     decesion_tree = {split_feature:{}}
-    #Èô»®·ÖÌØÕ÷µÄÐÅÏ¢ÔöÒæ±ÈÐ¡ÓÚãÐÖµ,Ôò·µ»ØÊý¾Ý¼¯ÖÐ³öÏÖ´ÎÊý×î¶àµÄlabel
+    #ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½Öµ,ï¿½ò·µ»ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½Ð³ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½label
     if cal_info_gain_ratio(dataset, split_feature_index, features) < 0.025:
         return most_occur_label(labels)
     split_feature_dct = {}
@@ -246,7 +246,7 @@ def build_tree(dataset,labels,features):
 
 def store_tree(decesion_tree,filename):
     '''
-    °Ñ¾ö²ßÊ÷ÒÔ¶þ½øÖÆ¸ñÊ½Ð´ÈëÎÄ¼þ
+    ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Æ¸ï¿½Ê½Ð´ï¿½ï¿½ï¿½Ä¼ï¿½
     '''
     import pickle
     writer = open(filename,'w')
@@ -255,7 +255,7 @@ def store_tree(decesion_tree,filename):
 
 def read_tree(filename):
     '''
-    ´ÓÎÄ¼þÖÐ¶ÁÈ¡¾ö²ßÊ÷£¬·µ»Ø¾ö²ßÊ÷
+    ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ð¶ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½ï¿½ï¿½
     '''
     import pickle
     reader = open(filename,'rU')
@@ -263,7 +263,7 @@ def read_tree(filename):
 
 def classify(decesion_tree,features,test_data,mean_values):
     '''
-    ¶Ô²âÊÔÊý¾Ý½øÐÐ·ÖÀà, decesion_tree : {'petal_length': {'<=': {'petal_width': {'<=': 'Iris-setosa', '>': {'sepal_width': {'<=': 'Iris-versicolor', '>': {'sepal_length': {'<=': 'Iris-setosa', '>': 'Iris-versicolor'}}}}}}, '>': 'Iris-virginica'}} 
+    ï¿½Ô²ï¿½ï¿½ï¿½ï¿½ï¿½Ý½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½, decesion_tree : {'petal_length': {'<=': {'petal_width': {'<=': 'Iris-setosa', '>': {'sepal_width': {'<=': 'Iris-versicolor', '>': {'sepal_length': {'<=': 'Iris-setosa', '>': 'Iris-versicolor'}}}}}}, '>': 'Iris-virginica'}} 
     '''
     first_fea = decesion_tree.keys()[0]
     fea_index = features.index(first_fea)
@@ -293,22 +293,22 @@ def classify_t(decesion_tree, features, test_data, mean_values=None):
         
 def get_means(train_dataset):
     '''
-    »ñÈ¡ÑµÁ·Êý¾Ý¼¯¸÷¸öÊôÐÔµÄÊý¾ÝÆ½¾ùÖµ
+    ï¿½ï¿½È¡Ñµï¿½ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôµï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½Öµ
     '''
     dataset = []
     for data in train_dataset:
         dataset.append(data[0:4])
-    mean_values = mean(dataset,axis = 0)   #Êý¾Ý¼¯ÔÚ¸ÃÌØÕ÷ÏîµÄËùÓÐÈ¡ÖµµÄÆ½¾ùÖµ
+    mean_values = mean(dataset,axis = 0)   #ï¿½ï¿½Ý¼ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡Öµï¿½ï¿½Æ½ï¿½ï¿½Öµ
     return mean_values
 
 def run(train_file,test_file):
     '''
-    Ö÷º¯Êý
+    ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     '''
     #pdb.set_trace()
     labels = get_labels(train_file)
     train_dataset,train_features = format_data(train_file)
-    pdb.set_trace()
+#     pdb.set_trace()
     decesion_tree = build_tree(train_dataset,labels,train_features)
     print 'decesion_tree :',decesion_tree
     store_tree(decesion_tree,'major_decesion_tree')
@@ -321,7 +321,7 @@ def run(train_file,test_file):
     #    #print 'classify_label  correct_label:',label,test_data[-1]
     #    if label == test_data[-1]:
     #        correct += 1
-    #print "×¼È·ÂÊ: ",correct/float(n)
+    #print "×¼È·ï¿½ï¿½: ",correct/float(n)
 
 def test(test_file):
     decesion_tree = read_tree('major_decesion_tree')
@@ -331,7 +331,7 @@ def test(test_file):
     for data in test_dataset:
         label = classify_t(decesion_tree, test_features, data)
         result.append(label)
-    pdb.set_trace()
+#     pdb.set_trace()
     store_tree(result, 'result.txt')
 
 #############################################################
@@ -339,9 +339,9 @@ if __name__ == '__main__':
     #if len(sys.argv) != 3:
     #    print "please use: python decision.py train_file test_file"
     #    sys.exit()
-    train_file = 'd:/jobs/dctree/maj-train.csv'
-    test_file = 'd:/jobs/dctree/maj-test.csv'
-    #run(train_file,test_file)
+    train_file = 'd:/jobs/dctree/degree/maj-train.csv'
+    test_file = 'd:/jobs/dctree/degree/maj-test.csv'
+#     run(train_file,test_file)
     test(test_file)
 end = time.clock()
 print (end - start)

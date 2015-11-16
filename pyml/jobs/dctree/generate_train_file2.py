@@ -25,7 +25,7 @@ try:
     file = open('d:/jobs/dctree/maj-train.csv', 'w+')
     useridlst = cur.fetchall()
     sq = 'select name from major where degreer0 >=0.6'
-    pdb.set_trace()
+#     pdb.set_trace()
     cur.execute(sq)
     degreer0lst = cur.fetchall()
     degreer0dct = {}
@@ -44,7 +44,7 @@ try:
     for degree in degreer2lst:
         degreer2dct[degree[0]] = 1
     file.write('degree,age,start_age,bstart_year,gender,start_salary,start_size,major\n')
-    pdb.set_trace()
+#     pdb.set_trace()
     for userid in useridlst:
         print userid
         userid = list(userid)

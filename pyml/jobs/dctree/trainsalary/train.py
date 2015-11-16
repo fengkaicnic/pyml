@@ -28,7 +28,7 @@ try:
     cur.execute(sqlze)
     sizelst = cur.fetchall()
     sq = 'select name from major where degreer0 >=0.6'
-    pdb.set_trace()
+#     pdb.set_trace()
     cur.execute(sq)
     degreer0lst = cur.fetchall()
     degreer0dct = {}
@@ -47,7 +47,7 @@ try:
     for degree in degreer2lst:
         degreer2dct[degree[0]] = 1
     #file.write('age,start_age,bstart_year,gender,major,size1,size2,size\n')
-    pdb.set_trace()
+#     pdb.set_trace()
     i = 0
     for userid in useridlst:
         sizes = sizelst[i:i+3]

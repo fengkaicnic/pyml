@@ -74,8 +74,8 @@ def prun(tree_dct, features, dataset, prunlst = None):
         else:
             continue
 #     pdb.set_trace()
-    if prunlst[-1] in features:
-        prunlst.pop()
+#     if prunlst[-1] in features:
+#         prunlst.pop()
     prundct = lst_tdct(copy.deepcopy(prunlst), {})
     
     testdata = []
@@ -94,6 +94,7 @@ def prun(tree_dct, features, dataset, prunlst = None):
     
     tree_result = []
     result = 0
+#     pdb.set_trace()
     for data in testdata:
         result = classify_t(tree_dct, features, data)
         tree_result.append(result)
@@ -134,5 +135,5 @@ if __name__ == '__main__':
     decesion_tree = read_tree('salary_tree')
     dataset, features = format_data(test_file)
     prun_tree = prun(decesion_tree, features, dataset)
-    utils.store_rst(prun_tree, 'prunsalary-tree')
+    utils.store_rst(prun_tree, 'prunsalary_tree')
     print prun_tree

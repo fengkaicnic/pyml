@@ -282,7 +282,7 @@ def run(train_file,test_file,weight):
     #print "׼ȷ��: ",correct/float(n)
 
 def test(train_file,test_file,rstname):
-    decesion_tree = read_tree('salary_tree')
+    decesion_tree = read_tree('prunsalary_tree')
     test_dataset,test_features = format_data(test_file)
     result = []
     for data in test_dataset:
@@ -297,7 +297,7 @@ if __name__ == '__main__':
     #    sys.exit()
     train_file = 'd:/jobs/dctree/salary/train.csv'
     test_file = 'd:/jobs/dctree/salary/test.csv'
-    #run(train_file,test_file)
+#     run(train_file,test_file, 0.08)
     test(train_file, test_file, 'salary')
 end = time.clock()
 print (end - start)

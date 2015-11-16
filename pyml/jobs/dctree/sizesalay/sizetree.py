@@ -181,7 +181,7 @@ def most_occur_label(labels):
     sorted_label_count = sorted(label_count.iteritems(),key = operator.itemgetter(1),reverse = True)
     return sorted_label_count[0][0]
 
-def build_tree(dataset,labels,features):
+def build_tree(dataset,labels,features, weight=None):
 
     if len(labels) == 0:
         return 'NULL'
@@ -198,7 +198,7 @@ def build_tree(dataset,labels,features):
     split_feature = features[split_feature_index]
     decesion_tree = {split_feature:{}}
     #��������������Ϣ�����С����ֵ,�򷵻���ݼ��г��ִ�������label
-    if cal_info_gain_ratio(dataset, split_feature_index, features) < 0.058:
+    if cal_info_gain_ratio(dataset, split_feature_index, features) < weight:
         return most_occur_label(labels)
     split_feature_dct = {}
     for data in dataset:
@@ -263,12 +263,12 @@ def get_means(train_dataset):
     mean_values = mean(dataset,axis = 0)   #��ݼ��ڸ������������ȡֵ��ƽ��ֵ
     return mean_values
 
-def run(train_file,test_file):
+def run(train_file, test_file, weight):
     #pdb.set_trace()
     labels = get_labels(train_file)
     train_dataset,train_features = format_data(train_file)
 #     pdb.set_trace()
-    decesion_tree = build_tree(train_dataset,labels,train_features)
+    decesion_tree = build_tree(train_dataset, labels, train_features, weight)
     print 'decesion_tree :',decesion_tree
     store_tree(decesion_tree,'size_tree')
     #mean_values = get_means(train_dataset)
@@ -283,14 +283,14 @@ def run(train_file,test_file):
     #print "׼ȷ��: ",correct/float(n)
 
 def test(test_file):
-    decesion_tree = read_tree('prun-tree')
+    decesion_tree = read_tree('size_tree')
     test_dataset,test_features = format_data(test_file)
 #     pdb.set_trace()
     result = []
     for data in test_dataset:
         label = classify_t(decesion_tree, test_features, data)
         result.append(label)
-    pdb.set_trace()
+#     pdb.set_trace()
     store_tree(result, 'sizeresult.txt')
 
 #############################################################
@@ -300,7 +300,7 @@ if __name__ == '__main__':
     #    sys.exit()
     train_file = 'd:/jobs/dctree/size/ss-train.csv'
     test_file = 'd:/jobs/dctree/size/ss-test.csv'
-    run(train_file,test_file)
-#     test(test_file)
+#     run(train_file, test_file, 0.058)
+    test(test_file)
 end = time.clock()
 print (end - start)

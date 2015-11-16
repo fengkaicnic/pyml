@@ -1,6 +1,6 @@
 from jobs import utils
 import pdb
-pdb.set_trace()
+# pdb.set_trace()
 
 test_file = 'd:/jobs/dctree/size/test.csv'
 labels = utils.get_labels(test_file, 5)

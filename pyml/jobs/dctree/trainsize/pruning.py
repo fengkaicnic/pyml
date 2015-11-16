@@ -131,5 +131,5 @@ if __name__ == '__main__':
     decesion_tree = read_tree('size_tree')
     dataset, features = format_data(test_file)
     prun_tree = prun(decesion_tree, features, dataset)
-    utils.store_rst(prun_tree, 'prun-tree')
+    utils.store_rst(prun_tree, 'prunsize_tree')
     print prun_tree

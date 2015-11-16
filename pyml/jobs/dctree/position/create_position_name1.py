@@ -25,7 +25,7 @@ try:
     cur.execute('set character_set_server=utf8')
     #sql = 'select userid from jobs_uinfotest'
     import pdb
-    pdb.set_trace()
+#     pdb.set_trace()
     position_dct = {}
     industryr = utils.read_rst('industryr.txt');
     with codecs.open('position_meta.txt') as file:

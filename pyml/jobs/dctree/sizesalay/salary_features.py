@@ -22,7 +22,7 @@ try:
                                         from jobs_uinfo as jb left join workexperience as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/sal-train.csv', 'w+')
+    file = open('d:/jobs/dctree/salary/sal-train.csv', 'w+')
     useridlst = cur.fetchall()
     sqlze = 'select userid, size, salary from work_size'
     cur.execute(sqlze)

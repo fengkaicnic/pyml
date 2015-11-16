@@ -24,7 +24,7 @@ try:
                                         from jobs_uinfotest as jb left join workexperiencetest as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/hparamrst.csv', 'w+')
+    file = open('d:/jobs/dctree/result.csv', 'w+')
     useridlst = cur.fetchall()
     rsultlabel = utils.read_rst('result.txt')
     pdb.set_trace()
