@@ -300,7 +300,7 @@ if __name__ == '__main__':
     #    sys.exit()
     train_file = 'd:/jobs/dctree/salary/sal-train.csv'
     test_file = 'd:/jobs/dctree/salary/sal-test.csv'
-#     run(train_file,test_file, 0.08)
-    test(test_file)
+    run(train_file,test_file, 0.08)
+#     test(test_file)
 end = time.clock()
 print (end - start)

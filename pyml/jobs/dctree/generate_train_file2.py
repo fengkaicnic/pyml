@@ -43,7 +43,7 @@ try:
     degreer2dct = {}
     for degree in degreer2lst:
         degreer2dct[degree[0]] = 1
-    file.write('degree,age,start_age,bstart_year,gender,start_salary,start_size,major\n')
+#     file.write('degree,age,start_age,bstart_year,gender,start_salary,start_size,major\n')
 #     pdb.set_trace()
     for userid in useridlst:
         print userid
