@@ -282,7 +282,7 @@ def run(train_file,test_file,weight):
     #print "׼ȷ��: ",correct/float(n)
 
 def test(train_file,test_file,rstname):
-    decesion_tree = read_tree('prunsalary_tree')
+    decesion_tree = read_tree('salary_tree')
     test_dataset,test_features = format_data(test_file)
     result = []
     for data in test_dataset:

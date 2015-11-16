@@ -24,7 +24,7 @@ try:
                                         from jobs_uinfotest as jb left join workexperiencetest as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/atestps.csv', 'w+')
+    file = open('d:/jobs/dctree/salary.csv', 'w+')
     useridlst = cur.fetchall()
     rsultlabel = utils.read_rst('result.txt')
 #     pdb.set_trace()
@@ -38,7 +38,7 @@ try:
     file.write('id,degree,size,salary,position_name\n')
     i = 0
     print rsultlabel
-    pdb.set_trace()
+#     pdb.set_trace()
     j = 0
     for userid in useridlst:
         result = []
@@ -46,18 +46,19 @@ try:
         print i
 #         result.append(degreelst[i])
 #         result.append(sizeresult[i])
-#         result.append(salaryresult[i])
         result.append(8)
+        result.append(8)
+        result.append(salaryresult[i])
 #         result.append(sizeresult[i])
-        result.append(8)
-        result.append('8')
+        
+        result.append('8\n')
 
         
-        if posresult[i] == 'test':
-            result.append(u'销售经理\n')
-            j += 1
-        else:
-            result.append(posresult[i]+'\n')
+#         if posresult[i] == 'test':
+#             result.append(u'销售经理\n')
+#             j += 1
+#         else:
+#             result.append(posresult[i]+'\n')
         #if rsultlabel[i] == '0':
         #    result.append('0')
         #    result.append(wsresult[i][0])
