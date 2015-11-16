@@ -168,7 +168,6 @@ def choose_best_fea_to_split(dataset,features):
             max_info_gain_ratio = info_gain_ratio
             split_fea_index = i
     return split_fea_index
-    
 
 def most_occur_label(labels):
 
@@ -181,8 +180,8 @@ def most_occur_label(labels):
     sorted_label_count = sorted(label_count.iteritems(),key = operator.itemgetter(1),reverse = True)
     return sorted_label_count[0][0]
 
-def build_tree(dataset,labels,features, weight=None):
-
+def build_tree(dataset, labels, features, weight=None):
+#     pdb.set_trace()
     if len(labels) == 0:
         return 'NULL'
     if len(labels) == len(labels[0]):
@@ -193,7 +192,9 @@ def build_tree(dataset,labels,features, weight=None):
     #����ݼ������ȶ����򷵻���ݼ��г��ִ�������label
     if cal_entropy(dataset, len(features)) == 0:
         return most_occur_label(labels)
-    split_feature_index = choose_best_fea_to_split(dataset,features)
+    split_feature_index = choose_best_fea_to_split(dataset, features)
+    if split_feature_index == -1:
+        return most_occur_label(labels)
     split_feature_index = split_feature_index 
     split_feature = features[split_feature_index]
     decesion_tree = {split_feature:{}}
@@ -263,12 +264,12 @@ def get_means(train_dataset):
     mean_values = mean(dataset,axis = 0)   #��ݼ��ڸ������������ȡֵ��ƽ��ֵ
     return mean_values
 
-def run(train_file,test_file, weight):
+def run(train_file, test_file, weight):
     #pdb.set_trace()
     labels = get_labels(train_file)
     train_dataset,train_features = format_data(train_file)
-#     pdb.set_trace()
-    decesion_tree = build_tree(train_dataset,labels,train_features, weight)
+    pdb.set_trace()
+    decesion_tree = build_tree(train_dataset, labels, train_features, weight)
     print 'decesion_tree :',decesion_tree
     store_tree(decesion_tree,'salary_tree')
     #mean_values = get_means(train_dataset)
@@ -300,7 +301,7 @@ if __name__ == '__main__':
     #    sys.exit()
     train_file = 'd:/jobs/dctree/salary/sal-train.csv'
     test_file = 'd:/jobs/dctree/salary/sal-test.csv'
-#     run(train_file,test_file, 0.3012)
+#     run(train_file,test_file, 0.05)
     test(test_file)
 end = time.clock()
 print (end - start)
