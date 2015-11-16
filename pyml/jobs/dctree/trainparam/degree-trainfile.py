@@ -22,7 +22,7 @@ try:
                                         from jobs_uinfo as jb left join workexperience as wk on \
                                         jb.userid = wk.userid and wk.num = 1 limit 60000'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/degree/trainparam.csv', 'w+')
+    file = open('d:/jobs/dctree/degree/train.csv', 'w+')
     useridlst = cur.fetchall()
     sq = 'select name from major where degreer0 >=0.6'
     pdb.set_trace()

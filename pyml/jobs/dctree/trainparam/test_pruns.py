@@ -1,10 +1,10 @@
 from jobs import utils
 import pdb
 
-test_file = 'd:/jobs/dctree/salary/test.csv'
-labels = utils.get_labels(test_file, 6)
+test_file = 'd:/jobs/dctree/degree/test.csv'
+labels = utils.get_labels(test_file, 0)
 pdb.set_trace()
-plabel = utils.read_rst('salary')
+plabel = utils.read_rst('result')
 i = 0
 rst = 0
 for label in labels:

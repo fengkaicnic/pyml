@@ -338,9 +338,9 @@ if __name__ == '__main__':
     #if len(sys.argv) != 3:
     #    print "please use: python decision.py train_file test_file"
     #    sys.exit()
-    train_file = 'd:/jobs/dctree/degree/trainparam.csv'
-    test_file = 'd:/jobs/dctree/degree/testparam.csv'
+    train_file = 'd:/jobs/dctree/degree/train.csv'
+    test_file = 'd:/jobs/dctree/degree/test.csv'
     #run(train_file,test_file)
-    test(test_file)
+    test(train_file, test_file, 'result')
 end = time.clock()
 print (end - start)
