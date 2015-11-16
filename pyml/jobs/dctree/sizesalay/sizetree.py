@@ -11,7 +11,7 @@ import types
 start = time.clock()
 
 def get_labels(train_file):
-    pdb.set_trace()
+#     pdb.set_trace()
     labels = []
     for index,line in enumerate(open(train_file,'rU').readlines()):
         label = line.strip().split(',')[-1]
@@ -267,7 +267,7 @@ def run(train_file,test_file):
     #pdb.set_trace()
     labels = get_labels(train_file)
     train_dataset,train_features = format_data(train_file)
-    pdb.set_trace()
+#     pdb.set_trace()
     decesion_tree = build_tree(train_dataset,labels,train_features)
     print 'decesion_tree :',decesion_tree
     store_tree(decesion_tree,'size_tree')
@@ -285,7 +285,7 @@ def run(train_file,test_file):
 def test(test_file):
     decesion_tree = read_tree('prun-tree')
     test_dataset,test_features = format_data(test_file)
-    pdb.set_trace()
+#     pdb.set_trace()
     result = []
     for data in test_dataset:
         label = classify_t(decesion_tree, test_features, data)
@@ -300,7 +300,7 @@ if __name__ == '__main__':
     #    sys.exit()
     train_file = 'd:/jobs/dctree/size/ss-train.csv'
     test_file = 'd:/jobs/dctree/size/ss-test.csv'
-    #run(train_file,test_file)
-    test(test_file)
+    run(train_file,test_file)
+#     test(test_file)
 end = time.clock()
 print (end - start)

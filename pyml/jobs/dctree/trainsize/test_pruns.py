@@ -4,7 +4,7 @@ pdb.set_trace()
 
 test_file = 'd:/jobs/dctree/size/test.csv'
 labels = utils.get_labels(test_file, 5)
-plabel = utils.read_rst('prun-result')
+plabel = utils.read_rst('sizeresult.txt')
 i = 0
 rst = 0
 for label in labels:
