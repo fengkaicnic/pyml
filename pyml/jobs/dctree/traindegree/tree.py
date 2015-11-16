@@ -223,7 +223,8 @@ def build_tree(dataset,labels,features):
     if cal_entropy(dataset) == 0:
         return most_occur_label(labels)
     split_feature_index = choose_best_fea_to_split(dataset,features)
-    split_feature_index = split_feature_index 
+    if split_feature_index == -1:
+        return most_occur_label(labels) 
     split_feature = features[split_feature_index]
     decesion_tree = {split_feature:{}}
     #��������������Ϣ�����С����ֵ,�򷵻���ݼ��г��ִ�������label
