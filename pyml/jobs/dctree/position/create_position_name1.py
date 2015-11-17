@@ -5,6 +5,7 @@ import sys
 import re
 import MySQLdb
 import time
+import pdb
 import codecs
 from jobs import utils
 from jobs.majorposition import get_position
@@ -24,7 +25,7 @@ try:
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
     #sql = 'select userid from jobs_uinfotest'
-    import pdb
+
 #     pdb.set_trace()
     position_dct = {}
     industryr = utils.read_rst('industryr.txt');
