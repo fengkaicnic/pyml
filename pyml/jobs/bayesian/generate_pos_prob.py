@@ -8,6 +8,7 @@ import time
 reload(sys)
 from jobs import utils
 import codecs
+import copy
 sys.setdefaultencoding('utf8')
 import pdb
 start = time.clock()
@@ -54,22 +55,27 @@ try:
             pos1key[works[0][1]] = 1
         if not pos2key.has_key(works[2][1]):
             pos2key[works[2][1]] = 1
-    
+    pdb.set_trace()
     for key in position_dct.keys():
-        workprobdct[key] = {'pos1':pos1key, 'pos2':pos2key, 'industry1':industry1key, 'industry2':industry2key}
+        workprobdct[key] = {'total':0, 'pos1':copy.deepcopy(pos1key), 'pos2':copy.deepcopy(pos2key), 'industry1':copy.deepcopy(industry1key), 'industry2':copy.deepcopy(industry2key)}
 
     i = 0
     t = 0
+#     pdb.set_trace()
     for j in xrange(70000):
-        print j
+#         print j
         works = worklst[i:i+3]
         if not position_dct.has_key(works[1][1]):
+            i += 3
             continue
-        j += 1
+        i += 3
+        t += 1
+        print t
         workprobdct[works[1][1]]['pos1'][works[0][1]] += 1
         workprobdct[works[1][1]]['pos2'][works[2][1]] += 1
         workprobdct[works[1][1]]['industry1'][works[0][0]] += 1
         workprobdct[works[1][1]]['industry2'][works[2][0]] += 1
+        workprobdct[works[1][1]]['total'] += 1
     workprobdct['total'] = t
     for key in position_dct.keys():
         workprobdct[key]['pos1']['total'] = reduce(lambda x,y:x+y, workprobdct[key]['pos1'].itervalues())
