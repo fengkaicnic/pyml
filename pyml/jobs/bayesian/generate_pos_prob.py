@@ -59,16 +59,18 @@ try:
         workprobdct[key] = {'pos1':pos1key, 'pos2':pos2key, 'industry1':industry1key, 'industry2':industry2key}
 
     i = 0
+    t = 0
     for j in xrange(70000):
         print j
         works = worklst[i:i+3]
         if not position_dct.has_key(works[1][1]):
             continue
+        j += 1
         workprobdct[works[1][1]]['pos1'][works[0][1]] += 1
         workprobdct[works[1][1]]['pos2'][works[2][1]] += 1
         workprobdct[works[1][1]]['industry1'][works[0][0]] += 1
         workprobdct[works[1][1]]['industry2'][works[2][0]] += 1
-    
+    workprobdct['total'] = t
     for key in position_dct.keys():
         workprobdct[key]['pos1']['total'] = reduce(lambda x,y:x+y, workprobdct[key]['pos1'].itervalues())
         workprobdct[key]['pos2']['total'] = reduce(lambda x,y:x+y, workprobdct[key]['pos2'].itervalues())
