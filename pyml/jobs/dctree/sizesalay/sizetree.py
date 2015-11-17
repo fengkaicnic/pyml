@@ -33,7 +33,8 @@ def format_data(dataset_file):
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length�����೤�ȣ���sepal width�������ȣ���petal length�����곤�ȣ���petal width�������ȣ�
-    features = ['age','gender','major','size1','size2']
+#     features = ['age','major','size1','size2']
+    features = ['size1','size2']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
@@ -301,7 +302,7 @@ if __name__ == '__main__':
     #    sys.exit()
     train_file = 'd:/jobs/dctree/size/ss-train.csv'
     test_file = 'd:/jobs/dctree/size/ss-test.csv'
-    run(train_file, test_file, 0.058)
+    run(train_file, test_file, 0.03)
 #     test(test_file)
 end = time.clock()
 print (end - start)

@@ -18,9 +18,10 @@ try:
     cur.execute('set character_set_database=utf8')
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
-    sql = 'select jb.age,jb.gender,jb.major \
-                                        from jobs_uinfo as jb left join workexperience as wk on \
-                                        jb.userid = wk.userid and wk.num = 1'
+#     sql = 'select jb.age,jb.gender,jb.major \
+#                                         from jobs_uinfo as jb left join workexperience as wk on \
+#                                         jb.userid = wk.userid and wk.num = 1'
+    sql = 'select age from jobs_uinfo'
     cur.execute(sql)
     file = open('d:/jobs/dctree/size/ss-train.csv', 'w+')
     useridlst = cur.fetchall()
@@ -59,20 +60,21 @@ try:
             userid[0] = '20'
         elif int(userid[0]) >= 60:
             userid[0] = '60'
-        if degreer0dct.has_key(userid[2]):
-            userid.pop(-1)
-            userid.append(0)
-        elif degreer1dct.has_key(userid[2]):
-            userid.pop(-1)
-            userid.append(1)
-        elif degreer2dct.has_key(userid[2]):
-            userid.pop(-1)
-            userid.append(2)
-        else:
-            userid.pop(-1)
-            userid.append(3)
+#         if degreer0dct.has_key(userid[1]):
+#             userid.pop(-1)
+#             userid.append(0)
+#         elif degreer1dct.has_key(userid[1]):
+#             userid.pop(-1)
+#             userid.append(1)
+#         elif degreer2dct.has_key(userid[1]):
+#             userid.pop(-1)
+#             userid.append(2)
+#         else:
+#             userid.pop(-1)
+#             userid.append(3)
         #userid.append(sizes[0][1])
         #userid.append(sizes[2][1])
+        userid.pop()
         userid.append(sizes[0][1])
         userid.append(sizes[2][1])
         userid.append(sizes[1][1])

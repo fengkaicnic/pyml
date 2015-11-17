@@ -33,7 +33,8 @@ def format_data(dataset_file):
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length�����೤�ȣ���sepal width�������ȣ���petal length�����곤�ȣ���petal width�������ȣ�
-    features = ['age','bstart_year','gender','major','salary1','salary2']
+#     features = ['age','bstart_year','gender','major','salary1','salary2']
+    features = ['salary1','salary2']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):

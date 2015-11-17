@@ -21,7 +21,8 @@ try:
 #     sql = 'select jb.age,jb.bstart_year,jb.gender,jb.major \
 #                                         from jobs_uinfo as jb left join workexperience as wk on \
 #                                         jb.userid = wk.userid and wk.num = 1'
-    sql = 'select age, bstart_year, gender, major from jobs_uinfo'
+#     sql = 'select age, bstart_year, gender, major from jobs_uinfo'
+    sql = 'select age, major from jobs_uinfo'
     cur.execute(sql)
     file = open('d:/jobs/dctree/salary/sal-train.csv', 'w+')
     useridlst = cur.fetchall()
@@ -59,13 +60,13 @@ try:
             userid[0] = '20'
         elif int(userid[0]) >= 60:
             userid[0] = '60'
-        if degreer0dct.has_key(userid[3]):
+        if degreer0dct.has_key(userid[1]):
             userid.pop(-1)
             userid.append(0)
-        elif degreer1dct.has_key(userid[3]):
+        elif degreer1dct.has_key(userid[1]):
             userid.pop(-1)
             userid.append(1)
-        elif degreer2dct.has_key(userid[3]):
+        elif degreer2dct.has_key(userid[1]):
             userid.pop(-1)
             userid.append(2)
         else:
@@ -73,6 +74,8 @@ try:
             userid.append(3)
 #         userid.append(sizes[0][1])
 #         userid.append(sizes[2][1])
+        userid.pop()
+        userid.pop()
         userid.append(sizes[0][2])
         userid.append(sizes[2][2])
         userid.append(sizes[1][2])
