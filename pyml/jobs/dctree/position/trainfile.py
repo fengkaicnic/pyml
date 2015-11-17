@@ -37,7 +37,6 @@ def get_share_mar():
 postpropertydct = get_position.get_pos()
 
 try:
-    
     conn = MySQLdb.connect(host='localhost', user='root', passwd='123456', db='jobs', use_unicode=True, charset='utf8')
     cur = conn.cursor()
     cur.execute('set character_set_client=utf8')
