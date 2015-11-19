@@ -13,7 +13,7 @@ def get_pos():
     position_dct = {}
     with open('position.properties') as file:
         lines = file.readlines()
-        print lines
+#         print lines
         for line in lines:
             linelst = line.split(',')
             for key in linelst[:-3]:

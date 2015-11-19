@@ -31,7 +31,7 @@ try:
     #wsresult = utils.read_rst('wsresult.txt')
     sizeresult = utils.read_rst('sizeresult.txt')
     salaryresult = utils.read_rst('salaryresult.txt')
-    posresult = utils.read_rst('position1')
+    posresult = utils.read_rst('position13')
     #degreelst = utils.read_rst('degree.txt')
     degreelst = utils.read_rst('result.txt')
     rsultlabel = map(str, rsultlabel)
