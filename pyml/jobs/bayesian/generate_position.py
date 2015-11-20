@@ -32,30 +32,30 @@ def convert_pos(position_dct, works):
     works = list(works)
     works[0] = list(works[0])
     works[1] = list(works[1])
-    if not position_dct.has_key(works[0][0]):
+    if not position_dct.has_key(works[0][1]):
         for key in postdct.keys():
-            if key in works[0][0]:
-                if u'总监' in works[0][0] or u'主管' in works[0][0]:
-                    works[0][0] = postdct[key][2]
-                elif u'经理' in works[0][0] or u'主任' in works[0][0] or u'负责' in works[1][0] or u'高级' in works[1][0]:
-                    works[0][0] = postdct[key][1]
+            if key in works[0][1]:
+                if u'总监' in works[0][1] or u'主管' in works[0][1]:
+                    works[0][1] = postdct[key][2]
+                elif u'经理' in works[0][1] or u'主任' in works[0][1] or u'负责' in works[0][1] or u'高级' in works[0][1]:
+                    works[0][1] = postdct[key][1]
                 else:
-                    works[0][0] = postdct[key][0]
+                    works[0][1] = postdct[key][0]
                 break
-    if not position_dct.has_key(works[1][0]):
+    if not position_dct.has_key(works[1][1]):
         for key in postdct.keys():
-            if key in works[1][0]:
-                if u'总监' in works[1][0] or u'主管' in works[1][0]:
-                    works[1][0] = postdct[key][2]
-                elif u'经理' in works[1][0] or u'主任' in works[1][0] or u'负责' in works[1][0] or u'高级' in works[1][0]:
-                    works[1][0] = postdct[key][1]
+            if key in works[1][1]:
+                if u'总监' in works[1][1] or u'主管' in works[1][1]:
+                    works[1][1] = postdct[key][2]
+                elif u'经理' in works[1][1] or u'主任' in works[1][1] or u'负责' in works[1][1] or u'高级' in works[1][1]:
+                    works[1][1] = postdct[key][1]
                 else:
-                    works[1][0] = postdct[key][0]
+                    works[1][1] = postdct[key][0]
                 break
     return works
 
 def get_position_prob(key, workprobdct, works):
-    works = convert_pos(position_dct, works)
+#     works = convert_pos(position_dct, works)
     if workprobdct[key]['pos1'].has_key(works[0][1]):
         pos1prob = 1000*float(workprobdct[key]['pos1'][works[0][1]])/workprobdct[key]['pos1']['total']
     else:
