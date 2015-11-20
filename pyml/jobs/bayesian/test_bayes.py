@@ -1,3 +1,4 @@
+#coding:utf8
 import sys
 from jobs import utils
 reload(sys)
