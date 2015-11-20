@@ -62,7 +62,7 @@ def buildStump(dataArr, classLabels, D):
 def adaBoostTrainDS(dataArr, classLabels, numIt = 40):
     weakClassArr = []
     m = shape(dataArr)[0]
-    D = mat(ones((m,1))/m)
+    D = mat(ones((m,1))/m) # D is the weight this
     aggClassEst = mat(zeros((m,1)))
     for i in range(numIt):
         bestStump, error, classEst = buildStump(dataArr, classLabels, D)
@@ -81,6 +81,7 @@ def adaBoostTrainDS(dataArr, classLabels, numIt = 40):
         print "total error: ", errorRate
         if errorRate == 0.0:break
     return weakClassArr
+
 def adaClassify(datToClass, classifierArr):
     dataMatrix = mat(datToClass)
     m =shape(dataMatrix)[0]
@@ -119,14 +120,16 @@ def plotROC(predStengths, classLabels):
     ax.axis([0,1,0,1])
     print "The area under curve is:", ySum*xStep
     plt.show()
+import pdb
+pdb.set_trace()
 datMat, classLabels = loadSimpData()
 adaBoostTrainDS(datMat, classLabels, 9)
 
-dataArr, labelArr = loadDataSet(r'horseColicTraining2.txt')
-classifierArray = adaBoostTrainDS(dataArr, labelArr, 10)
-testArr, testLabArr = loadDataSet(r'horseColicTest2.txt')
-prediction = adaClassify(testArr, classifierArray)
-plotROC(prediction.T, testLabArr)
-errArr = mat(ones((67,1)))
-error = errArr[prediction!=mat(testLabArr).T].sum()/shape(dataArr)[0]
-print error
+# dataArr, labelArr = loadDataSet(r'horseColicTraining2.txt')
+# classifierArray = adaBoostTrainDS(dataArr, labelArr, 10)
+# testArr, testLabArr = loadDataSet(r'horseColicTest2.txt')
+# prediction = adaClassify(testArr, classifierArray)
+# plotROC(prediction.T, testLabArr)
+# errArr = mat(ones((67,1)))
+# error = errArr[prediction!=mat(testLabArr).T].sum()/shape(dataArr)[0]
+# print error

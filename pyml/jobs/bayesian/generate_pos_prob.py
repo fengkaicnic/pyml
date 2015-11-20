@@ -94,7 +94,7 @@ try:
         workprobdct[key]['pos2']['total'] = reduce(lambda x,y:x+y, workprobdct[key]['pos2'].itervalues())
         workprobdct[key]['industry1']['total'] = reduce(lambda x,y:x+y, workprobdct[key]['industry1'].itervalues())
         workprobdct[key]['industry2']['total'] = reduce(lambda x,y:x+y, workprobdct[key]['industry2'].itervalues())
-    pdb.set_trace()
+#     pdb.set_trace()
     for key in workprobdct.keys():
         if key == 'total':
             continue

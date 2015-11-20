@@ -37,7 +37,7 @@ def convert_pos(position_dct, works):
             if key in works[0][0]:
                 if u'总监' in works[0][0] or u'主管' in works[0][0]:
                     works[0][0] = postdct[key][2]
-                elif u'经理' in works[0][0] or u'主任' in works[0][0]:
+                elif u'经理' in works[0][0] or u'主任' in works[0][0] or u'负责' in works[1][0] or u'高级' in works[1][0]:
                     works[0][0] = postdct[key][1]
                 else:
                     works[0][0] = postdct[key][0]
@@ -47,7 +47,7 @@ def convert_pos(position_dct, works):
             if key in works[1][0]:
                 if u'总监' in works[1][0] or u'主管' in works[1][0]:
                     works[1][0] = postdct[key][2]
-                elif u'经理' in works[1][0] or u'主任' in works[1][0]:
+                elif u'经理' in works[1][0] or u'主任' in works[1][0] or u'负责' in works[1][0] or u'高级' in works[1][0]:
                     works[1][0] = postdct[key][1]
                 else:
                     works[1][0] = postdct[key][0]
@@ -57,11 +57,11 @@ def convert_pos(position_dct, works):
 def get_position_prob(key, workprobdct, works):
     works = convert_pos(position_dct, works)
     if workprobdct[key]['pos1'].has_key(works[0][1]):
-        pos1prob = 100*float(workprobdct[key]['pos1'][works[0][1]])/workprobdct[key]['pos1']['total']
+        pos1prob = 1000*float(workprobdct[key]['pos1'][works[0][1]])/workprobdct[key]['pos1']['total']
     else:
         pos1prob = 0.0001/workprobdct[key]['pos1']['total']
     if workprobdct[key]['pos2'].has_key(works[1][1]):
-        pos2prob = 50*float(workprobdct[key]['pos2'][works[1][1]])/workprobdct[key]['pos2']['total']
+        pos2prob = 500*float(workprobdct[key]['pos2'][works[1][1]])/workprobdct[key]['pos2']['total']
     else:
         pos2prob = 0.0001/workprobdct[key]['pos2']['total']
     if workprobdct[key]['industry1'].has_key(works[0][0]):
