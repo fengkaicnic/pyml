@@ -195,7 +195,9 @@ def build_tree(dataset,labels,features,weight):
     if cal_entropy(dataset, len(features)) == 0:
         return most_occur_label(labels)
     split_feature_index = choose_best_fea_to_split(dataset,features)
-    split_feature_index = split_feature_index 
+    split_feature_index = split_feature_index
+    if split_feature_index == -1:
+        return most_occur_label(labels)
     split_feature = features[split_feature_index]
     decesion_tree = {split_feature:{}}
     #��������������Ϣ�����С����ֵ,�򷵻���ݼ��г��ִ�������label
@@ -268,7 +270,7 @@ def get_means(train_dataset):
 
 def run(train_file,test_file,weight):
     #pdb.set_trace()
-    labels = get_labels(train_file,5)
+    labels = get_labels(train_file,0)
     train_dataset,train_features = format_data(train_file)
     decesion_tree = build_tree(train_dataset,labels,train_features,weight)
     print 'decesion_tree :',decesion_tree
