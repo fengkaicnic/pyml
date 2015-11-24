@@ -24,34 +24,32 @@ try:
                                         from jobs_uinfotest as jb left join workexperiencetest as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/degree.csv', 'w+')
+    file = open('d:/jobs/dctree/salary/salary.csv', 'w+')
     useridlst = cur.fetchall()
-    rsultlabel = utils.read_rst('result.txt')
+#     rsultlabel = utils.read_rst('result.txt')
 #     pdb.set_trace()
     #wsresult = utils.read_rst('wsresult.txt')
-    sizeresult = utils.read_rst('sizeresult.txt')
-    salaryresult = utils.read_rst('salaryresult.txt')
-    posresult = utils.read_rst('position13')
+#     sizeresult = utils.read_rst('sizeresult.txt')
+    salaryresult = utils.read_rst('salary')
+#     posresult = utils.read_rst('position13')
     #degreelst = utils.read_rst('degree.txt')
-    degreelst = utils.read_rst('result1.txt')
-    rsultlabel = map(str, rsultlabel)
+#     degreelst = utils.read_rst('result1.txt')
     file.write('id,degree,size,salary,position_name\n')
     i = 0
-    print rsultlabel
 #     pdb.set_trace()
     j = 0
     for userid in useridlst:
         result = []
         result.append(userid[0])
         print i
-        result.append(degreelst[i])
+#         result.append(degreelst[i])
 #         result.append(sizeresult[i])
-#         result.append(8)
+        result.append(8)
         result.append(8)
 
-#         result.append(salaryresult[i])
+        result.append(salaryresult[i])
 #         result.append(sizeresult[i])
-        result.append(8)
+#         result.append(8)
         result.append('8\n')
 
         

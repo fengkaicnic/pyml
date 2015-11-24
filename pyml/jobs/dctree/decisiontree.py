@@ -36,7 +36,7 @@ def format_data(dataset_file):
         dataset.append(fea_and_label)
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal length（花萼长度）、sepal width（花萼宽度）、petal length（花瓣长度）、petal width（花瓣宽度）
-    features = ['degree', 'age','start_age','bstart_year','gender','start_salary','start_size','major']
+    features = ['degree', 'age','start_age', 'gender', 'bstart_year','start_salary','start_size','major']
     return dataset,features
 
 def split_dataset(dataset,feature_index,labels):
@@ -309,7 +309,7 @@ def run(train_file,test_file):
     #pdb.set_trace()
     labels = get_labels(train_file)
     train_dataset,train_features = format_data(train_file)
-    pdb.set_trace()
+#     pdb.set_trace()
     decesion_tree = build_tree(train_dataset,labels,train_features)
     print 'decesion_tree :',decesion_tree
     store_tree(decesion_tree,'major_decesion_tree')
@@ -333,7 +333,7 @@ def test(test_file):
         label = classify_t(decesion_tree, test_features, data)
         result.append(label)
     pdb.set_trace()
-    store_tree(result, 'result.txt')
+    store_tree(result, 'result1.txt')
 
 #############################################################
 if __name__ == '__main__':

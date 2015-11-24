@@ -18,7 +18,7 @@ try:
     cur.execute('set character_set_database=utf8')
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
-    sql = 'select jb.degree, jb.age,jb.start_age,jb.bstart_year,jb.gender,jb.start_salary,wk.size, jb.major \
+    sql = 'select jb.degree, jb.age, jb.gender, jb.start_age, jb.bstart_year, jb.start_salary, wk.size, jb.major \
                                         from jobs_uinfo as jb left join workexperience as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)

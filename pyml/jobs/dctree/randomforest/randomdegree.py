@@ -81,7 +81,7 @@ def format_data(dataset_file):
     #features = [dataset[0][i] for i in range(len(dataset[0])-1)]
     #sepal 
 #     features = ['age', 'start_age', 'bstart_year', 'start_salary', 'gender', 'major', 'size1', 'size2', 'salary1', 'salary2', 'industry1', 'industry2']
-    features = ['degree', 'age','start_age','bstart_year','gender','start_salary','start_size','major']
+    features = ['degree', 'age','start_age','bstart_year','start_salary','start_size','major']
     return dataset,features
 
 if __name__ == '__main__':
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     labels = get_labels(train_file,0)
     train_dataset, train_features = format_data(train_file)
     test_dataset, test_features = format_data(test_file)
-    tree_num = 3000
+    tree_num = 3990
     feature_num = 2
     result = []
 

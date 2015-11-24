@@ -18,7 +18,7 @@ try:
     cur.execute('set character_set_database=utf8')
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
-    sql = 'select jb.degree, jb.age,jb.start_age,jb.bstart_year,jb.gender,jb.start_salary,wk.size, jb.major \
+    sql = 'select jb.degree, jb.age, jb.start_age, jb.gender, jb.bstart_year,jb.start_salary,wk.size, jb.major \
                                         from jobs_uinfotest as jb left join workexperiencetest as wk on \
                                         jb.userid = wk.userid and wk.num = 1'
     cur.execute(sql)
@@ -49,9 +49,13 @@ try:
         print userid
         userid = list(userid)
         if int(userid[1]) <= 20:
-            userid[1] = '18'
+            userid[1] = '20'
         elif int(userid[1]) >= 60:
             userid[1] = '60'
+        if int(userid[2]) <= 15:
+            userid[2] = '15'
+        elif int(userid[1]) >= 36:
+            userid[2] = '36'
         if degreer0dct.has_key(userid[7]):
             userid.pop(-1)
             userid.append(0)
