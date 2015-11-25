@@ -6,6 +6,7 @@ import sys
 import re
 import MySQLdb
 import time
+import copy
 import pdb
 import codecs
 from jobs import utils
@@ -27,19 +28,21 @@ try:
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
     #sql = 'select userid from jobs_uinfotest'
-    
+    keynm = 0
     position_dct = {}
     with codecs.open('position_meta.txt') as file:
         lines = file.readlines()
         for linet in lines:
             line = linet[:-2]
             uline = unicode(line)
-            position_dct[uline] = '1'
+            position_dct[uline] = keynm
+            keynm += 1
     sql = 'select position_name, industry from work_size'
     cur.execute(sql)
     positionlst = cur.fetchall()
     positions = []
     positiondct = {}
+    industrydct = {}
     industrys = []
     result = []
 #     pdb.set_trace()
@@ -61,6 +64,10 @@ try:
                 positiondct[worklst[2][0]] += 1
             else:
                 positiondct[worklst[2][0]] = 1
+            if not industrydct.has_key(worklst[0][1]):
+                industrydct[worklst[0][1]] = 1
+            if not industrydct.has_key(worklst[2][1]):
+                industrydct[worklst[2][1]] = 1
     
     sq = 'select position_name from work_sizetest'
     cur.execute(sq)
@@ -91,12 +98,20 @@ try:
             
     keyshare = 0
     keynos = 0
+    keysharedct = copy.deepcopy(position_dct)
     for key in tst_dict.keys():
         if positiondct.has_key(key):
             keyshare += 1
+            if not position_dct.has_key(key):
+                keysharedct[key] = keynm
+                keynm += 1
         else:
             keynos += 1
             print key
+    for industry in industrydct.keys():
+        keysharedct[industry] = keynm
+        keynm += 1
+    utils.store_rst(keysharedct, 'keyshare')
     
     print 'poslenght : %d' % len(positiondct)
     print 'tstlenght : %d' % len(tst_dict)
