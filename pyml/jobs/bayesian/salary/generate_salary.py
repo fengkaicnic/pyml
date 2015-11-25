@@ -30,11 +30,11 @@ def get_position_meta():
 def get_salary_prob(key, salaryprobdct, salarys):
 #     salarys = convert_pos(position_dct, salarys)
     if salaryprobdct[key]['salary1'].has_key(salarys[0][1]):
-        salary1prob = 10*float(salaryprobdct[key]['salary1'][salarys[0][1]])/salaryprobdct[key]['salary1']['total']
+        salary1prob = 1*float(salaryprobdct[key]['salary1'][salarys[0][1]])/salaryprobdct[key]['salary1']['total']
     else:
         salary1prob = 0.0001/salaryprobdct[key]['salary1']['total']
     if salaryprobdct[key]['salary2'].has_key(salarys[1][1]):
-        salary2prob = 10*float(salaryprobdct[key]['salary2'][salarys[1][1]])/salaryprobdct[key]['salary2']['total']
+        salary2prob = 1*float(salaryprobdct[key]['salary2'][salarys[1][1]])/salaryprobdct[key]['salary2']['total']
     else:
         salary2prob = 0.0001/salaryprobdct[key]['salary2']['total']
     if salaryprobdct[key]['industry1'].has_key(salarys[0][0]):
@@ -47,8 +47,9 @@ def get_salary_prob(key, salaryprobdct, salarys):
         industry2prob = 0.0001/salaryprobdct[key]['industry2']['total']
     
     total = float(salaryprobdct[key]['total'])/salaryprobdct['total']
-    total = total*(salary1prob + salary2prob + industry1prob + industry2prob)
-    
+#     total = total*(salary1prob + salary2prob + industry1prob + industry2prob)
+    total = total*salary1prob*salary2prob
+#     pdb.set_trace()
     return total
 
 try:    

@@ -18,19 +18,19 @@ try:
     cur.execute('set character_set_database=utf8')
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
-#     sql = 'select jb.age,jb.start_age,jb.bstart_year,jb.start_salary,jb.gender,jb.major \
-#                                         from jobs_uinfo as jb left join workexperience as wk on \
-#                                         jb.userid = wk.userid and wk.num = 1 limit 60000, 10000'
-    sql = 'select jb.age,jb.gender,jb.major \
-                                        from jobs_uinfo as jb left join workexperience as wk on \
-                                        jb.userid = wk.userid and wk.num = 1 limit 60000, 10000'
+#     sql = 'select jb.age,jb.bstart_year,jb.gender,jb.major \
+#                                         from jobs_uinfotest as jb left join workexperiencetest as wk on \
+#                                         jb.userid = wk.userid and wk.num = 1'
+    sql = 'select age, bstart_year, gender, major from jobs_uinfotest'
+    sql = 'select age, major from jobs_uinfotest'
     cur.execute(sql)
-    file = open('d:/jobs/dctree/random/test.csv', 'w+')
+    file = open('d:/jobs/dctree/random/sal-test.csv', 'w+')
     useridlst = cur.fetchall()
-    sqlze = 'select userid, size, salary, industry from work_size limit 180000, 30000'
+    sqlze = 'select userid, size, salary from work_sizetest'
     cur.execute(sqlze)
     sizelst = cur.fetchall()
     sq = 'select name from major where degreer0 >=0.6'
+#     pdb.set_trace()
     cur.execute(sq)
     degreer0lst = cur.fetchall()
     degreer0dct = {}
@@ -49,36 +49,40 @@ try:
     for degree in degreer2lst:
         degreer2dct[degree[0]] = 1
     #file.write('age,bstart_year,gender,major,size1,size2,size\n')
-
+#     pdb.set_trace()
     i = 0
     for userid in useridlst:
-        sizes = sizelst[i:i+3]
-        i += 3
+        sizes = sizelst[i:i+2]
+        i += 2
         print userid
         userid = list(userid)
         if int(userid[0]) <= 20:
             userid[0] = '20'
         elif int(userid[0]) >= 60:
             userid[0] = '60'
-        if degreer0dct.has_key(userid[2]):
+        if degreer0dct.has_key(userid[1]):
             userid.pop(-1)
             userid.append(0)
-        elif degreer1dct.has_key(userid[2]):
+        elif degreer1dct.has_key(userid[1]):
             userid.pop(-1)
             userid.append(1)
-        elif degreer2dct.has_key(userid[2]):
+        elif degreer2dct.has_key(userid[1]):
             userid.pop(-1)
             userid.append(2)
         else:
             userid.pop(-1)
             userid.append(3)
         userid.append(sizes[0][1])
-        userid.append(sizes[2][1])
-        userid.append(sizes[0][2])
-        userid.append(sizes[2][2])
-        userid.append(sizes[0][3])
-        userid.append(sizes[2][3])
         userid.append(sizes[1][1])
+#         userid.pop()
+#         userid.pop()
+#         lstt = [0 for j in range(7)]
+#         lstt1 = [0 for j in range(7)]
+#         lstt[sizes[0][2]] = 1
+#         lstt1[sizes[1][2]] = 1
+#         userid = userid + lstt + lstt1
+        #userid.append(sizes[1][2])
+        userid.append(9)
         userlst = map(str, userid)
         strs = ','.join(userlst) + '\n'
         file.write(strs)
