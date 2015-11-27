@@ -34,9 +34,11 @@ try:
         for linet in lines:
             line = linet[:-2]
             uline = unicode(line)
-            position_dct[uline] = 1
+            lintlst = uline.split(',')
+            position_dct[lintlst[0]] = lintlst[1]
     
     file = open('d:/jobs/xgboost/data.csv', 'w+')
+    pdb.set_trace()
     keyshare = utils.read_rst('keyshare')
     sql = 'select position_name, industry from work_size'
     cur.execute(sql)
@@ -65,12 +67,12 @@ try:
                 rst.append(1)
             rst.append(str(keyshare[worklst[1][0]]) + '\n')
             datalst.append(rst)
-    
+    pdb.set_trace()
     for data in datalst:
         file.write(','.join(map(str, data)))
-    
         
     end = time.clock()
+    file.close()
 #     print (end-start)
 except Exception as e:
     conn.commit()

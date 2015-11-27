@@ -28,15 +28,16 @@ try:
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
     #sql = 'select userid from jobs_uinfotest'
-    keynm = 0
+    keynm = 130
     position_dct = {}
+    pdb.set_trace()
     with codecs.open('position_meta.txt') as file:
         lines = file.readlines()
         for linet in lines:
             line = linet[:-2]
             uline = unicode(line)
-            position_dct[uline] = keynm
-            keynm += 1
+            lintlst = uline.split(',')
+            position_dct[lintlst[0]] = lintlst[1]
     sql = 'select position_name, industry from work_size'
     cur.execute(sql)
     positionlst = cur.fetchall()
