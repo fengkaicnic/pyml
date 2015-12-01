@@ -7,8 +7,19 @@ import time
 import jieba
 import pdb
 reload(sys)
+import codecs
 sys.setdefaultencoding('utf8')
 start = time.clock()
+
+def get_position_meta():
+    position_dct = {}
+    with codecs.open('position_meta.txt') as file:
+        lines = file.readlines()
+        for linet in lines:
+            line = linet[:-2]
+            uline = unicode(line)
+            position_dct[uline] = '1'
+    return position_dct
 
 def read_tree(filename):
     '''
@@ -26,38 +37,45 @@ try:
     cur.execute('set character_set_database=utf8')
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
-    sql = 'select position_name from work_size where num in (1, 3)'
+    sql = 'select position_name from work_size'
     cur.execute(sql)
-    
+    position_dct = get_position_meta()
 #     file = open('d:/jobs/dctree/majortest.csv', 'w+')
     positionlst = cur.fetchall()
     i = 0
     pdb.set_trace()
     letterdct = {}
-    for position in positionlst:
-        seg_lst = jieba.cut(position[0])
+    
+    for j in xrange(70000):
+        poslst = positionlst[j:j+3]
+        if position_dct.has_key(poslst[1][0]):
+            continue
+        seg_lst = jieba.cut(poslst[0][0])
         for term in seg_lst:
             if not letterdct.has_key(term):
                 letterdct[term] = 1
             else:
                 letterdct[term] += 1
+        seg_lst = jieba.cut(poslst[2][0])
+        for term in seg_lst:
+            if not letterdct.has_key(term):
+                letterdct[term] = 1
+            else:
+                letterdct[term] += 1
+
     positions = letterdct.keys()
     positions_num = []
     for letter in positions:
-#         positions_num.append(letter + ':' + str(letterdct[letter]))
         print letter
         if letter == '\\':
             continue
         sq = 'insert into letter(name, type, num, stopped) values ("%s", "%s", %d, 0)' % (letter, 'work_size', letterdct[letter])
         print sq
         cur.execute(sq)
-#     strss = '\n'.join(positions_num)
-#     file.write(strss)
+
     conn.commit()
     conn.close()
-#     file.close()
 except Exception as e:
-#     file.close()
     conn.close()
     print letter
     print e
