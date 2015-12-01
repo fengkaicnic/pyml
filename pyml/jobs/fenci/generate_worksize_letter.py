@@ -48,7 +48,7 @@ try:
         print letter
         if letter == '\\':
             continue
-        sq = 'insert into letter(name, type, num) values ("%s", "%s", %d)' % (letter, 'work_size', letterdct[letter])
+        sq = 'insert into letter(name, type, num, stopped) values ("%s", "%s", %d, 0)' % (letter, 'work_size', letterdct[letter])
         print sq
         cur.execute(sq)
 #     strss = '\n'.join(positions_num)
