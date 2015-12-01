@@ -77,6 +77,7 @@ class LSA(object):
         for j in range(len(vdemention2)):
             plt.text(vdemention2[j],vdemention3[j],titles[j]) 
         plt.plot(vdemention2, vdemention3, '.')        
+        plt.show()
         
         ut = u.T
         demention2 = ut[1]
@@ -84,7 +85,7 @@ class LSA(object):
         for i in range(len(demention2)):
             plt.text(demention2[i],demention3[i],self.keys[i]) 
         plt.plot(demention2, demention3, '.')
-        
+        plt.show()
 import pdb
 mylsa = LSA(stopwords, ignorechars)
 for t in titles:
