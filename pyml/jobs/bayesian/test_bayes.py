@@ -7,9 +7,9 @@ sys.setdefaultencoding('utf8')
 
 test_file = 'd:/jobs/dctree/salary/test.csv'
 labels = utils.get_labels(test_file, 6)
-pdb.set_trace()
+# pdb.set_trace()
 plabel1 = utils.read_rst('position.txt')
-plabel2 = utils.read_rst('position13')
+plabel2 = utils.read_rst('positionlet')
 i = 0
 rst = 0
 for label in plabel1:
