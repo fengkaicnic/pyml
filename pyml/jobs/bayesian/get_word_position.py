@@ -28,7 +28,9 @@ position_dct = get_position_meta()
 def get_letter_position(key, pos, letter, wordprobdct):
     prob = 1.0
     for let in letter:
-        prob *= float(wordprobdct[key][pos].get(let, 1))/wordprobdct[key][pos]['total']
+        if len(let) == 1:
+            continue
+        prob *= float(wordprobdct[key][pos].get(let, 0.01))/wordprobdct[key][pos]['total']
     return prob
     
     
@@ -55,7 +57,7 @@ def get_position_prob(key, wordprobdct, works):
 #         industry2prob = 0.0001/workprobdct[key]['industry2']['total']
     
     total = float(wordprobdct[key]['total'])/wordprobdct['total']
-    total = total*(pos1prob + pos2prob)
+    total = total*(50*pos1prob + pos2prob)
     
     return total
 
