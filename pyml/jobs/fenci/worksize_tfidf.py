@@ -4,6 +4,7 @@ import sys
 import re
 import MySQLdb
 import time
+import numpy as np
 import jieba
 from jobs import utils
 import pdb
@@ -36,6 +37,15 @@ def get_letter_dct(position_dct):
         letter_dct[position] = [[], []]
     
     return letter_dct
+
+def get_doc_prob(letter_dct, letter):
+    count = 0
+    for let in letter_dct:
+        if letter in let:
+            count += 1
+    if count == 0:
+        count = 1
+    return 32 / float(count)
         
 try:
     pdb.set_trace()
@@ -49,7 +59,7 @@ try:
     sql = 'select position_name from work_size'
     cur.execute(sql)
     position_dct = get_position_meta()
-#     file = open('d:/jobs/dctree/majortest.csv', 'w+')
+
     positionlst = cur.fetchall()
     i = 0
     letterdct = {}
@@ -63,29 +73,36 @@ try:
         for term in seg_lst:
             if len(term) > 1:
                 letter_dct[poslst[1][0]][0].append(term)
-            if not letterdct.has_key(term):
-                letterdct[term] = 1
-            else:
-                letterdct[term] += 1
         seg_lst = jieba.cut(poslst[2][0])
         for term in seg_lst:
             if len(term) > 1:
                 letter_dct[poslst[1][0]][1].append(term)
-            if not letterdct.has_key(term):
-                letterdct[term] = 1
-            else:
-                letterdct[term] += 1
-
-    positions = letterdct.keys()
-    positions_num = []
-#     for letter in positions:
-#         print letter
-#         if letter == '\\':
-#             continue
-#         sq = 'insert into letter(name, type, num, stopped) values ("%s", "%s", %d, 0)' % (letter, 'work_size', letterdct[letter])
-#         print sq
-#         cur.execute(sq)
-    utils.store_rst(letter_dct, 'letterdct')
+    
+    tfidf_dct = {}
+    keylst = [item[0] for item in letter_dct.items()]
+    tletterlst = [item[1][0] for item in letter_dct.items()]
+    for j, tletter in enumerate(tletterlst):
+        sletter = set(tletter)
+        tfidf_dct[keylst[j]] = [[], [], []]
+        for letter in sletter:
+            if tletter.count(letter) <= 1:
+                continue
+            tfidf_dct[keylst[j]][0].append(letter)
+            tfidf_dct[keylst[j]][1].append(float(tletter.count(letter))/len(tletter))
+            tfidf_dct[keylst[j]][2].append(get_doc_prob(tletterlst, letter))
+#         pdb.set_trace()
+        tfidf_dct[keylst[j]][1] = np.array(tfidf_dct[keylst[j]][1])
+        tfidf_dct[keylst[j]][2] = np.array(tfidf_dct[keylst[j]][2])
+        tfidf_dct[keylst[j]][2] = np.log(tfidf_dct[keylst[j]][2])
+        tfidf_dct[keylst[j]][1] = tfidf_dct[keylst[j]][1] * tfidf_dct[keylst[j]][2]
+    
+    for key in keylst:
+        print '===================',key,'==================='
+        for i in range(len(tfidf_dct[key][0])):
+            print tfidf_dct[key][0][i],':',tfidf_dct[key][1][i]
+    
+    utils.store_rst(tfidf_dct, 'tfidf_dct')
+         
     conn.commit()
     conn.close()
 except Exception as e:
