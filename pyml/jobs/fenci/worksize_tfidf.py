@@ -96,12 +96,24 @@ try:
         tfidf_dct[keylst[j]][2] = np.log(tfidf_dct[keylst[j]][2])
         tfidf_dct[keylst[j]][1] = tfidf_dct[keylst[j]][1] * tfidf_dct[keylst[j]][2]
     
-    for key in keylst:
-        print '===================',key,'==================='
-        for i in range(len(tfidf_dct[key][0])):
-            print tfidf_dct[key][0][i],':',tfidf_dct[key][1][i]
+    tfidf_sort_dct = {}
     
-    utils.store_rst(tfidf_dct, 'tfidf_dct')
+    for key in keylst:
+#         print '===================',key,'==================='
+        tfidf_sort_dct[key] = {}
+        for i in range(len(tfidf_dct[key][0])):
+            tfidf_sort_dct[key][tfidf_dct[key][0][i]] = tfidf_dct[key][1][i]
+#             print tfidf_dct[key][0][i],':',tfidf_dct[key][1][i]
+
+    for key in tfidf_sort_dct.keys():
+        tfidf_sort_dct[key] = sorted(tfidf_sort_dct[key].items(), key=lambda item:item[1], reverse=True)
+        print '==============================',key,'============================================'   
+        for index, item in enumerate(tfidf_sort_dct[key]):
+            print item[0],':',item[1]
+            if index > 50:
+                break
+    
+    utils.store_rst(tfidf_sort_dct, 'tfidf_dct')
          
     conn.commit()
     conn.close()

@@ -30,7 +30,7 @@ def get_letter_position(key, pos, letter, wordprobdct):
     for let in letter:
         if len(let) == 1:
             continue
-        prob *= float(wordprobdct[key][pos].get(let, 0.01))/wordprobdct[key][pos]['total']
+        prob *= float(wordprobdct[key][pos].get(let, 1.0))/wordprobdct[key][pos]['total']
     return prob
     
     

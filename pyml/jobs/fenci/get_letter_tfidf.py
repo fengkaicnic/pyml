@@ -13,6 +13,7 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 
 letter_dct = utils.read_rst('letterdct')
+tfidf_dct = {}
 
 # pdb.set_trace()
 corpus = []
@@ -29,11 +30,25 @@ word=vectorizer.get_feature_names()#获取词袋模型中的所有词语
 weight=tfidf.toarray()#将tf-idf矩阵抽取出来，元素a[i][j]表示j词在i类文本中的tf-idf权重
 
 for i in range(len(weight)):#打印每类文本的tf-idf词语权重，第一个for遍历所有文本，第二个for便利某一类文本下的词语权重
-    print u"-------这里输出第              ",keys[i],u"    类文本的词语tf-idf权重------"
+#     print u"-------这里输出第              ",keys[i],u"    类文本的词语tf-idf权重------"
+    tfidf_dct[keys[i]] = {}
     for j in range(len(word)):
-      if weight[i][j] == 0.0:
-          continue
-      print word[j],weight[i][j]
-      
+        if weight[i][j] == 0.0:
+            continue
+        tfidf_dct[keys[i]][word[j]] = weight[i][j]
+#         print word[j],weight[i][j]
+
+tfidf_sort_dct = {}
+
+for key in tfidf_dct.keys():
+    tfidf_sort_dct[key] = sorted(tfidf_dct[key].items(), key=lambda item:item[1], reverse=True)
+
+for key in tfidf_sort_dct.keys():
+    print u"-------这里输出第              ",key,u"    类文本的词语tf-idf权重------"
+    for index, item in enumerate(tfidf_sort_dct[key]):
+        print item[0],':',item[1]
+        if index >=50:
+            break
+    
 print len(corpus)
 print len(keys)
