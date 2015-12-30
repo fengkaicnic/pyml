@@ -64,6 +64,8 @@ def run(Sigma,Mu1,Mu2,k,N,iter_num,Epsilon):
     if sum(abs(Mu-Old_Mu)) < Epsilon:
       break
 if __name__ == '__main__':
-   run(6,40,20,2,1000,1000,0.0001)
-   plt.hist(X[0,:],50)
-   plt.show()
+    import pdb
+    pdb.set_trace()
+    run(6,40,20,2,1000,1000,0.0001)
+    plt.hist(X[0,:],50)
+    plt.show()
