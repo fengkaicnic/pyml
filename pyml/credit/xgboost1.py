@@ -54,8 +54,7 @@ print train_new.shape
 print test_new.shape
 
 pdb.set_trace()
-#dtrain = xgboost.DMatrix(data=train_new, label=1-train_label[:,1])
-dtrain = xgboost.DMatrix(data=train_new, label=train_label[:,1])
+dtrain = xgboost.DMatrix(data=train_new, label=1-train_label[:,1])
 dtest = xgboost.DMatrix(data=test_new)
 
 param = {'bst:max_depth':8, 'bst:eta':0.02, 'objective':'binary:logistic'}
@@ -73,8 +72,7 @@ plst = param.items()
 nround = 1520
 bst = xgboost.train(plst, dtrain, nround)
 
-#pred = 1 - bst.predict(dtest)
-pred = bst.predict(dtest)
+pred = 1 - bst.predict(dtest)
 
 result = np.zeros((test_x.shape[0], 2))
 result[:,0] = test_x[:,0]
