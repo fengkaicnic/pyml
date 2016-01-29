@@ -6,9 +6,11 @@ import pdb
 pdb.set_trace()
 p = re.compile(u"[\u4e00-\u9fa5]*")
   
-with open('output/text1') as f:
+with open('output/text5') as f:
     for line1 in f.readlines():
         line = line1.decode('utf8') 
+        if 'WB_text W_f14' not in line:
+            continue
         results = p.findall(line)
         for index, result in enumerate(results):
             if result:
