@@ -33,16 +33,19 @@ def extract_data(content):
 #     pdb.set_trace()
     contentlst = content.split('\n')
     for line in contentlst:
-        linet = line.replace(' ', '')
-        if len(linet) < 13 and len(linet) > 5:
+        for linen in line.split(' '):
+            if len(linen) < 13 and len(linen) > 5:
 #             pdb.set_trace()
-            name = chinesep.search(linet.strip().decode('utf-8'))
-            if name:
-                print name.group(0)
+                name = chinesep.search(linen.strip().decode('utf-8'))
+                if name:
+                    print name.group(0)
             continue
+        linet = line.replace(' ', '')
+        
         if linet.find('地址：') != -1:
             print linet[linet.find('地址')+len('地址：'):]
             continue
+        
         if linet.find('地址:') != -1:
             print linet[linet.find('地址:')+len('地址:'):]
     
