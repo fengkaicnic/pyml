@@ -13,6 +13,8 @@ urlph = re.compile('(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp
 urlp = re.compile('[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?')
 mphonep = re.compile('(1(([35][0-9])|(47)|[8][0126789]))\d{8}')
 telephonep = re.compile('0\d{2,3}(\-)?\d{7,8}')
+chinesep = re.compile(u'^[\u4e00-\u9fa5]+$')
+#chinesepl = re.compile('[\x{4e00}-\x{9fa5}]+')
 
 def extract_data(content):
     url = urlph.search(content)
@@ -28,11 +30,25 @@ def extract_data(content):
         print mphone.group(0)
     if telephone:
         print telephone.group(0)
+#     pdb.set_trace()
+    contentlst = content.split('\n')
+    for line in contentlst:
+        linet = line.replace(' ', '')
+        if len(linet) < 13 and len(linet) > 5:
+#             pdb.set_trace()
+            name = chinesep.search(linet.strip().decode('utf-8'))
+            if name:
+                print name.group(0)
+            continue
+        if linet.find('地址：') != -1:
+            print linet[linet.find('地址')+len('地址：'):]
+            continue
+        if linet.find('地址:') != -1:
+            print linet[linet.find('地址:')+len('地址:'):]
     
 def parse_eml(path):
     fp = codecs.open(path, 'r', encoding='gbk')
     msg = email.message_from_file(fp)
-    pdb.set_trace()
     emailaddress = msg.get('from')[msg.get('from').find('<')+1:msg.get('from').find('>')]
     print emailaddress
     for bar in msg.walk():
@@ -44,7 +60,7 @@ def parse_eml(path):
             data = bar.get_payload(decode=True)
             try:
 #                 print data.decode('gb2312').encode('utf-8')
-                content = data
+                content = data.decode('gb2312').encode('utf-8')
             except UnicodeDecodeError:
 #                 print data
                 content = data
