@@ -69,6 +69,14 @@ def extract_data(content):
         
         if linet.find('地址:') != -1:
             print '地址：',linet[linet.find('地址:')+len('地址:'):]
+            continue
+
+        if linet.find('地点：') != -1:
+            print '地点：',linet[linet.find('地点')+len('地点：'):]
+            continue
+
+        if linet.find('地点:') != -1:
+            print '地点：',linet[linet.find('地点:')+len('地点:'):]
     
 def parse_eml(path):
     fp = codecs.open(path, 'r', encoding='gbk')
@@ -121,7 +129,7 @@ def parse_eml_string(path):
         strings = ''.join(map(lambda st:st.replace('\n', ''), linelst))
         print base64.decodestring(strings)
         
-path = 'd:/eml'
+path = 'd:/nreml'
 lst = os.listdir(path)
 for pth in lst:
     pth = path + '/' + pth
