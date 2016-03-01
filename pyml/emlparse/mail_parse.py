@@ -8,8 +8,9 @@ reload(sys)
 import os
 import pdb
 sys.setdefaultencoding('utf8')
+from parse1 import parse_eml
 
-def parse_eml(path):
+def parse_eml_local(path):
     # fp = codecs.open(path, 'r', encoding='gbk')
     fp = codecs.open(path, 'r')
     msg = email.message_from_file(fp)
@@ -50,4 +51,5 @@ if __name__ == '__main__':
             print pth.decode('gb2312').encode('utf-8')
         except UnicodeDecodeError:
             print pth
+        # pdb.set_trace()
         parse_eml(pth)

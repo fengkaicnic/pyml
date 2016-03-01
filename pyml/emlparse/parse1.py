@@ -22,9 +22,12 @@ chinesep = re.compile(u'^[\u4e00-\u9fa5]+$')
 family_dct = get_family_dct()
 
 def check_name(name):
+    if len(name) > 10:
+        return False
     for key in family_dct.iterkeys():
         if name.startswith(key):
-            return True
+            if not u'先生' in name and not u'女士' in name:
+                return True
     return False
 
 def html_parser(content):
@@ -50,16 +53,19 @@ def extract_data(content):
     # if telephone:
     #     print '座机：',telephone.group(0)
 #     pdb.set_trace()
-    contentlst = content.split('\n')
+    if content.count('\n') < 5:
+        contentlst = content.split(' ')
+    else:
+        contentlst = content.split('\n')
     for line_l in contentlst:
         # pdb.set_trace()
         for line in line_l.split('|'):
             if u'说明: 说明' in line:
                 continue
             for linen in line.split(' '):
-                if len(linen) < 10 and len(linen) > 5:
+                if len(linen.strip(' ')) < 10 and len(linen.strip(' ')) > 5:
     #             pdb.set_trace()
-                    name = chinesep.search(linen.strip().decode('utf-8'))
+                    name = chinesep.search(linen.strip().strip(' ').decode('utf-8'))
                     if name:
                         if check_name(name.group(0)):
                             print "联系人：",name.group(0)
@@ -75,12 +81,14 @@ def extract_data(content):
                 print '座机：',telephone.group(0)
 
             if linet.find('联系人：') != -1:
-                print "联系人：",linet[linet.find('联系人')+len('联系人：'):]
-                continue
+                if check_name(linet[linet.find('联系人')+len('联系人：'):]):
+                    print "联系人：",linet[linet.find('联系人')+len('联系人：'):]
+                    continue
 
             if linet.find('联系人:') != -1:
-                print "联系人：",linet[linet.find('联系人:')+len('联系人:'):]
-                continue
+                if check_name(linet[linet.find('联系人:')+len('联系人:'):]):
+                    print "联系人：",linet[linet.find('联系人:')+len('联系人:'):]
+                    continue
 
             if linet.find('地址：') != -1:
                 print '地址：',linet[linet.find('地址')+len('地址：'):]
