@@ -4,11 +4,13 @@ import sys
 import codecs
 reload(sys)
 import email
+from parse1 import parse_eml
 sys.setdefaultencoding('utf8')
 
-filter_words = ['智联招聘', '在线考评', '51job', '不合适', '推荐', '猎头', '网易考拉']
+filter_words = ['智联招聘', '在线考评', '51job', '已经有', '不合适', '最新职位', '推荐', '简历排名',  '猎头', '网易考拉', '互联网淘金', '已投']
 mailst = ['service@steelport.zhaopin.com', 'service@51job.com']
-path = u"d:/eml/email"
+# path = u"d:/eml/email"
+path = u'd:/eml/bugmail'
 usedlst = []
 nouselst = []
 
@@ -37,14 +39,16 @@ for pth in lst:
             namefg = False
             break
     if namefg:
-        if filter_email(name):
-            usedlst.append(name)
-        else:
-            nouselst.append(name)
+        usedlst.append(name)
+        # if filter_email(name):
+        #     usedlst.append(name)
+        # else:
+        #     nouselst.append(name)
 
 print '============================used name:=============================='
 for name in usedlst:
     print name
+    parse_eml(path + '/' + name)
 print len(usedlst)
 print '============================noused name:============================'
 for name in nouselst:
