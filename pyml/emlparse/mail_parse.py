@@ -22,6 +22,7 @@ def parse_eml(path):
             if name:
                 print 'attachment:', name
                 continue
+            pdb.set_trace()
             data = bar.get_payload(decode=True)
             try:
                 print data.decode('gb2312').encode('utf-8')
