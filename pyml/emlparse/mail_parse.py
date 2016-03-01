@@ -24,12 +24,18 @@ def parse_eml(path):
                 continue
             pdb.set_trace()
             data = bar.get_payload(decode=True)
-            try:
-                print data.decode('gb2312').encode('utf-8')
-                content = data.decode('gb2312').encode('utf-8')
-            except UnicodeDecodeError:
-                print data
-                content = data
+            if bar.get_content_charset() == 'gb2312':
+                print data.decode('gbk').encode('utf-8')
+                content = data.decode('gbk').encode('utf-8')
+            else:
+                print data.decode(bar.get_content_charset()).encode('utf-8')
+                content = data.decode(bar.get_content_charset()).encode('utf-8')
+            # try:
+            #     print data.decode('gb2312').encode('utf-8')
+            #     content = data.decode('gb2312').encode('utf-8')
+            # except UnicodeDecodeError:
+            #     print data
+            #     content = data
 #             print bar.get_content_maintype()
 #             print bar.get_content_type()
             break

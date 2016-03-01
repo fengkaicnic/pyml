@@ -7,6 +7,7 @@ import re
 reload(sys)
 import os
 import pdb
+from bs4 import BeautifulSoup
 sys.setdefaultencoding('utf8')
 from family_name import get_family_dct
 
@@ -25,6 +26,14 @@ def check_name(name):
         if name.startswith(key):
             return True
     return False
+
+def html_parser(content):
+    soup = BeautifulSoup(content)
+    spanlst = soup.find_all('span')
+    contentlst = []
+    for span in spanlst:
+        contentlst.append(span.text)
+    return contentlst
 
 def extract_data(content):
     url = urlph.search(content)
@@ -101,10 +110,17 @@ def parse_eml(path):
             if name:
                 print 'attachment:', name
                 continue
-            data = bar.get_payload(decode=True)
+            if bar.get_content_type() == 'text/plain':
+                data = bar.get_payload(decode=True)
+            else:
+                data = '\n'.join(html_parser(bar.get_payload(decode=True)))
             try:
-                print data.decode('gb2312').encode('utf-8')
-                content = data.decode('gb2312').encode('utf-8')
+                if bar.get_content_charset() == 'gb2312':
+                    # print data.decode('gbk').encode('utf-8')
+                    content = data.decode('gbk').encode('utf-8')
+                else:
+                    # print data.decode(bar.get_content_charset()).encode('utf-8')
+                    content = data.decode(bar.get_content_charset()).encode('utf-8')
             except UnicodeDecodeError:
                 print data
                 content = data
