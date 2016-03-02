@@ -1,6 +1,8 @@
 #coding:utf8
 import sys
 import email
+import os
+import time
 import pdb
 from email import Parser
 reload(sys)
@@ -9,10 +11,50 @@ from email.header import decode_header
 import poplib
 sys.setdefaultencoding('utf-8')
 
+messageid_dct = None
+pth = 'd:/pop3/'
+
+def validate_mail_path(user):
+    path = pth + user
+    if not os.path.exists(path):
+        os.makedirs(path)
+    if not os.path.isfile(path + '/messageid'):
+        fle = open(path + '/messageid', 'wb')
+        fle.close()
+
+def generate_name(subject, mailtm):
+    mailtm = mailtm[:mailtm.find('+')-1]
+    mailtime = time.strptime(mailtm, '%a,%d %b %Y %H:%M:%S')
+    year = str(mailtime.tm_year)
+    mon = '0' + str(mailtime.tm_mon) if mailtime.tm_mon < 10 else str(mailtime.tm_mon)
+    day = '0' + str(mailtime.tm_mday) if mailtime.tm_mday < 10 else str(mailtime.tm_mday)
+    year_mon = year + mon + day
+
+
+    pass
+
+def check_email(messageid_dct, messageid, user):
+    if messageid_dct is None:
+        messageid_dct = {}
+        with open(pth + user) as fle:
+            lines = fle.readlines()
+            for line in lines:
+                messageid_dct[line] = 1
+    if messageid_dct.has_key(messageid):
+        return False
+    return True
+
+def write_mail(path, content):
+    pass
+
 def parse_eml_local(msg_content):
     # fp = codecs.open(path, 'r', encoding='gbk')
     msg = email.message_from_string(msg_content)
-    pdb.set_trace()
+    messageid = msg.get('Message-Id')
+    if not check_email(messageid_dct, messageid):
+        return
+    subject = msg.get('Subject')
+    name = generate_name(subject)
     for header in ['From', 'To', 'Subject']:
         value = msg.get(header, '')
         print '*****************************'
@@ -50,8 +92,9 @@ if __name__ == '__main__':
     user = 'bugemail@nrnr.me'
     password = 'Naren2016'
     pop3_server = 'pop.exmail.qq.com'
-
     server = poplib.POP3(pop3_server)
+    pdb.set_trace()
+    validate_mail_path(user)
 
     print server.getwelcome()
     server.user(user)
@@ -66,6 +109,11 @@ if __name__ == '__main__':
     resp, lines, octets = server.retr(index)
     msg_content = '\r\n'.join(lines)
     print msg_content
-    parse_eml_local(msg_content)
+    msg = email.message_from_string(msg_content)
+    mailtm = msg.get('date')
+    mailtm = mailtm[:mailtm.find('+')-1]
+    path = 'd:/pop3/mailtest/mailtest.eml'
+    open(path, 'wb').write(msg_content)
+    # parse_eml_local(msg_content)
 
     server.quit()
