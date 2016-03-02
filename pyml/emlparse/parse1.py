@@ -30,6 +30,11 @@ def check_name(name):
                 return True
     return False
 
+def check_address(address):
+    if len(address) < 10:
+        return False
+    return True
+
 def html_parser(content):
     soup = BeautifulSoup(content)
     spanlst = soup.find_all('span')
@@ -91,19 +96,23 @@ def extract_data(content):
                     continue
 
             if linet.find('地址：') != -1:
-                print '地址：',linet[linet.find('地址')+len('地址：'):]
-                continue
+                if check_address(linet[linet.find('地址')+len('地址：'):]):
+                    print '地址：',linet[linet.find('地址')+len('地址：'):]
+                    continue
 
             if linet.find('地址:') != -1:
-                print '地址：',linet[linet.find('地址:')+len('地址:'):]
-                continue
+                if check_address(linet[linet.find('地址:')+len('地址:'):]):
+                    print '地址：',linet[linet.find('地址:')+len('地址:'):]
+                    continue
 
             if linet.find('地点：') != -1:
-                print '地点：',linet[linet.find('地点')+len('地点：'):]
-                continue
+                if check_address(linet[linet.find('地点')+len('地点：'):]):
+                    print '地点：',linet[linet.find('地点')+len('地点：'):]
+                    continue
 
             if linet.find('地点:') != -1:
-                print '地点：',linet[linet.find('地点:')+len('地点:'):]
+                if check_address(linet[linet.find('地点:')+len('地点:'):]):
+                    print '地点：',linet[linet.find('地点:')+len('地点:'):]
     
 def parse_eml(path):
     # fp = codecs.open(path, 'r', encoding='gbk')

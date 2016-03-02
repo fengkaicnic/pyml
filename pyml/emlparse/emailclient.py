@@ -3,6 +3,7 @@ import logging
 import getpass, poplib
 import imaplib
 import email
+import pdb
 import os
 import sys
 import re
@@ -13,7 +14,7 @@ import datetime
 import hashlib
 import itertools
 
-from emlparse import new_mail_handler
+#from emlparse import new_mail_handler
 
 import shutil
 import random
@@ -22,8 +23,8 @@ import string
 import base64
 import json
 
-import nanautil.dbhelper as dbhelper
-import nanautil.util as nautil
+#import nanautil.dbhelper as dbhelper
+#import nanautil.util as nautil
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -117,7 +118,8 @@ class CEmailReceiver(object):
         self.use_ssl= kargs.get('use_ssl',True)
         self.port = kargs.get('port',0)
         self.autoDele=kargs.get('autoDele',False)
-        self.smtp = smtp_setting(smtp_str)
+        # self.smtp = smtp_setting(smtp_str)
+        self.smtp = ''
         self.cur_dir=os.path.dirname(os.path.realpath(__file__))+"/"
         self.data_root = self.cur_dir+"data/"
 
@@ -136,7 +138,10 @@ class CEmailReceiver(object):
 
     @property
     def email_root(self):
-        return "data/" + self.unit_folder
+        try:
+            return "data/" + self.unit_folder
+        except:
+            return 'data/'
 
     def calc_unit_parameters(self, mm):
         _to = mm.get_to()
@@ -160,10 +165,10 @@ class CEmailReceiver(object):
 
     def calEmlName(self, strMsg):
         mm=CMailMsg(strMsg)
-        self.calc_unit_parameters(mm)
+        # self.calc_unit_parameters(mm)
         folder, fname = mm.get_eml_name()
         cur_dir = self.email_root+"/"+folder
-        cur_dir = nautil.to_utf8(cur_dir)
+        # cur_dir = nautil.to_utf8(cur_dir)
         if not os.access(cur_dir, os.F_OK):
             os.makedirs(cur_dir);
         #if not os.access(self.emailroot+"/err_emails", os.F_OK):
@@ -212,82 +217,72 @@ class CPop3Client(CEmailReceiver):
 
 
     def fetch_one(self,which):
-        try:
-            top_retry = 0
-            msg = None
-            while top_retry < 3:
-                try:
-                    msg = self.p3.top(which, 1)
-                    break
-                except:
-                    time.sleep(3)
-                    top_retry += 1
-            if top_retry > 0:
-                if msg is None:
-                    nautil.dlog.warning("emailclient-pop3(%s:%s): top failed after %s retries" % (argv_dict.get('unit_folder', ''), which, top_retry))
-                    return None, 'exception', None
-                else:
-                    nautil.dlog.warning("emailclient-pop3(%s:%s): top succeeded after %s retries" % (argv_dict.get('unit_folder', ''), which, top_retry))
-            strMsg = "\n".join(msg[1])
-            del msg
-            sFileName, mm=self.calEmlName(strMsg)
-            if mm.get_to() == "no_to":
-                open(sFileName,"wb").write("no_to")
-                nautil.dlog.warning("emailclient-pop3(%s:%s): ignore one email %s" % (argv_dict.get('unit_folder', ''), which, sFileName))
-                logger.warning("emailclient-pop3(%s:%s): ignore one email %s" % (argv_dict.get('unit_folder', ''), which, sFileName))
-                return None, 'ignore', None
-
-            subject = mm.get_subject(True)
-            # print subject.decode('utf8')
-
-            inbox_time = mm.get_date()
-            timestamp  = time.time()
-            disposes = []
-            if os.access(sFileName,os.F_OK):
-                disposes.append('handled')
-                self.already_exists += 1
-
-            if timestamp-inbox_time > 86400*10:
-                disposes.append('pre-dele')
-
-            if timestamp-inbox_time > 86400*60:
-                disposes.append('old')
-
-            if 'old' in disposes or 'handled' in disposes:  #old or handled
-                return sFileName, disposes, mm.get_date()
-
-            logger.info("retring(%s) %s" % (which, subject))
-            msg= self.p3.retr(which)
-            if self.autoDele and (timestamp-inbox_time > 86400*15): #15 days
-                self.p3.dele(which)
-                self.deleted += 1
-                disposes.append('deleted')
-
-            open(sFileName,"wb").write("\n".join(msg[1]))
+        top_retry = 0
+        msg = None
+        while top_retry < 3:
             try:
-                handler_ok = self.on_new_email(sFileName, inbox_time)
+                msg = self.p3.top(which, 1)
+                break
             except:
-                return None, 'handler_exception', None
-
-            if handler_ok:
-                self.ok_email += 1
+                time.sleep(3)
+                top_retry += 1
+        if top_retry > 0:
+            if msg is None:
+                print 'have no nautil'
+                # nautil.dlog.warning("emailclient-pop3(%s:%s): top failed after %s retries" % (argv_dict.get('unit_folder', ''), which, top_retry))
+                return None, 'exception', None
             else:
-                logger.error("on_new_email failed for %s" % sFileName)
-                retries = self.err_records.get(sFileName,0)
-                self.err_records[sFileName] = retries+1
-                sFileNameLow = sFileName.lower()
-                if sFileNameLow.find('zhaopin')>0 or sFileNameLow.find('51job')>0:
-                    try:
-                        shutil.move(sFileName, self.data_root+'error_emails')
-                    except Exception, e:
-                        logger.error("move failed %s: %s" % (sFileName, str(e)))
-                        os.unlink(sFileName)
-                    sFileName=None
-            return sFileName, ['new'], None
-        except Exception,e:
-            logger.exception("fetch_one(%s) %d" % (argv_dict.get('unit_folder', ''), which))
-            nautil.dlog.exception("fetch_one(%s) %d" % (argv_dict.get('unit_folder', ''), which))
-        return None, 'exception', None
+                print 'have not nautil'
+                # nautil.dlog.warning("emailclient-pop3(%s:%s): top succeeded after %s retries" % (argv_dict.get('unit_folder', ''), which, top_retry))
+        strMsg = "\n".join(msg[1])
+        del msg
+        sFileName, mm=self.calEmlName(strMsg)
+        if mm.get_to() == "no_to":
+            open(sFileName,"wb").write("no_to")
+            # nautil.dlog.warning("emailclient-pop3(%s:%s): ignore one email %s" % (argv_dict.get('unit_folder', ''), which, sFileName))
+            logger.warning("emailclient-pop3(%s:%s): ignore one email %s" % (argv_dict.get('unit_folder', ''), which, sFileName))
+            return None, 'ignore', None
+
+        subject = mm.get_subject(True)
+        # print subject.decode('utf8')
+
+        inbox_time = mm.get_date()
+        timestamp  = time.time()
+        disposes = []
+        if os.access(sFileName,os.F_OK):
+            disposes.append('handled')
+            self.already_exists += 1
+
+        if timestamp-inbox_time > 86400*10:
+            disposes.append('pre-dele')
+
+        if timestamp-inbox_time > 86400*60:
+            disposes.append('old')
+
+        if 'old' in disposes or 'handled' in disposes:  #old or handled
+            return sFileName, disposes, mm.get_date()
+
+        logger.info("retring(%s) %s" % (which, subject))
+        msg= self.p3.retr(which)
+        if self.autoDele and (timestamp-inbox_time > 86400*15): #15 days
+            self.p3.dele(which)
+            self.deleted += 1
+            disposes.append('deleted')
+
+        open(sFileName,"wb").write("\n".join(msg[1]))
+        # handler_ok = self.on_new_email(sFileName, inbox_time)
+        handler_ok = 1
+        if handler_ok:
+            self.ok_email += 1
+        else:
+            logger.error("on_new_email failed for %s" % sFileName)
+            retries = self.err_records.get(sFileName,0)
+            self.err_records[sFileName] = retries+1
+            sFileNameLow = sFileName.lower()
+            if sFileNameLow.find('zhaopin')>0 or sFileNameLow.find('51job')>0:
+                shutil.move(sFileName, self.data_root+'error_emails')
+                sFileName=None
+        return sFileName, ['new'], None
 
     def fetch_all_impl(self):
         numMessages,total_size = self.p3.stat()
@@ -333,7 +328,7 @@ class CPop3Client(CEmailReceiver):
                 if old_emails >= max_errors: #连续 5 封老邮件
                     emsg = "(%s) %s个连续老邮件, 退出" % (argv_dict.get('unit_folder', ''), max_errors)
                     logger.info(emsg)
-                    nautil.dlog.info("emailclient-pop3: %s " % emsg)
+                    # nautil.dlog.info("emailclient-pop3: %s " % emsg)
                     break
             else:
                 old_emails = 0
@@ -344,17 +339,14 @@ class CPop3Client(CEmailReceiver):
                 if successive_exceptions > max_errors:
                     emsg = "(%s) %s次连续异常, 退出" % (argv_dict.get('unit_folder', ''), max_errors)
                     logger.error(emsg)
-                    nautil.dlog.error("emailclient-pop3: %s " % emsg)
+                    # nautil.dlog.error("emailclient-pop3: %s " % emsg)
                     break
             else:
                 successive_exceptions = 0
 
     def fetch_all(self):
-        try:
             self.fetch_all_impl()
             self.p3.quit()
-        except Exception,e:
-            logger.exception("fetch_all")
 
 class CImapClient(CEmailReceiver):
     def __init__(self, smtp_str, host, user, passwd, **kargs):
@@ -445,29 +437,24 @@ class CImapClient(CEmailReceiver):
             logger.exception("fetch_all")
 
 def serv(protocol, smtpstr, host, port,user, passwd, use_ssl):
-    try:
-        initlog("/"+argv_dict['unit_folder']+".log")
-        #time.sleep(random.random()*60)
-        #return 0
-        smtpstr = base64.decodestring(smtpstr)
-        if protocol=='IMAP':
-            p3c = CImapClient(smtpstr,host, user, passwd, **{'use_ssl':use_ssl,'port':port, 'autoDele':argv_dict.get('auto_del',0) } )
-        elif protocol=='POP3':
-            p3c = CPop3Client(smtpstr,host, user, passwd, **{'use_ssl':use_ssl,'port':port, 'autoDele':argv_dict.get('auto_del',0) } )
-        if not p3c.relogin():
-            logger.error("######## login failed, please check parameters")
-            return 2
+    # initlog("/"+argv_dict['unit_folder']+".log")
+    #time.sleep(random.random()*60)
+    #return 0
+    # smtpstr = base64.decodestring(smtpstr)
+    if protocol=='IMAP':
+        p3c = CImapClient(smtpstr,host, user, passwd, **{'use_ssl':use_ssl,'port':port, 'autoDele':argv_dict.get('auto_del',0) } )
+    elif protocol=='POP3':
+        p3c = CPop3Client(smtpstr,host, user, passwd, **{'use_ssl':use_ssl,'port':port, 'autoDele':argv_dict.get('auto_del',0) } )
+    if not p3c.relogin():
+        logger.error("######## login failed, please check parameters")
+        return 2
 
-        argv_dict['smtp']=p3c.smtp
-        p3c.fetch_all()
-        p3c.log_statistics()
+    argv_dict['smtp']=p3c.smtp
+    p3c.fetch_all()
+    p3c.log_statistics()
 
-        #shutil.rmtree(p3c.working_folder)
-        return 0
-    except Exception,e:
-        logger.exception("serv failed")
-    return 1
-
+    #shutil.rmtree(p3c.working_folder)
+    return 0
 
 def usage(appname):
     print "Usage: %s pop3|imap email_server port username passwd ssl|nossl smtpstr unitname" % appname
@@ -478,7 +465,7 @@ def main(argv):
         return 101
 
     global argv_dict
-    argv_dict = nautil.json_loads_utf8(argv[8].replace("'", '"'))
+    # argv_dict = nautil.json_loads_utf8(argv[8].replace("'", '"'))
     return serv(argv[1],argv[7], argv[2], int(argv[3]), argv[4],argv[5], argv[6]=='ssl')
 
 def main_test(argv):
@@ -498,12 +485,13 @@ def rundispatcher():
 
 #emailclient.py pop3 owa.hold.founder.com 0 hrit Founder@2011! nossl b3dhLmhvbGQuZm91bmRlci5jb21gMGBocml0YEZvdW5kZXJAMjAxMSFg5LiW57qq5Lq65omN5LmQ5ZutIDxocml0QGZvdW5kZXIuY29tPg==  "{'unit': '北京方正世纪信息系统有限公司', 'auto_del': 0}"
 if __name__ == "__main__":
-    nautil.dlog.init("emailclient", server='42.120.18.245')
+    #nautil.dlog.init("emailclient", server='42.120.18.245')
+    serv('POP3', ' ', 'pop.exmail.qq.com', 0, 'bugemail@nrnr.me', 'Naren2016', 1)
     if 'rundispatcher' in sys.argv:
         rundispatcher()
         sys.exit(0)
 
-    dbhelper.CPDB.init_db_pool('online')
-    nautil.dlog.init('emailclient', server='10.241.42.149')
+    # dbhelper.CPDB.init_db_pool('online')
+    # nautil.dlog.init('emailclient', server='10.241.42.149')
     sys.exit(main(sys.argv))
 
