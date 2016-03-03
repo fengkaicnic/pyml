@@ -5,6 +5,7 @@ import os
 import time
 import pdb
 from email import Parser
+from scipy.stats.mstats_basic import tmax
 reload(sys)
 import uuid
 import codecs
@@ -15,6 +16,27 @@ sys.setdefaultencoding('utf-8')
 
 messageid_dct = {}
 pth = 'd:/pop3/'
+mona = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+def handle_time(timestr):
+    timelst = timestr.split(' ')
+    mon = ''
+    year = ''
+    day = ''
+    hds = ''
+    for tm in timelst:
+        if tm.find(':') != -1 and tm.find('+') == -1:
+            hds = tm
+            continue
+        if tm in mona:
+            mon = tm
+            continue
+        if tm.isdigit():
+            if int(tm) < 32:
+                day = tm
+            else:
+                year = tm
+    return ' '.join([year, mon, day, hds])
 
 def validate_mail_path(user):
     path = pth + user
@@ -29,8 +51,18 @@ def validate_mail_path(user):
 
 def generate_name(subject, mailtm, folder_path):
     path = [folder_path]
-    mailtm = mailtm[:mailtm.find('+')-1]
-    mailtime = time.strptime(mailtm, '%a,%d %b %Y %H:%M:%S')
+    timestr = handle_time(mailtm)
+    print timestr
+    mailtime = time.strptime(timestr, '%Y %b %d %H:%M:%S')
+#     if mailtm.find('+') != -1:
+#         mailtm = mailtm[:mailtm.find('+')-1]
+#     else:
+#         mailtm = mailtm[:mailtm.find('-')-1]
+#     print mailtm
+#     try:
+#         mailtime = time.strptime(mailtm, '%a, %d %b %Y %H:%M:%S')
+#     except:
+#         mailtime = time.strptime(mailtm, '%d %b %Y %H:%M:%S')
     folder = time.strftime('%Y%m', mailtime)
     path.append(folder)
     if not os.path.exists('/'.join(path)):
@@ -47,6 +79,8 @@ def get_message_dct(user):
     return messageid_dct
     
 def check_email(messageid_dct, messageid):
+    if not messageid:
+        return False
     if messageid_dct.has_key(messageid):
         return False
     else:
@@ -122,10 +156,11 @@ if __name__ == '__main__':
     print mails
 
     index = len(mails)
-    resp, lines, octets = server.retr(index-1)
-    msg_content = '\r\n'.join(lines)
-    print msg_content
-    handle_eml(messageid_dct, msg_content, folder_path, user)
+    for v in range(index):
+        resp, lines, octets = server.retr(v+1)
+        msg_content = '\r\n'.join(lines)
+#         print msg_content
+        handle_eml(messageid_dct, msg_content, folder_path, user)
     pkl_fle = open(pth + user + '/messageid', 'wb')
     pickle.dump(messageid_dct, pkl_fle)
     pkl_fle.close()
