@@ -6,12 +6,14 @@ import time
 import pdb
 from email import Parser
 reload(sys)
+import uuid
 import codecs
 from email.header import decode_header
 import poplib
+import pickle
 sys.setdefaultencoding('utf-8')
 
-messageid_dct = None
+messageid_dct = {}
 pth = 'd:/pop3/'
 
 def validate_mail_path(user):
@@ -19,42 +21,55 @@ def validate_mail_path(user):
     if not os.path.exists(path):
         os.makedirs(path)
     if not os.path.isfile(path + '/messageid'):
-        fle = open(path + '/messageid', 'wb')
-        fle.close()
+        pkl_fle = open(path + '/messageid', 'wb')
+        pickle.dump({}, pkl_fle)
+        pkl_fle.close()
+    
+    return path
 
-def generate_name(subject, mailtm):
+def generate_name(subject, mailtm, folder_path):
+    path = [folder_path]
     mailtm = mailtm[:mailtm.find('+')-1]
     mailtime = time.strptime(mailtm, '%a,%d %b %Y %H:%M:%S')
-    year = str(mailtime.tm_year)
-    mon = '0' + str(mailtime.tm_mon) if mailtime.tm_mon < 10 else str(mailtime.tm_mon)
-    day = '0' + str(mailtime.tm_mday) if mailtime.tm_mday < 10 else str(mailtime.tm_mday)
-    year_mon = year + mon + day
+    folder = time.strftime('%Y%m', mailtime)
+    path.append(folder)
+    if not os.path.exists('/'.join(path)):
+        os.makedirs('/'.join(path))
+    fle_name = time.strftime('%d%H%M%S', mailtime)
+    subject_name = decode_header(subject)[0][0].replace(' ', '')
+    path.append(fle_name+uuid.uuid1().hex+'.eml')
+    return '/'.join(path)
 
-
-    pass
-
-def check_email(messageid_dct, messageid, user):
-    if messageid_dct is None:
-        messageid_dct = {}
-        with open(pth + user) as fle:
-            lines = fle.readlines()
-            for line in lines:
-                messageid_dct[line] = 1
+def get_message_dct(user):
+    pkl_fle = open(pth + user + '/messageid', 'rb')
+    messageid_dct = pickle.load(pkl_fle)
+    pkl_fle.close()
+    return messageid_dct
+    
+def check_email(messageid_dct, messageid):
     if messageid_dct.has_key(messageid):
         return False
+    else:
+        messageid_dct[messageid] = 1
     return True
 
 def write_mail(path, content):
-    pass
+    with open(path, 'wb') as file:
+        file.write(content)
 
-def parse_eml_local(msg_content):
+def handle_eml(messageid_dct, msg_content, folder_path, user):
     # fp = codecs.open(path, 'r', encoding='gbk')
     msg = email.message_from_string(msg_content)
     messageid = msg.get('Message-Id')
     if not check_email(messageid_dct, messageid):
         return
     subject = msg.get('Subject')
-    name = generate_name(subject)
+    mailtm = msg.get('date')
+    name = generate_name(subject, mailtm, folder_path)
+    write_mail(name, msg_content)
+
+def parse_eml(msg_content):
+    msg = email.message_from_string(msg_content)
     for header in ['From', 'To', 'Subject']:
         value = msg.get(header, '')
         print '*****************************'
@@ -94,8 +109,9 @@ if __name__ == '__main__':
     pop3_server = 'pop.exmail.qq.com'
     server = poplib.POP3(pop3_server)
     pdb.set_trace()
-    validate_mail_path(user)
-
+    folder_path = validate_mail_path(user)
+    
+    messageid_dct = get_message_dct(user)
     print server.getwelcome()
     server.user(user)
     server.pass_(password)
@@ -106,14 +122,11 @@ if __name__ == '__main__':
     print mails
 
     index = len(mails)
-    resp, lines, octets = server.retr(index)
+    resp, lines, octets = server.retr(index-1)
     msg_content = '\r\n'.join(lines)
     print msg_content
-    msg = email.message_from_string(msg_content)
-    mailtm = msg.get('date')
-    mailtm = mailtm[:mailtm.find('+')-1]
-    path = 'd:/pop3/mailtest/mailtest.eml'
-    open(path, 'wb').write(msg_content)
-    # parse_eml_local(msg_content)
-
+    handle_eml(messageid_dct, msg_content, folder_path, user)
+    pkl_fle = open(pth + user + '/messageid', 'wb')
+    pickle.dump(messageid_dct, pkl_fle)
+    pkl_fle.close()
     server.quit()
