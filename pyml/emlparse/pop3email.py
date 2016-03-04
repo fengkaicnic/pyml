@@ -1,4 +1,5 @@
 #coding:utf8
+import time
 import sys
 import email
 import os
@@ -13,6 +14,7 @@ from email.header import decode_header
 import poplib
 import pickle
 sys.setdefaultencoding('utf-8')
+start = time.time()
 
 messageid_dct = {}
 pth = 'd:/pop3/'
@@ -156,12 +158,16 @@ if __name__ == '__main__':
     print mails
 
     index = len(mails)
-    for v in range(index):
-        resp, lines, octets = server.retr(v+1)
-        msg_content = '\r\n'.join(lines)
-#         print msg_content
-        handle_eml(messageid_dct, msg_content, folder_path, user)
-    pkl_fle = open(pth + user + '/messageid', 'wb')
-    pickle.dump(messageid_dct, pkl_fle)
-    pkl_fle.close()
+    try:
+        for v in range(index):
+            resp, lines, octets = server.retr(v+1)
+            msg_content = '\r\n'.join(lines)
+    #         print msg_content
+            handle_eml(messageid_dct, msg_content, folder_path, user)
+    except:
+        pkl_fle = open(pth + user + '/messageid', 'wb')
+        pickle.dump(messageid_dct, pkl_fle)
+        pkl_fle.close()
     server.quit()
+end = time.time()
+print (end - start)
