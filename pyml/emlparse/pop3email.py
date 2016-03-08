@@ -5,9 +5,11 @@ import email
 import os
 import time
 import pdb
+from parse1 import parse_eml
 from email import Parser
 from scipy.stats.mstats_basic import tmax
 reload(sys)
+import traceback
 import uuid
 import codecs
 from email.header import decode_header
@@ -51,7 +53,7 @@ def validate_mail_path(user):
     
     return path
 
-def generate_name(subject, mailtm, folder_path):
+def generate_name(mailtm, folder_path):
     path = [folder_path]
     timestr = handle_time(mailtm)
     print timestr
@@ -70,7 +72,6 @@ def generate_name(subject, mailtm, folder_path):
     if not os.path.exists('/'.join(path)):
         os.makedirs('/'.join(path))
     fle_name = time.strftime('%d%H%M%S', mailtime)
-    subject_name = decode_header(subject)[0][0].replace(' ', '')
     path.append(fle_name+uuid.uuid1().hex+'.eml')
     return '/'.join(path)
 
@@ -93,16 +94,34 @@ def write_mail(path, content):
     with open(path, 'wb') as file:
         file.write(content)
 
+def get_eml_name(name, user):
+    eml_name_path = pth + user + '/emlname'
+    if not os.path.isfile(eml_name_path):
+        pkl_fle = open(eml_name_path, 'wb')
+        pkl_fle.close()
+        return {}
+    else:
+        pkl_fle = open(eml_name_path, 'rb')
+        eml_name_dct = pickle.loads(pkl_fle)
+        pkl_fle.close()
+        return eml_name_dct
+
+def write_eml_name():
+    pass
+
 def handle_eml(messageid_dct, msg_content, folder_path, user):
     # fp = codecs.open(path, 'r', encoding='gbk')
     msg = email.message_from_string(msg_content)
     messageid = msg.get('Message-Id')
-    if not check_email(messageid_dct, messageid):
-        return
     subject = msg.get('Subject')
+    if not check_email(messageid_dct, messageid):
+        return [decode_header(subject)[0][0].replace(' ', '')]
+
     mailtm = msg.get('date')
-    name = generate_name(subject, mailtm, folder_path)
+    name = generate_name(mailtm, folder_path)
+    print decode_header(subject)[0][0].replace(' ', '')
     write_mail(name, msg_content)
+    return name
 
 def parse_eml(msg_content):
     msg = email.message_from_string(msg_content)
@@ -146,8 +165,11 @@ if __name__ == '__main__':
     server = poplib.POP3(pop3_server)
     pdb.set_trace()
     folder_path = validate_mail_path(user)
-    
+
     messageid_dct = get_message_dct(user)
+    eml_name_lst = []
+    bug_eml_lst = []
+    subject_lst = []
     print server.getwelcome()
     server.user(user)
     server.pass_(password)
@@ -158,16 +180,32 @@ if __name__ == '__main__':
     print mails
 
     index = len(mails)
-    try:
-        for v in range(index):
+    for v in range(index):
+        try:
             resp, lines, octets = server.retr(v+1)
             msg_content = '\r\n'.join(lines)
     #         print msg_content
-            handle_eml(messageid_dct, msg_content, folder_path, user)
-    except:
-        pkl_fle = open(pth + user + '/messageid', 'wb')
-        pickle.dump(messageid_dct, pkl_fle)
-        pkl_fle.close()
+            result = handle_eml(messageid_dct, msg_content, folder_path, user)
+            if isinstance(result, list):
+                subject_lst.append(result[0])
+            else:
+                eml_name_lst.append(result)
+        except:
+            print traceback.print_exc()
+            bug_eml_lst.append(result)
+    pkl_fle = open(pth + user + '/messageid', 'wb')
+    pickle.dump(messageid_dct, pkl_fle)
+    pkl_fle.close()
+
+    # for path in eml_name_lst:
+    #     try:
+    #         parse_eml(path)
+    #     except Exception, e:
+    #         print e
+    #         print traceback.print_exc()
     server.quit()
+    print '=================================='
+    for subject in subject_lst:
+        print subject
 end = time.time()
 print (end - start)
