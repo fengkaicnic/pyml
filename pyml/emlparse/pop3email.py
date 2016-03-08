@@ -5,6 +5,8 @@ import email
 import os
 import time
 import pdb
+import eventlet
+eventlet.monkey_patch()
 from parse1 import parse_eml
 from email import Parser
 from scipy.stats.mstats_basic import tmax
@@ -56,7 +58,8 @@ def validate_mail_path(user):
 def generate_name(mailtm, folder_path):
     path = [folder_path]
     timestr = handle_time(mailtm)
-    print timestr
+    print mailtm
+    # print timestr
     mailtime = time.strptime(timestr, '%Y %b %d %H:%M:%S')
 #     if mailtm.find('+') != -1:
 #         mailtm = mailtm[:mailtm.find('+')-1]
@@ -114,8 +117,8 @@ def handle_eml(messageid_dct, msg_content, folder_path, user):
     msg = email.message_from_string(msg_content)
     messageid = msg.get('Message-Id')
     subject = msg.get('Subject')
-    if not check_email(messageid_dct, messageid):
-        return [decode_header(subject)[0][0].replace(' ', '')]
+    # if not check_email(messageid_dct, messageid):
+    #     return [decode_header(subject)[0][0].replace(' ', '')]
 
     mailtm = msg.get('date')
     name = generate_name(mailtm, folder_path)
@@ -158,18 +161,39 @@ def parse_eml(msg_content):
 #             print bar.get_content_type()
             break
 
+def recive_eml(lst, bug_index):
+    result = 'error'
+    index = lst[0]
+    messageid_dct = lst[1]
+    subject_lst = lst[2]
+    eml_name_lst = lst[3]
+    try:
+        resp, lines, octets = server.retr(index+1)
+        msg_content = '\r\n'.join(lines)
+#         print msg_content
+        result = handle_eml(messageid_dct, msg_content, folder_path, user)
+        if isinstance(result, list):
+            subject_lst.append(result[0])
+        else:
+            eml_name_lst.append(result)
+    except:
+        print traceback.print_exc()
+        bug_index.append(index)
+        bug_eml_lst.append(result)
+
 if __name__ == '__main__':
     user = 'bugemail@nrnr.me'
     password = 'Naren2016'
     pop3_server = 'pop.exmail.qq.com'
     server = poplib.POP3(pop3_server)
-    pdb.set_trace()
     folder_path = validate_mail_path(user)
+    pool = eventlet.GreenPool()
 
     messageid_dct = get_message_dct(user)
     eml_name_lst = []
     bug_eml_lst = []
     subject_lst = []
+    bug_index = []
     print server.getwelcome()
     server.user(user)
     server.pass_(password)
@@ -179,24 +203,18 @@ if __name__ == '__main__':
     resp, mails, octets = server.list()
     print mails
 
-    index = len(mails)
-    for v in range(index):
-        try:
-            resp, lines, octets = server.retr(v+1)
-            msg_content = '\r\n'.join(lines)
-    #         print msg_content
-            result = handle_eml(messageid_dct, msg_content, folder_path, user)
-            if isinstance(result, list):
-                subject_lst.append(result[0])
-            else:
-                eml_name_lst.append(result)
-        except:
-            print traceback.print_exc()
-            bug_eml_lst.append(result)
+    # index = len(mails)
+    index = [306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333]
+    pdb.set_trace()
+    paramlst = []
+    # for v in range(index):
+    for v in index:
+        recive_eml([v, messageid_dct, subject_lst, eml_name_lst], bug_index)
+    # pool.imap(recive_eml, paramlst)
     pkl_fle = open(pth + user + '/messageid', 'wb')
     pickle.dump(messageid_dct, pkl_fle)
     pkl_fle.close()
-
+    print bug_index
     # for path in eml_name_lst:
     #     try:
     #         parse_eml(path)
