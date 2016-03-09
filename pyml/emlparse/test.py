@@ -3,40 +3,27 @@ import os
 import sys
 import base64
 reload(sys)
+import re
 sys.setdefaultencoding('utf8')
+import pdb
 
+emailp = re.compile('\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}')
+
+pdb.set_trace()
 strings = ''' 
+Can not deliver the message you sent. Will not retry.
 
-zfXPyMn6o6zE+rrDo6ENCg0KztLDx8rVtb3E+rXEvPLA+qOsztLDx7mry77Kx7qjur28r83FxuzP
-wrXEyc/K0Lmry77S172ov8a8vKOsuavLvr3pydy/ybXHwrxodHRwOi8vd3d3LmVraW5nLXRlY2gu
-Y29tL6GjDQoNCs/ruPrE+tS8vt/M5cqxvOTD5srUo6zK1bW908q8/sfrvqG/7Lj6ztLBqs+1o7rN
-9cWuyr8xODYwMTM2ODk4M6GjDQoNCmwgIM/uxL/H6b/2o7q6o7q9vK/Nxcbsz8K39buvtcS7pcGq
-zfi98Mjaxr3MqKOsIHdlYiArQVBQK86i0MWjrMilxOqzycGio6w31MLJz8/ftdrSu7/usvrGt6Os
-vdjWucS/x7DTqtK1tu6zrDEwMNLao6zTw7uns6w0MDDN8qGjDQoNCmwgILmry77H6b/2o7rS172o
-v8a8vLnJt93T0M/euavLvsS/x7DT0DcwMMjLK6OsvfHE6tLRyc/K0KOsyvTIq8fyNTAwx7/G89K1
-uqO6vbyvzcXG7M/Co6y8r83FxuzPwtPQMzAwtuC80rfWuavLvqOsufrE2s3iur2/1bmry77T0DIz
-vNKjrL3wyNrG89K109AxNrzSoaMNCg0KbCAgu/mxvrijwPujutbcxKnLq9DdoaK0+NC9xOq82aGi
-zuXP1dK7vfChormru/298Mirtu69ycTJoaKyubPk0r3BxrGjz9WhoraoxtrM5bzsoaLXqNK1xeDR
-taGis/a5+rv6u+Ghow0KDQpsICC27s3iuKPA+6O6uf292rfRo6zD4rfRu/rGsaOsvNLK9NXbv9u7
-+saxo6zV27/bvsa16qGi1du/27Xn07DGsaGi1LG5pLijwPu3v6OsyfrI1b3wo6yzrLXNxNqyv7zb
-usC7qtPOwtbCw9DQo6ENCg0KbCAgzNix8LijwPujurmry77E2rK/6KTZpL/OoaLW0NK9sLTEpqGi
-zsLIqqGi0/DDq8fyoaLXwMfytcihow0KDQrI57n7xOPKx8unuOejrM7Sw8fT0MPIw8PX06O7DQoN
-CsjnufvE48/rzsi2qKOsztLDx8rHyc/K0Lmry76juw0KDQrI57n7xOPP68rC0rWjrM7Sw8fKx9fu
-yMi7pcGqzfi98Mjao7sNCg0KyOe5+8Tjz+vGvcyotPOjrM7Sw8fKx9PQMTfN8tSxuaS1xLqjur28
-r83Fo7sNCg0KyOe5+8Tjz7K7trXn07CjrM7Sw8fT0NfUvLrTsNS6us3Usbmks6y1zdXbv9u159Ow
-xrGjuw0KDQrI57n7xOPPsru2wsPTzqOsztLDx9PQ1LG5pMPit9G7+saxus280sr0Mi411duzrNa1
-u/rGsaO7DQoNCsirx/K3ts6nNjC24LzS1LG5pNXbv9vO5dDHvLa+xrXqo6yzrLXN1LG5pLzbusC7
-qtPOwtbCw9DQo6ENCg0KuavLvrXY1rejurGxvqnK0Lars8fH+LrNxr3A77arvdYxMbrF1LrTurrN
-ur3Qx9SwM7rFwqU1suMgINLXvai/xry8DQoNCrPLs7XCt8/fOg0KDQq12Mz6wrfP36O6tdjM+tO6
-us25rNW+o6wyusXP3yBBs/a/2qOss/a12Mz6zfmxsbn9utOjrM3507q6zbzS1LC3vc/yzfm2q9ff
-NTAww9e8tL/Jo7sNCrmrvbvP38K3o7rM2DKhojE4oaI4NTihojkwOaGiNDS1vdO6us25rNW+z8Kz
-taOsILu31vfCt8K3sbGjrNO6us280tSwtqux3zIwMMPXoaMNCltjaWQ6aW1hZ2UwMDEucG5nQDAx
-RDEyQjZELkY0NEU4MDMwXQ0KDQrN9cS9wPKjqDE4NjAxMzY4OTgzo6kNCjIwMTUtMTItNA0K
+Sender: <59aaf40c-df5c-11e5-8780-00163e1cf649@email.xnaren.com>
 
+The following addresses had delivery problems
 
-
+<wang.qiang@o-film.com> : Reply from mx20.o-film.com[192.168.119.110]:
+        >>> RCPT TO:<wang.qiang@o-film.com>
+        <<< 550 5.1.1 <wang.qiang@o-film.com>: Recipient address rejected: User unknown
 '''
 
-ty = base64.decodestring(strings)
+emailone = emailp.search(strings)
+emails = re.findall(emailp, strings)
 
-print ty.decode('gb2312').encode('utf-8')
+print emailone.group()
+print emails

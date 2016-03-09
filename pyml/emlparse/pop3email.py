@@ -65,8 +65,9 @@ def validate_mail_path(user):
 
 def check_from_subject(from_mail, subject):
     flag = 0
+    from_mail = from_mail and 'none'
     subject = decode_header(subject)[0][0].replace(' ', '')
-    if 'postmaster' in from_mail:
+    if 'postmaster' in from_mail.lower():
         return 1
     for key in subject_key:
         if key in subject:
@@ -173,6 +174,7 @@ def handle_eml(messageid_dct, msg_content, folder_path, user):
         if os.path.isfile(name):
             return name
         else:
+            parse_eml(msg, True)
             print decode_header(subject)[0][0].replace(' ', '')
             write_mail(name, msg_content)
             return name

@@ -18,6 +18,7 @@ mphonep = re.compile('(1(([3578][0-9])|(47)|[8][0126789]))\d{8}')
 telephonep = re.compile('0\d{2,3}(\-)?\d{7,8}')
 telephonep1 = re.compile('\d{7,8}')
 chinesep = re.compile(u'^[\u4e00-\u9fa5]+$')
+emailp = re.compile('\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}')
 #chinesepl = re.compile('[\x{4e00}-\x{9fa5}]+')
 
 family_dct = get_family_dct()
@@ -44,10 +45,15 @@ def html_parser(content):
         contentlst.append(span.text)
     return contentlst
 
-def extract_data(content):
+def extract_data(content, bugmail):
     url = urlph.search(content)
     # mphone = mphonep.search(content)
     # telephone = telephonep.search(content)
+    if bugmail:
+        emailaddr = emailp.search(content)
+        if emailaddr:
+            print 'bug email:',emailaddr.group(0)
+        return
     if url:
         print 'url:',url.group(0)
     else:
@@ -79,8 +85,8 @@ def extract_data(content):
             linet = line.replace(' ', '')
             mphone = mphonep.search(linet)
             telephone = telephonep.search(linet)
-            if not telephone:
-                telephone = telephonep1.search(linet)
+            # if not telephone:
+            #     telephone = telephonep1.search(linet)
             if mphone:
                 print '手机：',mphone.group(0)
             if telephone:
@@ -115,7 +121,7 @@ def extract_data(content):
                 if check_address(linet[linet.find('地点:')+len('地点:'):]):
                     print '地点：',linet[linet.find('地点:')+len('地点:'):]
     
-def parse_eml(msg):
+def parse_eml(msg, bugmail=False):
     # fp = codecs.open(path, 'r', encoding='gbk')
     # fp = codecs.open(path, 'r')
     # msg = email.message_from_file(fp)
@@ -138,11 +144,12 @@ def parse_eml(msg):
                     content = data.decode('gbk').encode('utf-8')
                 else:
                     # print data.decode(bar.get_content_charset()).encode('utf-8')
-                    content = data.decode(bar.get_content_charset()).encode('utf-8')
+                    content = data.decode(bar.get_content_charset() and \
+                                          bar.get_content_charset() or 'utf8').encode('utf-8')
             except UnicodeDecodeError:
                 print data
                 content = data
-            extract_data(content)
+            extract_data(content, bugmail)
 #             print bar.get_content_maintype()
 #             print bar.get_content_type()
             break
