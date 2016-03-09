@@ -49,17 +49,20 @@ def extract_data(content, bugmail):
     url = urlph.search(content)
     # mphone = mphonep.search(content)
     # telephone = telephonep.search(content)
+    result = {}
     if bugmail:
         emailaddr = emailp.search(content)
         if emailaddr:
-            print 'bug email:',emailaddr.group(0)
-        return
+            print {'bugemail':emailaddr.group(0)}
+            result['bugemail'] = emailaddr.group(0)
+        return result
+
     if url:
-        print 'url:',url.group(0)
+        result['url'] = url.group(0)
     else:
         url = urlp.search(content)
         if url and 'www' in url.group(0):
-            print 'url:',url.group(0)
+            result['url'] = url.group(0)
     # if mphone:
     #     print '手机：',mphone.group(0)
     # if telephone:
@@ -80,6 +83,7 @@ def extract_data(content, bugmail):
                     name = chinesep.search(linen.strip().strip(' ').decode('utf-8'))
                     if name:
                         if check_name(name.group(0)):
+                            result[u'联系人'] = name.group(0)
                             print "联系人：",name.group(0)
                 continue
             linet = line.replace(' ', '')
@@ -88,38 +92,47 @@ def extract_data(content, bugmail):
             # if not telephone:
             #     telephone = telephonep1.search(linet)
             if mphone:
+                result[u'手机'] = mphone.group(0)
                 print '手机：',mphone.group(0)
             if telephone:
+                result[u'座机'] = telephone.group(0)
                 print '座机：',telephone.group(0)
 
             if linet.find('联系人：') != -1:
                 if check_name(linet[linet.find('联系人')+len('联系人：'):]):
+                    result[u'联系人'] = linet[linet.find('联系人')+len('联系人：'):]
                     print "联系人：",linet[linet.find('联系人')+len('联系人：'):]
                     continue
 
             if linet.find('联系人:') != -1:
                 if check_name(linet[linet.find('联系人:')+len('联系人:'):]):
+                    result[u'联系人'] = linet[linet.find('联系人')+len('联系人:'):]
                     print "联系人：",linet[linet.find('联系人:')+len('联系人:'):]
                     continue
 
             if linet.find('地址：') != -1:
                 if check_address(linet[linet.find('地址')+len('地址：'):]):
+                    result[u'地址'] = linet[linet.find('地址')+len('地址：'):]
                     print '地址：',linet[linet.find('地址')+len('地址：'):]
                     continue
 
             if linet.find('地址:') != -1:
                 if check_address(linet[linet.find('地址:')+len('地址:'):]):
+                    result[u'地址'] = linet[linet.find('地址')+len('地址:'):]
                     print '地址：',linet[linet.find('地址:')+len('地址:'):]
                     continue
 
             if linet.find('地点：') != -1:
                 if check_address(linet[linet.find('地点')+len('地点：'):]):
+                    result[u'地址'] = linet[linet.find('地点')+len('地点：'):]
                     print '地点：',linet[linet.find('地点')+len('地点：'):]
                     continue
 
             if linet.find('地点:') != -1:
                 if check_address(linet[linet.find('地点:')+len('地点:'):]):
+                    result[u'地址'] = linet[linet.find('地点:')+len('地点:'):]
                     print '地点：',linet[linet.find('地点:')+len('地点:'):]
+    return result
     
 def parse_eml(msg, bugmail=False):
     # fp = codecs.open(path, 'r', encoding='gbk')
@@ -149,7 +162,8 @@ def parse_eml(msg, bugmail=False):
             except UnicodeDecodeError:
                 print data
                 content = data
-            extract_data(content, bugmail)
+            result = extract_data(content, bugmail)
+            print result
 #             print bar.get_content_maintype()
 #             print bar.get_content_type()
             break

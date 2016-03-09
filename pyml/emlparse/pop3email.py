@@ -65,7 +65,7 @@ def validate_mail_path(user):
 
 def check_from_subject(from_mail, subject):
     flag = 0
-    from_mail = from_mail and 'none'
+    from_mail = from_mail or 'none'
     subject = decode_header(subject)[0][0].replace(' ', '')
     if 'postmaster' in from_mail.lower():
         return 1
@@ -78,16 +78,17 @@ def generate_name(msg, folder_path):
     messageid = msg.get('Message-Id')
     subject = msg.get('Subject')
     from_email = msg.get('From')
+    path = [folder_path]
     flag = 0
     if check_from_subject(from_email, subject):
         flag = 1
+        path.append('bugemail')
     mailtime = time.localtime(handle_time(mailtm))
     m = hashlib.md5()
-    m.update(msg.get('message-id'))
-    m.update(msg.get('From'))
-    m.update(msg.get('Subject'))
+    m.update(msg.get('message-id', 'none'))
+    m.update(msg.get('From', 'none'))
+    m.update(msg.get('Subject', 'None'))
     fle_name = time.strftime("%d-%H%M%S-",mailtime) + m.hexdigest()+"-"+ utils.parseaddr(msg.get('From'))[1]+".eml"
-    path = [folder_path]
 
     folder = time.strftime('%Y%m', mailtime)
     path.append(folder)
