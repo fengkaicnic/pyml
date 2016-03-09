@@ -3,6 +3,7 @@ import sys
 import email
 import base64
 import codecs
+from email import utils
 import re
 reload(sys)
 import os
@@ -114,11 +115,11 @@ def extract_data(content):
                 if check_address(linet[linet.find('地点:')+len('地点:'):]):
                     print '地点：',linet[linet.find('地点:')+len('地点:'):]
     
-def parse_eml(path):
+def parse_eml(msg):
     # fp = codecs.open(path, 'r', encoding='gbk')
-    fp = codecs.open(path, 'r')
-    msg = email.message_from_file(fp)
-    emailaddress = msg.get('from')[msg.get('from').find('<')+1:msg.get('from').find('>')]
+    # fp = codecs.open(path, 'r')
+    # msg = email.message_from_file(fp)
+    emailaddress = utils.parseaddr(msg.get('from'))[1]
     print '======================================================='
     print 'email:',emailaddress
     for bar in msg.walk():
@@ -184,4 +185,7 @@ if __name__ == '__main__':
             print pth.decode('gb2312').encode('utf-8')
         except UnicodeDecodeError:
             print pth
-        parse_eml(pth)
+        fp = codecs.open(path, 'r')
+        msg = email.message_from_file(fp)
+        parse_eml(msg)
+        fp.close()

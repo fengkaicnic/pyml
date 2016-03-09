@@ -6,11 +6,13 @@ import os
 import time
 import pdb
 import eventlet
+from email import utils
 eventlet.monkey_patch()
 from parse1 import parse_eml
 from email import Parser
 from scipy.stats.mstats_basic import tmax
 reload(sys)
+import hashlib
 import traceback
 import uuid
 import codecs
@@ -23,8 +25,14 @@ start = time.time()
 messageid_dct = {}
 pth = 'd:/pop3/'
 mona = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+subject_key = ['failure', 'Addressverification', u'错误', u'失败']
 
 def handle_time(timestr):
+    if timestr is None:
+        return 946656000 #2000-01-01
+    return utils.mktime_tz(utils.parsedate_tz(timestr))
+
+def handle_time_old(timestr):
     timelst = timestr.split(' ')
     mon = ''
     year = ''
@@ -55,9 +63,41 @@ def validate_mail_path(user):
     
     return path
 
-def generate_name(mailtm, folder_path):
+def check_from_subject(from_mail, subject):
+    flag = 0
+    subject = decode_header(subject)[0][0].replace(' ', '')
+    if 'postmaster' in from_mail:
+        return 1
+    for key in subject_key:
+        if key in subject:
+            return 1
+
+def generate_name(msg, folder_path):
+    mailtm = msg.get('Date')
+    messageid = msg.get('Message-Id')
+    subject = msg.get('Subject')
+    from_email = msg.get('From')
+    flag = 0
+    if check_from_subject(from_email, subject):
+        flag = 1
+    mailtime = time.localtime(handle_time(mailtm))
+    m = hashlib.md5()
+    m.update(msg.get('message-id'))
+    m.update(msg.get('From'))
+    m.update(msg.get('Subject'))
+    fle_name = time.strftime("%d-%H%M%S-",mailtime) + m.hexdigest()+"-"+ utils.parseaddr(msg.get('From'))[1]+".eml"
     path = [folder_path]
-    timestr = handle_time(mailtm)
+
+    folder = time.strftime('%Y%m', mailtime)
+    path.append(folder)
+    if not os.path.exists('/'.join(path)):
+        os.makedirs('/'.join(path))
+    path.append(fle_name)
+    return (flag, '/'.join(path))
+
+def generate_name_old(mailtm, folder_path):
+    path = [folder_path]
+    timestr = handle_time_old(mailtm)
     print mailtm
     # print timestr
     mailtime = time.strptime(timestr, '%Y %b %d %H:%M:%S')
@@ -115,51 +155,27 @@ def write_eml_name():
 def handle_eml(messageid_dct, msg_content, folder_path, user):
     # fp = codecs.open(path, 'r', encoding='gbk')
     msg = email.message_from_string(msg_content)
-    messageid = msg.get('Message-Id')
     subject = msg.get('Subject')
     # if not check_email(messageid_dct, messageid):
     #     return [decode_header(subject)[0][0].replace(' ', '')]
 
     mailtm = msg.get('date')
-    name = generate_name(mailtm, folder_path)
-    print decode_header(subject)[0][0].replace(' ', '')
-    write_mail(name, msg_content)
-    return name
-
-def parse_eml(msg_content):
-    msg = email.message_from_string(msg_content)
-    for header in ['From', 'To', 'Subject']:
-        value = msg.get(header, '')
-        print '*****************************'
-        print header,':',value
-        if header == 'Subject':
-            print decode_header(value)[0][0]
-
-    emailaddress = msg.get('from')[msg.get('from').find('<')+1:msg.get('from').find('>')]
-    print '======================================================='
-    print 'email:',emailaddress
-    for bar in msg.walk():
-        if not bar.is_multipart():
-            name = bar.get_param('name')
-            if name:
-                print 'attachment:', name
-                continue
-            data = bar.get_payload(decode=True)
-            if bar.get_content_charset() == 'gb2312':
-                print data.decode('gbk').encode('utf-8')
-                content = data.decode('gbk').encode('utf-8')
-            else:
-                print data.decode(bar.get_content_charset()).encode('utf-8')
-                content = data.decode(bar.get_content_charset()).encode('utf-8')
-            # try:
-            #     print data.decode('gb2312').encode('utf-8')
-            #     content = data.decode('gb2312').encode('utf-8')
-            # except UnicodeDecodeError:
-            #     print data
-            #     content = data
-#             print bar.get_content_maintype()
-#             print bar.get_content_type()
-            break
+    flag, name = generate_name(msg, folder_path)
+    if flag == 0:
+        if os.path.isfile(name):
+            return 1
+        else:
+            parse_eml(msg)
+            print decode_header(subject)[0][0].replace(' ', '')
+            write_mail(name, msg_content)
+            return name
+    elif flag == 1:
+        if os.path.isfile(name):
+            return name
+        else:
+            print decode_header(subject)[0][0].replace(' ', '')
+            write_mail(name, msg_content)
+            return name
 
 def recive_eml(lst, bug_index):
     result = 'error'
@@ -172,10 +188,11 @@ def recive_eml(lst, bug_index):
         msg_content = '\r\n'.join(lines)
 #         print msg_content
         result = handle_eml(messageid_dct, msg_content, folder_path, user)
-        if isinstance(result, list):
-            subject_lst.append(result[0])
+        if isinstance(result, int):
+            return 1
         else:
             eml_name_lst.append(result)
+            return 0
     except:
         print traceback.print_exc()
         bug_index.append(index)
@@ -187,7 +204,6 @@ if __name__ == '__main__':
     pop3_server = 'pop.exmail.qq.com'
     server = poplib.POP3(pop3_server)
     folder_path = validate_mail_path(user)
-    pool = eventlet.GreenPool()
 
     messageid_dct = get_message_dct(user)
     eml_name_lst = []
@@ -202,15 +218,19 @@ if __name__ == '__main__':
 
     resp, mails, octets = server.list()
     print mails
-
-    # index = len(mails)
-    index = [306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333]
-    pdb.set_trace()
+    flag = 0
+    index = len(mails)
+    # pdb.set_trace()
     paramlst = []
     # for v in range(index):
-    for v in index:
-        recive_eml([v, messageid_dct, subject_lst, eml_name_lst], bug_index)
-    # pool.imap(recive_eml, paramlst)
+    for v in range(index):
+        code = recive_eml([index-v, messageid_dct, subject_lst, eml_name_lst], bug_index)
+        if code == 0 and flag != 0:
+            flag = 0
+        elif code == 1:
+            flag += 1
+            if flag > 5:
+                break
     pkl_fle = open(pth + user + '/messageid', 'wb')
     pickle.dump(messageid_dct, pkl_fle)
     pkl_fle.close()

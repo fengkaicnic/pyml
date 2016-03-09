@@ -286,6 +286,10 @@ class CPop3Client(CEmailReceiver):
 
     def fetch_all_impl(self):
         numMessages,total_size = self.p3.stat()
+        print '===================='
+        print numMessages
+        print total_size
+        print '===================='
         _reverse = 'Unknown'
         if numMessages >= 2:
             msg_end = CMailMsg("\n".join(self.p3.top(numMessages,1)[1]))
