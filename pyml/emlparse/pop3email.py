@@ -177,12 +177,10 @@ def get_eml_name(name, user):
 def write_eml_name():
     pass
 
-def handle_eml(messageid_dct, msg_content, folder_path, user):
+def handle_eml(msg_content, folder_path, user):
     # fp = codecs.open(path, 'r', encoding='gbk')
     msg = email.message_from_string(msg_content)
     subject = msg.get('Subject')
-    # if not check_email(messageid_dct, messageid):
-    #     return [decode_header(subject)[0][0].replace(' ', '')]
 
     mailtm = msg.get('date')
     flag, name = generate_name(msg, folder_path)
@@ -207,14 +205,13 @@ def handle_eml(messageid_dct, msg_content, folder_path, user):
 def recive_eml(lst, bug_index):
     result = 'error'
     index = lst[0]
-    messageid_dct = lst[1]
-    subject_lst = lst[2]
-    eml_name_lst = lst[3]
+    subject_lst = lst[1]
+    eml_name_lst = lst[2]
     try:
         resp, lines, octets = server.retr(index+1)
         msg_content = '\r\n'.join(lines)
 #         print msg_content
-        result = handle_eml(messageid_dct, msg_content, folder_path, user)
+        result = handle_eml(msg_content, folder_path, user)
         if isinstance(result, int):
             return [1]
         else:
@@ -245,7 +242,7 @@ if __name__ == '__main__':
         pth = pth + '/'
     repeatnum = args.num
 
-    messageid_dct = get_message_dct(user)
+    # messageid_dct = get_message_dct(user)
     eml_name_lst = []
     bug_eml_lst = []
     subject_lst = []
@@ -265,7 +262,7 @@ if __name__ == '__main__':
     resultlst = []
     # for v in range(index):
     for v in range(index):
-        rst = recive_eml([index-v, messageid_dct, subject_lst, eml_name_lst], bug_index)
+        rst = recive_eml([index-v, subject_lst, eml_name_lst], bug_index)
         if rst[0] == 0:
             if flag != 0:
                 flag = 0
@@ -277,16 +274,7 @@ if __name__ == '__main__':
     pdb.set_trace()
     for result in resultlst:
         print json.dumps(result, encoding='utf8', ensure_ascii=False)
-    pkl_fle = open(pth + user + '/messageid', 'wb')
-    pickle.dump(messageid_dct, pkl_fle)
-    pkl_fle.close()
     print bug_index
-    # for path in eml_name_lst:
-    #     try:
-    #         parse_eml(path)
-    #     except Exception, e:
-    #         print e
-    #         print traceback.print_exc()
     server.quit()
     print '=================================='
     for subject in subject_lst:
