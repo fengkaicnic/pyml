@@ -7,6 +7,7 @@ from email import utils
 import re
 reload(sys)
 import os
+import json
 import pdb
 from bs4 import BeautifulSoup
 sys.setdefaultencoding('utf8')
@@ -51,6 +52,7 @@ def extract_data(content, bugmail):
     # telephone = telephonep.search(content)
     result = {}
     if bugmail:
+        result['bug'] = 1
         emailaddr = emailp.search(content)
         if emailaddr:
             print {'bugemail':emailaddr.group(0)}
@@ -163,7 +165,8 @@ def parse_eml(msg, bugmail=False):
                 print data
                 content = data
             result = extract_data(content, bugmail)
-            print result
+            return result
+            # print json.dumps(result, encoding='utf8', ensure_ascii=False)
 #             print bar.get_content_maintype()
 #             print bar.get_content_type()
             break

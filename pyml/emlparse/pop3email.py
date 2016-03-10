@@ -4,6 +4,7 @@ import sys
 import email
 import os
 import time
+import argparse
 import pdb
 import eventlet
 from email import utils
@@ -12,6 +13,7 @@ from parse1 import parse_eml
 from email import Parser
 from scipy.stats.mstats_basic import tmax
 reload(sys)
+import json
 import hashlib
 import traceback
 import uuid
@@ -167,18 +169,18 @@ def handle_eml(messageid_dct, msg_content, folder_path, user):
         if os.path.isfile(name):
             return 1
         else:
-            parse_eml(msg)
+            result = parse_eml(msg)
             print decode_header(subject)[0][0].replace(' ', '')
             write_mail(name, msg_content)
-            return name
+            return result
     elif flag == 1:
         if os.path.isfile(name):
             return name
         else:
-            parse_eml(msg, True)
+            result = parse_eml(msg, True)
             print decode_header(subject)[0][0].replace(' ', '')
             write_mail(name, msg_content)
-            return name
+            return result
 
 def recive_eml(lst, bug_index):
     result = 'error'
@@ -192,21 +194,34 @@ def recive_eml(lst, bug_index):
 #         print msg_content
         result = handle_eml(messageid_dct, msg_content, folder_path, user)
         if isinstance(result, int):
-            return 1
+            return [1]
         else:
             eml_name_lst.append(result)
-            return 0
+            return [0, result]
     except:
         print traceback.print_exc()
         bug_index.append(index)
         bug_eml_lst.append(result)
+        return [2]
 
 if __name__ == '__main__':
     user = 'bugemail@nrnr.me'
     password = 'Naren2016'
     pop3_server = 'pop.exmail.qq.com'
+    # user = 'nrall001@163.com'
+    # password = 'nr1111'
+    # pop3_server = 'pop.163.com'
     server = poplib.POP3(pop3_server)
     folder_path = validate_mail_path(user)
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--path', default='d:/pop3', help='the path to store result')
+    parser.add_argument('--num', type=int, default=5, help='the repeat num to terminate the program')
+    args = parser.parse_args()
+    pth = args.path
+    if pth[-1] != '/':
+        pth = pth + '/'
+    repeatnum = args.num
 
     messageid_dct = get_message_dct(user)
     eml_name_lst = []
@@ -225,15 +240,21 @@ if __name__ == '__main__':
     index = len(mails)
     # pdb.set_trace()
     paramlst = []
+    resultlst = []
     # for v in range(index):
     for v in range(index):
-        code = recive_eml([index-v, messageid_dct, subject_lst, eml_name_lst], bug_index)
-        if code == 0 and flag != 0:
-            flag = 0
-        elif code == 1:
+        rst = recive_eml([index-v, messageid_dct, subject_lst, eml_name_lst], bug_index)
+        if rst[0] == 0:
+            if flag != 0:
+                flag = 0
+            resultlst.append(rst[1])
+        elif rst[0] == 1:
             flag += 1
-            if flag > 5:
+            if flag > repeatnum:
                 break
+    pdb.set_trace()
+    for result in resultlst:
+        print json.dumps(result, encoding='utf8', ensure_ascii=False)
     pkl_fle = open(pth + user + '/messageid', 'wb')
     pickle.dump(messageid_dct, pkl_fle)
     pkl_fle.close()
