@@ -82,7 +82,13 @@ def extract_data(content, bugmail):
             for linen in line.split(' '):
                 if len(linen.strip(' ')) < 10 and len(linen.strip(' ')) > 5:
     #             pdb.set_trace()
-                    name = chinesep.search(linen.strip().strip(' ').decode('utf-8'))
+                    try:
+                        name = chinesep.search(linen.strip().strip(' ').decode('utf-8'))
+                    except:
+                        try:
+                            name = chinesep.search(linen.strip().strip(' ').decode('gbk'))
+                        except:
+                            name = None
                     if name:
                         if check_name(name.group(0)):
                             result[u'联系人'] = name.group(0)

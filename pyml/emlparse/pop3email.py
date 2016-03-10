@@ -27,7 +27,10 @@ start = time.time()
 messageid_dct = {}
 pth = 'd:/pop3/'
 mona = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+filter_words = ['智联招聘', '在线考评', '51job', '已经有', '不合适', '最新职位', '推荐', '简历排名',  '猎头', '网易考拉', '互联网淘金', '已投']
+mailst = ['service@steelport.zhaopin.com', 'service@51job.com']
 subject_key = ['failure', 'Addressverification', u'错误', u'失败']
+mailtype={1:'bugmail', 2:'spam'}
 
 def handle_time(timestr):
     if timestr is None:
@@ -68,12 +71,28 @@ def validate_mail_path(user):
 def check_from_subject(from_mail, subject):
     flag = 0
     from_mail = from_mail or 'none'
+
     subject = decode_header(subject)[0][0].replace(' ', '')
     if 'postmaster' in from_mail.lower():
-        return 1
+        return 1 #failure send
+    try:
+        subject = subject.decode('utf8').encode('utf8')
+    except:
+        try:
+            subject = subject.decode('gbk').encode('utf8')
+        except:
+            try:
+                subject = subject.decode('gb18030').encode('utf8')
+            except:
+                pdb.set_trace()
+    for word in filter_words:
+        if word in subject:
+            return 2 #spam
+    print subject
     for key in subject_key:
         if key in subject:
-            return 1
+            return 1    #/failure send
+    return 0
 
 def generate_name(msg, folder_path):
     mailtm = msg.get('Date')
@@ -82,16 +101,18 @@ def generate_name(msg, folder_path):
     from_email = msg.get('From')
     path = [folder_path]
     flag = 0
-    if check_from_subject(from_email, subject):
-        flag = 1
-        path.append('bugemail')
+    flag = check_from_subject(from_email, subject)
+    if flag:
+        path.append(mailtype[flag])
     mailtime = time.localtime(handle_time(mailtm))
     m = hashlib.md5()
     m.update(msg.get('message-id', 'none'))
     m.update(msg.get('From', 'none'))
     m.update(msg.get('Subject', 'None'))
-    fle_name = time.strftime("%d-%H%M%S-",mailtime) + m.hexdigest()+"-"+ utils.parseaddr(msg.get('From'))[1]+".eml"
-
+    if '@' in utils.parseaddr(msg.get('From'))[1]:
+        fle_name = time.strftime("%d-%H%M%S-",mailtime) + m.hexdigest()+"-"+ utils.parseaddr(msg.get('From'))[1]+".eml"
+    else:
+        fle_name = time.strftime("%d-%H%M%S-",mailtime) + m.hexdigest()+"-.eml"
     folder = time.strftime('%Y%m', mailtime)
     path.append(folder)
     if not os.path.exists('/'.join(path)):
@@ -173,14 +194,15 @@ def handle_eml(messageid_dct, msg_content, folder_path, user):
             print decode_header(subject)[0][0].replace(' ', '')
             write_mail(name, msg_content)
             return result
-    elif flag == 1:
+    else:
+        result = 'spam'
         if os.path.isfile(name):
             return name
-        else:
+        if flag == 1:
             result = parse_eml(msg, True)
-            print decode_header(subject)[0][0].replace(' ', '')
-            write_mail(name, msg_content)
-            return result
+        print decode_header(subject)[0][0].replace(' ', '')
+        write_mail(name, msg_content)
+        return result
 
 def recive_eml(lst, bug_index):
     result = 'error'
@@ -205,12 +227,12 @@ def recive_eml(lst, bug_index):
         return [2]
 
 if __name__ == '__main__':
-    user = 'bugemail@nrnr.me'
-    password = 'Naren2016'
-    pop3_server = 'pop.exmail.qq.com'
-    # user = 'nrall001@163.com'
-    # password = 'nr1111'
-    # pop3_server = 'pop.163.com'
+    # user = 'bugemail@nrnr.me'
+    # password = 'Naren2016'
+    # pop3_server = 'pop.exmail.qq.com'
+    user = 'nrall001@163.com'
+    password = 'nr1531032'
+    pop3_server = 'pop.163.com'
     server = poplib.POP3(pop3_server)
     folder_path = validate_mail_path(user)
 
