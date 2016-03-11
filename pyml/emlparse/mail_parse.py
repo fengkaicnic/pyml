@@ -8,7 +8,7 @@ reload(sys)
 import os
 import pdb
 sys.setdefaultencoding('utf8')
-from parse1 import parse_eml
+from parse2 import parse_eml
 
 def parse_eml_local(path):
     # fp = codecs.open(path, 'r', encoding='gbk')
@@ -43,7 +43,7 @@ def parse_eml_local(path):
 
 if __name__ == '__main__':
     # path = 'd:/nreml'
-    path = 'd:/mailtest'
+    path = 'd:/naren'
     lst = os.listdir(path)
     for pth in lst:
         pth = path + '/' + pth
@@ -52,4 +52,7 @@ if __name__ == '__main__':
         except UnicodeDecodeError:
             print pth
         # pdb.set_trace()
-        parse_eml(pth)
+        fp = codecs.open(pth, 'r')
+        msg = email.message_from_file(fp)
+        parse_eml(msg)
+        fp.close()
