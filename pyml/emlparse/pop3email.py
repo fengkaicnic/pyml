@@ -68,6 +68,11 @@ def validate_mail_path(user):
     
     return path
 
+#检查邮件是否是垃圾邮件
+#param: [from_mail, subject]
+#from_mail: 发件人邮箱
+#subject: 邮件的主题
+#返回码： （0 代表正常邮件）（1 代表发送出错的油价）（2 代表垃圾邮件）
 def check_from_subject(from_mail, subject):
     flag = 0
     from_mail = from_mail or 'none'
@@ -94,6 +99,11 @@ def check_from_subject(from_mail, subject):
             return 1    #/failure send
     return 0
 
+#此函数的功能是产生路径和文件名称，以便于存储邮件
+#在此过程中会检查一下邮件是否垃圾邮件或者错误邮件
+#检查调用check_from_subject来检查，根据发件邮箱和邮件主题检查
+#返回两个参数，一个是flag，另一个是路径
+#这个flag如果0代表正常邮件，1代表垃圾邮件
 def generate_name(msg, folder_path):
     mailtm = msg.get('Date')
     messageid = msg.get('Message-Id')
@@ -177,6 +187,15 @@ def get_eml_name(name, user):
 def write_eml_name():
     pass
 
+#此函数是获取和检查之后的处理邮件函数
+#param:
+#msg_content: 这个参数是邮件内容
+#folder_path：此参数是邮件的存储位置
+#user：邮箱名
+#此函数先根据邮件内容和folder_path两个参数来确定存储的位置和邮件生成的名称
+#调用generate_name来生成邮件存储路径和判断邮件类型
+#如果是正常邮件，则检查邮件是否已经存储，已存则直接返回1，未存的话就解析再存储
+#如果是垃圾邮件，那就存储，然后解析出from_email就可以
 def handle_eml(msg_content, folder_path, user):
     # fp = codecs.open(path, 'r', encoding='gbk')
     msg = email.message_from_string(msg_content)
@@ -202,6 +221,12 @@ def handle_eml(msg_content, folder_path, user):
         write_mail(name, msg_content)
         return result
 
+#这里是处理邮件的函数，首先从服务器提取出邮件，然后生成邮件内容
+#生成邮件内容后，调用handle_eml来处理邮件，返回结果
+#处理的时候还要看结果的返回码，返回码有这几种
+#[0,1,2]0代表邮件存储和处理都正常
+#1代表此邮件已经存储和处理过
+#2代表处理过程中出现异常
 def recive_eml(lst, bug_index):
     result = 'error'
     index = lst[0]
@@ -227,15 +252,16 @@ if __name__ == '__main__':
     # user = 'bugemail@nrnr.me'
     # password = 'Naren2016'
     # pop3_server = 'pop.exmail.qq.com'
-    user = 'nrall001@163.com'
-    password = 'nr1531032'
-    pop3_server = 'pop.163.com'
-    server = poplib.POP3(pop3_server)
-    folder_path = validate_mail_path(user)
+    # user = 'nrall001@163.com'
+    # password = 'nr1531032'
+    # pop3_server = 'pop.163.com'
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--path', default='d:/pop3', help='the path to store result')
     parser.add_argument('--num', type=int, default=5, help='the repeat num to terminate the program')
+    parser.add_argument('--user', default='nrall001@163.com', help='the user of the email')
+    parser.add_argument('--password', default='nr1531032', help='the password of the email')
+    parser.add_argument('--pop3server', default='pop.163.com', help='the pop3 server of email')
     args = parser.parse_args()
     pth = args.path
     if pth[-1] != '/':
@@ -247,6 +273,11 @@ if __name__ == '__main__':
     bug_eml_lst = []
     subject_lst = []
     bug_index = []
+    pop3_server = args.pop3server
+    user = args.user
+    password = args.password
+    server = poplib.POP3(pop3_server)
+    folder_path = validate_mail_path(user)
     print server.getwelcome()
     server.user(user)
     server.pass_(password)

@@ -141,7 +141,12 @@ def extract_data(content, bugmail):
                     result[u'地址'] = linet[linet.find('地点:')+len('地点:'):]
                     print '地点：',linet[linet.find('地点:')+len('地点:'):]
     return result
-    
+
+#此函数的作用就是解析邮件内容
+#param:
+#msg:邮件内容
+#bugmail:是否为问题邮件，如果是问题邮件的话，那就只解析邮件内容中的email就返回
+#若不是问题邮件，那么就解析整个邮件，包括电话、地址、网址、email、联系人等
 def parse_eml(msg, bugmail=False):
     # fp = codecs.open(path, 'r', encoding='gbk')
     # fp = codecs.open(path, 'r')
