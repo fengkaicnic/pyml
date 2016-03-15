@@ -1,29 +1,94 @@
 #coding:utf8
-import os
+import time
 import sys
-import base64
+import email
+import os
+import time
+import time
+import argparse
+import traceback
 reload(sys)
-import re
-sys.setdefaultencoding('utf8')
 import pdb
+from email import utils
+import base64
+import poplib
+from email.header import decode_header
+sys.setdefaultencoding('utf8')
 
-emailp = re.compile('\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}')
+filter_words = ['智联', '汇总', '奖品', '确认', '提醒', '在线考评', '薪水', '电影',\
+                '会员', '注册', '51job', '已经有', '不合适', '最新职位', '手机',\
+                '简历', '跳槽',  '猎头', '网易考拉', '互联网淘金', '已投', '安全问题', '机会'\
+                '靠谱']
+mailst = ['service@steelport.zhaopin.com', 'service@51job.com']
 
-pdb.set_trace()
-strings = ''' 
-Can not deliver the message you sent. Will not retry.
+def decode_nck(nick):
+    nklst = nick.split('?')
+    return base64.decodestring(nklst[3]).decode(nklst[1])
 
-Sender: <59aaf40c-df5c-11e5-8780-00163e1cf649@email.xnaren.com>
+start = time.time()
+if __name__ == '__main__':
+    # user = 'bugemail@nrnr.me'
+    # password = 'Naren2016'
+    # pop3_server = 'pop.exmail.qq.com'
+    user = 'nrall001@163.com'
+    password = 'nr1531032'
+    pop3_server = 'pop.163.com'
 
-The following addresses had delivery problems
+    server = poplib.POP3(pop3_server)
+    print server.getwelcome()
+    server.user(user)
+    server.pass_(password)
 
-<wang.qiang@o-film.com> : Reply from mx20.o-film.com[192.168.119.110]:
-        >>> RCPT TO:<wang.qiang@o-film.com>
-        <<< 550 5.1.1 <wang.qiang@o-film.com>: Recipient address rejected: User unknown
-'''
+    print 'Message: %s. Size: %s' % server.stat()
 
-emailone = emailp.search(strings)
-emails = re.findall(emailp, strings)
+    resp, mails, octets = server.list()
+    # print mails
+    index = len(mails)
+    num = 0
+    for v in range(index):
+        try:
+            flag = 0
+            # resp, lines, octets = server.retr(v+1)
+            resp, lines, octets = server.top(v+1, 7)
+            msg_content = '\r\n'.join(lines)
+            msg = email.message_from_string(msg_content)
+            # pdb.set_trace()
+            fmail = msg.get('From')
+            from_mail = utils.parseaddr(msg.get('From'))[1]
+            nick = utils.parseaddr(msg.get('From'))[0]
+            subject = msg.get('Subject')
+            subject = decode_header(subject)[0][0].replace(' ', '')
+            try:
+                subject = subject.decode('utf8').encode('utf8')
+            except:
+                try:
+                    subject = subject.decode('gbk').encode('utf8')
+                except:
+                    subject = subject.decode('gb18030').encode('utf8')
+            for word in filter_words:
+                if word in subject:
+                    flag = 1
+                    break
 
-print emailone.group()
-print emails
+            if not flag:
+                # print '========================================='
+                # print from_mail
+                print fmail
+                print nick
+                if not nick:
+                    # pdb.set_trace()
+                    nick = ''
+                else:
+                    if '=' in nick:
+                        nick = decode_nck(nick)
+                print subject,'||',nick
+
+                num += 1
+                # print '*****************************************'
+        except:
+            pass
+    print num
+    server.quit()
+end = time.time()
+
+print (end - start)
