@@ -46,6 +46,8 @@ def html_parser(content):
         contentlst.append(span.text)
     return contentlst
 
+#如果是bugmail的话，只返回邮件地址
+#不是的话则返回字典，里面是一些能提取到的信息
 def extract_data(content, bugmail):
     url = urlph.search(content)
     # mphone = mphonep.search(content)
@@ -147,6 +149,7 @@ def extract_data(content, bugmail):
 #msg:邮件内容
 #bugmail:是否为问题邮件，如果是问题邮件的话，那就只解析邮件内容中的email就返回
 #若不是问题邮件，那么就解析整个邮件，包括电话、地址、网址、email、联系人等
+#返回：
 def parse_eml(msg, bugmail=False):
     # fp = codecs.open(path, 'r', encoding='gbk')
     # fp = codecs.open(path, 'r')
