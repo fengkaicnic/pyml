@@ -31,8 +31,11 @@ filter_words = ['智联', '汇总', '奖品', '提醒', '在线考评', '薪水'
 mailst = ['service@steelport.zhaopin.com', 'service@51job.com']
 
 def decode_nck(nick):
-    nklst = nick.split('?')
-    return base64.decodestring(nklst[3]).decode(nklst[1])
+    try:
+        nklst = nick.split('?')
+        return base64.decodestring(nklst[3]).decode(nklst[1])
+    except:
+        return ''
 
 start = time.time()
 if __name__ == '__main__':
@@ -46,10 +49,14 @@ if __name__ == '__main__':
     server.pass_(password)
     print 'Message: %s. Size: %s' % server.stat()
     resp, mails, octets = server.list()
-
+    pdb.set_trace()
     index = len(mails)
-    linecsv = []
+    spam_csv = []
+    ter_csv = []
     num = 0
+    ter_nm = 0
+    words = set()
+    wordm = set()
     for v in range(index):
         try:
             # resp, lines, octets = server.retr(v+1)
@@ -59,6 +66,8 @@ if __name__ == '__main__':
             fmail = msg.get('From')
             from_mail = utils.parseaddr(msg.get('From'))[1]
             nick = fmail.split(' ')[0]
+            if '=' in nick:
+                nick = decode_nck(nick)
             subject = msg.get('Subject')
             subject = decode_header(subject)[0][0].replace(' ', '')
             flag = 0
@@ -74,17 +83,36 @@ if __name__ == '__main__':
                     flag = 1
                     break
             if not flag:
-                continue
-            num += 1
-            subject = subject.replace(',', '|')
-            nick = decode_nck(nick)
-            print '=========================================='
-            print '|'.join([subject, nick, from_mail])
-            jieba.cut(subject, cut_all=False)
-            print '------------------------------------------'
+                subject = subject.replace(',', '')
+                seglst = jieba.cut(subject, cut_all=False)
+                for seg in seglst:
+                    wordm.add(seg)
+                    words.add(seg)
+                ter_csv.append('|'.join([subject, nick]))
+                ter_nm += 1
+            else:
+                num += 1
+                subject = subject.replace(',', '')
+                print '=========================================='
+                spam_csv.append('|'.join([subject, nick]))
+                seglst = jieba.cut(subject, cut_all=False)
+                for seg in seglst:
+                    words.add(seg)
+                ncklst = jieba.cut(nick, cut_all=False)
+                for nk in ncklst:
+                    words.add(nk)
+                print '------------------------------------------'
         except:
             pass
+    print ter_nm
+    print len(wordm)
     print num
+    print len(words)
+    with open('d:/naren/spam.csv', 'wb') as file:
+        file.writelines('\n'.join(spam_csv).encode('utf8'))
+    with open('d:/naren/ter.csv', 'wb') as file:
+        file.writelines('\n'.join(ter_csv).encode('utf8'))
     server.quit()
 end = time.time()
+
 print (end - start)
