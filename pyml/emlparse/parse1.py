@@ -142,6 +142,8 @@ def extract_data(content, bugmail):
                 if check_address(linet[linet.find('地点:')+len('地点:'):]):
                     result[u'地址'] = linet[linet.find('地点:')+len('地点:'):]
                     print '地点：',linet[linet.find('地点:')+len('地点:'):]
+    if result.has_key(u'地址'):
+        result[u'地址'] = result[u'地址'].replace(',', '|')
     return result
 
 #此函数的作用就是解析邮件内容

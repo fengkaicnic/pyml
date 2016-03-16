@@ -14,6 +14,7 @@ import pdb
 from email import utils
 import base64
 import poplib
+import utils as emlutils
 from email.header import decode_header
 sys.setdefaultencoding('utf8')
 
@@ -25,8 +26,8 @@ stop_words = ['面试', '邀请', '介绍', '加入', '公司', '有限', '机�
 
 filter_words = ['智联', '汇总', '奖品', '确认', '提醒', '在线考评', '薪水', '电影',\
                 '会员', '注册', '51job', '已经有', '不合适', '最新职位', '手机',\
-                '简历', '跳槽',  '猎头', '网易考拉', '互联网淘金', '已投', '安全问题', '机会'\
-                '靠谱']
+                '简历', '跳槽',  '猎头', '网易考拉', '互联网淘金', '已投', '安全问题', '机会',\
+                '靠谱', '推荐']
 mailst = ['service@steelport.zhaopin.com', 'service@51job.com']
 
 def decode_nck(nick):
@@ -81,6 +82,7 @@ if __name__ == '__main__':
                     subject = subject.decode('gbk').encode('utf8')
                 except:
                     subject = subject.decode('gb18030').encode('utf8')
+            subject = subject.replace(',', '|')
             for word in filter_words:
                 if word in subject:
                     flag = 1
@@ -111,33 +113,29 @@ if __name__ == '__main__':
                     arg_map = {'name': nick}
                 rst = sales_solr.sales_search(arg_map, page_index, countofpage, solr_ip_port)
                 print rst
-                linecsv.append(subject.strip())
-                linecsv.append(',')
-                linecsv.append(arg_map['name'].strip())
-                linecsv.append(',')
-                linecsv.append(str(rst[0]))
-                linecsv.append(',')
+                lines = []
+                lines.append(subject.strip())
+                lines.append(arg_map['name'].strip())
+                lines.append(str(rst[0]))
                 if rst[0]:
                     total += 1
                 num += 1
                 result = parse_eml(msg)
                 # pdb.set_trace()
-                linecsv.append(result.get(u'联系人', '').strip())
-                linecsv.append(',')
-                linecsv.append(result.get(u'手机', '').strip())
-                linecsv.append(',')
-                linecsv.append(result.get(u'座机', '').strip())
-                linecsv.append(',')
-                linecsv.append(result.get(u'地址', '').strip())
-                linecsv.append(result.get('email', '').strip())
-                linecsv.append('\n')
+                lines.append(result.get(u'联系人', '').strip())
+                lines.append(result.get(u'手机', '').strip())
+                lines.append(result.get(u'座机', '').strip())
+                lines.append(result.get(u'地址', '').strip())
+                lines.append(result.get('email', '').strip())
+                linecsv.append(','.join(lines))
                 # print '*****************************************'
         except:
             pass
     print total
     print num
     with open('d:/naren/test.csv', 'wb') as file:
-        file.writelines(''.join(linecsv).encode('utf8'))
+        file.writelines('\n'.join(linecsv).encode('utf8'))
+    emlutils.write_table(linecsv)
     server.quit()
 end = time.time()
 
