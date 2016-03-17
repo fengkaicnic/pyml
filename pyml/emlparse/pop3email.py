@@ -17,6 +17,7 @@ import json
 import hashlib
 import traceback
 import uuid
+import parseutils
 import codecs
 from email.header import decode_header
 import poplib
@@ -27,7 +28,11 @@ start = time.time()
 messageid_dct = {}
 pth = 'd:/pop3/'
 mona = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-filter_words = ['智联招聘', '在线考评', '51job', '已经有', '不合适', '最新职位', '推荐', '简历排名',  '猎头', '网易考拉', '互联网淘金', '已投']
+# filter_words = ['智联招聘', '在线考评', '51job', '已经有', '不合适', '最新职位', '推荐', '简历排名',  '猎头', '网易考拉', '互联网淘金', '已投']
+filter_words = ['智联', '汇总', '奖品', '确认', '提醒', '在线考评', '薪水', '电影',\
+                '会员', '注册', '51job', '已经有', '不合适', '最新职位', '手机',\
+                '简历', '跳槽',  '猎头', '网易考拉', '互联网淘金', '已投', '安全问题', '机会',\
+                '靠谱', '推荐']
 mailst = ['service@steelport.zhaopin.com', 'service@51job.com']
 subject_key = ['failure', 'Addressverification', u'错误', u'失败']
 mailtype={1:'bugmail', 2:'spam'}
@@ -68,18 +73,8 @@ def validate_mail_path(user):
     
     return path
 
-#检查邮件是否是垃圾邮件
-#param: [from_mail, subject]
-#from_mail: 发件人邮箱
-#subject: 邮件的主题
-#返回码： （0 代表正常邮件）（1 代表发送出错的油价）（2 代表垃圾邮件）
-def check_from_subject(from_mail, subject):
-    flag = 0
-    from_mail = from_mail or 'none'
-
+def decode_subject(subject):
     subject = decode_header(subject)[0][0].replace(' ', '')
-    if 'postmaster' in from_mail.lower():
-        return 1 #failure send
     try:
         subject = subject.decode('utf8').encode('utf8')
     except:
@@ -90,6 +85,19 @@ def check_from_subject(from_mail, subject):
                 subject = subject.decode('gb18030').encode('utf8')
             except:
                 pdb.set_trace()
+    return subject
+
+#检查邮件是否是垃圾邮件
+#param: [from_mail, subject]
+#from_mail: 发件人邮箱
+#subject: 邮件的主题
+#返回码： （0 代表正常邮件）（1 代表发送出错的油价）（2 代表垃圾邮件）
+def check_from_subject(from_mail, subject):
+    flag = 0
+    from_mail = from_mail or 'none'
+    subject = decode_subject(subject)
+    if 'postmaster' in from_mail.lower():
+        return 1 #failure send
     for word in filter_words:
         if word in subject:
             return 2 #spam
@@ -111,8 +119,8 @@ def generate_name(msg, folder_path):
     from_email = msg.get('From')
     path = [folder_path]
     flag = 0
-    flag = check_from_subject(from_email, subject)
-    if flag:
+    flag = check_from_subject(from_email, subject)  #检查邮件的类型
+    if flag: #根据邮件的类型，来分开存放
         path.append(mailtype[flag])
     mailtime = time.localtime(handle_time(mailtm))
     m = hashlib.md5()
@@ -200,18 +208,32 @@ def handle_eml(msg_content, folder_path, user):
     # fp = codecs.open(path, 'r', encoding='gbk')
     msg = email.message_from_string(msg_content)
     subject = msg.get('Subject')
-
+    subject = decode_subject(subject)
+    fmail = msg.get('From')
+    from_mail = utils.parseaddr(msg.get('From'))[1]
+    # nick = utils.parseaddr(msg.get('From'))[0]
+    nick = fmail.split(' ')[0]
     mailtm = msg.get('date')
     flag, name = generate_name(msg, folder_path)
-    if flag == 0:
+    if flag == 0:         #如果是正常邮件的话则走这个过程
         if os.path.isfile(name):
             return 1
         else:
+            rst = parseutils.generate_table_data(subject, nick)
+            lines = []
+            lines.append(subject.strip())
+            lines.append(rst[1])
+            lines.append(str(rst[0]))
             result = parse_eml(msg)
-            print decode_header(subject)[0][0].replace(' ', '')
+            lines.append(result.get(u'联系人', '').strip())
+            lines.append(result.get(u'手机', '').strip())
+            lines.append(result.get(u'座机', '').strip())
+            lines.append(result.get(u'地址', '').strip())
+            lines.append(result.get('email', '').strip())
+            parseutils.write_table([','.join(lines)])
             write_mail(name, msg_content)
             return result
-    else:
+    else:   #如果是垃圾邮件或者错误邮件的话，就走这个流程
         result = 'spam'
         if os.path.isfile(name):
             return name
