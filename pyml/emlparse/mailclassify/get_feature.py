@@ -75,4 +75,4 @@ def generate_train_test():
 
 
 if __name__ == '__main__':
-    generate_train_test()
+    get_feature_word()

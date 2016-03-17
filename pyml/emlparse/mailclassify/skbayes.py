@@ -8,6 +8,7 @@ reload(sys)
 from sklearn import metrics
 from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.externals import joblib
 sys.setdefaultencoding('utf8')
 
 
@@ -66,6 +67,7 @@ def main():
     train_words, train_tags, test_words, test_tags = input_data(train_file, test_file)
     train_data, test_data = vectorize(train_words, test_words)
     clf = train_clf(train_data, train_tags)
+    # joblib.dump(clf, 'clf.model')
     pred = clf.predict(test_data)
     evaluate(numpy.asarray(test_tags), pred)
 

@@ -98,13 +98,16 @@ def check_from_subject(from_mail, subject):
     subject = decode_subject(subject)
     if 'postmaster' in from_mail.lower():
         return 1 #failure send
-    for word in filter_words:
-        if word in subject:
-            return 2 #spam
-    print subject
     for key in subject_key:
         if key in subject:
             return 1    #/failure send
+    # for word in filter_words:
+    #     if word in subject:
+    #         return 2 #spam
+    if not parseutils.predict_mail(subject):
+        return 2
+    print subject
+
     return 0
 
 #此函数的功能是产生路径和文件名称，以便于存储邮件

@@ -6,8 +6,10 @@ import email
 from naren_solr import sales_solr
 import pdb
 import jieba
+from sklearn.feature_extraction.text import HashingVectorizer
 from email import utils
 import traceback
+from sklearn.externals import joblib
 import base64
 from email.header import decode_header
 import MySQLdb
@@ -20,6 +22,20 @@ stop_words = ['面试', '邀请', '介绍', '加入', '公司', '有限', '机�
 
 persist = PersistentDB.PersistentDB(MySQLdb, host='121.40.183.7', port=3306, user='fengkai',\
                                     passwd='8e1c7d52557b', db='reply_analyze', charset='utf8')
+
+comma_tokenizer = lambda x: jieba.cut(x, cut_all=True)
+clf = joblib.load('mailclassify/clf.model')
+
+def vectorize(test_words):
+    v = HashingVectorizer(tokenizer=comma_tokenizer, n_features=30000, non_negative=True)
+    test_data = v.fit_transform(test_words)
+    return test_data
+
+def predict_mail(subject):
+    # pdb.set_trace()
+    data = vectorize([subject])
+    code = clf.predict(data)
+    return int(code[0].strip())
 
 def decode_nck(nick):
     nklst = nick.split('?')
