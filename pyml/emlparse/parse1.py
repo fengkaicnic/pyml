@@ -152,40 +152,40 @@ def extract_data(content, bugmail):
 #bugmail:是否为问题邮件，如果是问题邮件的话，那就只解析邮件内容中的email就返回
 #若不是问题邮件，那么就解析整个邮件，包括电话、地址、网址、email、联系人等
 #返回：
-def parse_eml(msg, bugmail=False):
+def parse_eml(msg, content, bugmail=False):
     # fp = codecs.open(path, 'r', encoding='gbk')
     # fp = codecs.open(path, 'r')
     # msg = email.message_from_file(fp)
     emailaddress = utils.parseaddr(msg.get('from'))[1]
     print '======================================================='
     print 'email:',emailaddress
-    for bar in msg.walk():
-        if not bar.is_multipart():
-            name = bar.get_param('name')
-            if name:
-                print 'attachment:', name
-                continue
-            if bar.get_content_type() == 'text/plain':
-                data = bar.get_payload(decode=True)
-            else:
-                data = '\n'.join(html_parser(bar.get_payload(decode=True)))
-            try:
-                if bar.get_content_charset() == 'gb2312':
-                    # print data.decode('gbk').encode('utf-8')
-                    content = data.decode('gbk').encode('utf-8')
-                else:
-                    # print data.decode(bar.get_content_charset()).encode('utf-8')
-                    content = data.decode(bar.get_content_charset() and \
-                                          bar.get_content_charset() or 'utf8').encode('utf-8')
-            except UnicodeDecodeError:
-                print data
-                content = data
-            result = extract_data(content, bugmail)
-            return result
-            # print json.dumps(result, encoding='utf8', ensure_ascii=False)
+    # for bar in msg.walk():
+    #     if not bar.is_multipart():
+    #         name = bar.get_param('name')
+    #         if name:
+    #             print 'attachment:', name
+    #             continue
+    #         if bar.get_content_type() == 'text/plain':
+    #             data = bar.get_payload(decode=True)
+    #         else:
+    #             data = '\n'.join(html_parser(bar.get_payload(decode=True)))
+    #         try:
+    #             if bar.get_content_charset() == 'gb2312':
+    #                 # print data.decode('gbk').encode('utf-8')
+    #                 content = data.decode('gbk').encode('utf-8')
+    #             else:
+    #                 # print data.decode(bar.get_content_charset()).encode('utf-8')
+    #                 content = data.decode(bar.get_content_charset() and \
+    #                                       bar.get_content_charset() or 'utf8').encode('utf-8')
+    #         except UnicodeDecodeError:
+    #             print data
+    #             content = data
+    result = extract_data(content, bugmail)
+    return result
+    # print json.dumps(result, encoding='utf8', ensure_ascii=False)
 #             print bar.get_content_maintype()
 #             print bar.get_content_type()
-            break
+
 
 def parse_eml_string(path):
     textflag = False

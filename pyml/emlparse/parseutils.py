@@ -5,14 +5,19 @@ from DBUtils import PersistentDB
 import email
 from naren_solr import sales_solr
 import pdb
+from bs4 import BeautifulSoup
+import os
+reload(sys)
 import jieba
 from sklearn.feature_extraction.text import HashingVectorizer
+import logging
 from email import utils
 import traceback
 from sklearn.externals import joblib
 import base64
 from email.header import decode_header
 import MySQLdb
+sys.setdefaultencoding('utf8')
 
 stop_words = ['面试', '邀请', '介绍', '加入', '公司', '有限', '机会', '职位', '推荐', '简介', '月薪', '工作',\
               '服务', '开发', '北京', '高级', '回复', '邀请函', '并', '查收', '工程师', '】', '来信', '您',\
@@ -40,6 +45,41 @@ def predict_mail(subject):
 def decode_nck(nick):
     nklst = nick.split('?')
     return base64.decodestring(nklst[3]).decode(nklst[1])
+
+
+def html_parser(content):
+    soup = BeautifulSoup(content)
+    spanlst = soup.find_all('span')
+    contentlst = []
+    for span in spanlst:
+        contentlst.append(span.text)
+    return contentlst
+
+
+def get_mail_content(msg):
+    for bar in msg.walk():
+        if not bar.is_multipart():
+            name = bar.get_param('name')
+            if name:
+                print 'attachment:', name
+                continue
+            if bar.get_content_type() == 'text/plain':
+                data = bar.get_payload(decode=True)
+            else:
+                data = '\n'.join(html_parser(bar.get_payload(decode=True)))
+            try:
+                if bar.get_content_charset() == 'gb2312':
+                    # print data.decode('gbk').encode('utf-8')
+                    content = data.decode('gbk').encode('utf-8')
+                else:
+                    # print data.decode(bar.get_content_charset()).encode('utf-8')
+                    content = data.decode(bar.get_content_charset() and \
+                                          bar.get_content_charset() or 'utf8').encode('utf-8')
+            except UnicodeDecodeError:
+                # print data
+                content = data
+    return content
+
 
 def generate_table_data(subject, nick):
     subject = decode_header(subject)[0][0].replace(' ', '')
@@ -74,31 +114,65 @@ def generate_table_data(subject, nick):
         arg_map = {'name':''.join(com_lst)}
     else:
         arg_map = {'name': nick}
-    rst = sales_solr.sales_search(arg_map, page_index, countofpage, solr_ip_port)
+    try:
+        rst = sales_solr.sales_search(arg_map, page_index, countofpage, solr_ip_port)
+    except:
+        return (0, arg_map['name'])
     return (rst[0], arg_map['name'])
 
 def get_mail_name(msg):
     pass
 
+
 def read_from_csv(path):
     pass
 
 #做测试用，传入的参数是[[], []]形式，以后要修改
-def write_table(datas):
+def write_table(datas, logger):
     conn = persist.connection()
     cur = conn.cursor()
     try:
         for data in datas:
-            datalst = data.split(',')
-            print datalst
-            datasql = 'insert into result(subject, company_name, matches, contact_name, mobile,\
-                        phone, address, email_address) values ("%s", "%s", %d, "%s", "%s", "%s", "%s", "%s")' % \
-                        (datalst[0], datalst[1], int(datalst[2]), datalst[3], datalst[4], datalst[5], datalst[6], datalst[7])
-            print datasql
+            datalst = data
+            # print datalst
+            try:
+                datasql = 'insert into result(subject, company_name, matches, contact_name, mobile,\
+                        phone, address, email_address, recive_email, content, time_stamp) values\
+                         ("%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", "%s", %f)' % (datalst[0], datalst[1], \
+                         datalst[2], datalst[3], datalst[4], datalst[5], datalst[6], datalst[7], datalst[8], datalst[9].replace('"', '\"'), datalst[10])
+            except:
+                pass
+            # print datasql
             cur.execute(datasql)
         conn.commit()
         cur.close()
         conn.close()
     except:
+        logger.exception("Exception Logged")
         traceback.print_exc()
         conn.close()
+
+
+def set_logger(filename):
+    # 创建一个logger,可以考虑如何将它封装
+    logger = logging.getLogger('mylogger')
+    logger.setLevel(logging.DEBUG)
+
+    # 创建一个handler，用于写入日志文件
+    fh = logging.FileHandler(os.path.join(os.getcwd(), filename))
+    fh.setLevel(logging.DEBUG)
+
+    # 再创建一个handler，用于输出到控制台
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+
+    # 定义handler的输出格式
+    formatter = logging.Formatter('%(asctime)s - %(module)s.%(funcName)s.%(lineno)d - %(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+    ch.setFormatter(formatter)
+
+    # 给logger添加handler
+    logger.addHandler(fh)
+    logger.addHandler(ch)
+
+    return logger

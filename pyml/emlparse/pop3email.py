@@ -6,8 +6,10 @@ import os
 import time
 import argparse
 import pdb
+import logging
 import eventlet
 from email import utils
+import re
 eventlet.monkey_patch()
 from parse1 import parse_eml
 from email import Parser
@@ -36,6 +38,13 @@ filter_words = ['智联', '汇总', '奖品', '确认', '提醒', '在线考评'
 mailst = ['service@steelport.zhaopin.com', 'service@51job.com']
 subject_key = ['failure', 'Addressverification', u'错误', u'失败']
 mailtype={1:'bugmail', 2:'spam'}
+emailp = re.compile('\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}')
+
+logger = parseutils.set_logger('extract_mail.log')
+# log_filename = 'extract_mail.log'
+# log_format = '%(filename)s [%(asctime)s] [%(levelname)s] %(message)s'
+# logging.basicConfig(format=log_format, dataformat='%Y-%m-%d %H:%M:%S', filename=log_filename, filemode='w', level=logging.INFO)
+
 
 def handle_time(timestr):
     if timestr is None:
@@ -214,6 +223,14 @@ def handle_eml(msg_content, folder_path, user):
     subject = decode_subject(subject)
     fmail = msg.get('From')
     from_mail = utils.parseaddr(msg.get('From'))[1]
+    content = parseutils.get_mail_content(msg)
+    if 'gb2312' in from_mail:
+        emailq = emailp.search(content)
+        emailw = emailp.search(msg.get('From'))
+        if emailq:
+            from_mail = emailq.group(0)
+        elif emailw:
+            from_mail = emailw.group(0)
     # nick = utils.parseaddr(msg.get('From'))[0]
     nick = fmail.split(' ')[0]
     mailtm = msg.get('date')
@@ -226,14 +243,18 @@ def handle_eml(msg_content, folder_path, user):
             lines = []
             lines.append(subject.strip())
             lines.append(rst[1])
-            lines.append(str(rst[0]))
-            result = parse_eml(msg)
+            lines.append(rst[0])
+            result = parse_eml(msg, content)
             lines.append(result.get(u'联系人', '').strip())
             lines.append(result.get(u'手机', '').strip())
             lines.append(result.get(u'座机', '').strip())
             lines.append(result.get(u'地址', '').strip())
-            lines.append(result.get('email', '').strip())
-            parseutils.write_table([','.join(lines)])
+            lines.append(from_mail.strip())
+            lines.append(user.strip())
+            lines.append(content)
+            lines.append(time.time())
+            # parseutils.write_table([','.join(lines)])
+            parseutils.write_table([lines], logger)
             write_mail(name, msg_content)
             return result
     else:   #如果是垃圾邮件或者错误邮件的话，就走这个流程
@@ -268,6 +289,7 @@ def recive_eml(lst, bug_index):
             eml_name_lst.append(result)
             return [0, result]
     except:
+        logger.exception("Exception Logged")
         print traceback.print_exc()
         bug_index.append(index)
         bug_eml_lst.append(result)
