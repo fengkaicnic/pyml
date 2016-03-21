@@ -1,11 +1,13 @@
 import os
+import pdb
+import utils
 
 import MySQLdb
 try:
-    conn = MySQLdb.connect(host='localhost', user='root', passwd='mysql', db='test', charset='utf8')
+    conn = utils.persist.connection()
     cur = conn.cursor()
-    sql1 = 'drop '
-    metasql = 'create table songs(id int primary key not null auto_increment, name varchar(128), majorid int, type varchar(20))'
+    metasql = 'create table songs(id int primary key not null auto_increment, song_id varchar(36), artist_id varchar(36),\
+                publish_time varchar(8), song_init_plays int, launguage int, gender int)'
     scoretol = cur.execute(metasql)
     conn.close()
 

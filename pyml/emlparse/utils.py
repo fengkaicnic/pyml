@@ -40,3 +40,12 @@ def write_table(datas):
     except:
         traceback.print_exc()
         conn.close()
+
+def test_time():
+    print time.time()
+
+if __name__ == '__main__':
+
+    test_time()
+    print type(time.time())
+    print int(time.time())

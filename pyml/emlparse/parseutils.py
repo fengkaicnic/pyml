@@ -75,9 +75,11 @@ def get_mail_content(msg):
                     # print data.decode(bar.get_content_charset()).encode('utf-8')
                     content = data.decode(bar.get_content_charset() and \
                                           bar.get_content_charset() or 'utf8').encode('utf-8')
+                    return content
             except UnicodeDecodeError:
                 # print data
                 content = data
+                return content
     return content
 
 
@@ -138,7 +140,7 @@ def write_table(datas, logger):
             try:
                 datasql = 'insert into result(subject, company_name, matches, contact_name, mobile,\
                         phone, address, email_address, recive_email, content, time_stamp) values\
-                         ("%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", "%s", %f)' % (datalst[0], datalst[1], \
+                         ("%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", "%s", %d)' % (datalst[0], datalst[1], \
                          datalst[2], datalst[3], datalst[4], datalst[5], datalst[6], datalst[7], datalst[8], datalst[9].replace('"', '\"'), datalst[10])
             except:
                 pass

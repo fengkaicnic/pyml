@@ -6,6 +6,7 @@ import codecs
 from email import utils
 import re
 reload(sys)
+import parseutils
 import os
 import json
 import pdb
@@ -217,7 +218,7 @@ def parse_eml_string(path):
 
 if __name__ == '__main__':
     # path = 'd:/nreml'
-    path = 'd:/mailtest'
+    path = 'd:/nreml/tst'
     lst = os.listdir(path)
     for pth in lst:
         pth = path + '/' + pth
@@ -225,7 +226,9 @@ if __name__ == '__main__':
             print pth.decode('gb2312').encode('utf-8')
         except UnicodeDecodeError:
             print pth
-        fp = codecs.open(path, 'r')
+        fp = codecs.open(pth, 'r')
         msg = email.message_from_file(fp)
-        parse_eml(msg)
+        pdb.set_trace()
+        content = parseutils.get_mail_content(msg)
+        parse_eml(msg, content)
         fp.close()

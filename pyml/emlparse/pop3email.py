@@ -226,11 +226,10 @@ def handle_eml(msg_content, folder_path, user):
     content = parseutils.get_mail_content(msg)
     if 'gb2312' in from_mail:
         emailq = emailp.search(content)
-        emailw = emailp.search(msg.get('From'))
         if emailq:
             from_mail = emailq.group(0)
-        elif emailw:
-            from_mail = emailw.group(0)
+        else:
+            from_mail = ''
     # nick = utils.parseaddr(msg.get('From'))[0]
     nick = fmail.split(' ')[0]
     mailtm = msg.get('date')
@@ -252,7 +251,7 @@ def handle_eml(msg_content, folder_path, user):
             lines.append(from_mail.strip())
             lines.append(user.strip())
             lines.append(content)
-            lines.append(time.time())
+            lines.append(int(time.time()))
             # parseutils.write_table([','.join(lines)])
             parseutils.write_table([lines], logger)
             write_mail(name, msg_content)
