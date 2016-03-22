@@ -2,8 +2,11 @@
 import os
 import json
 import re
+import time
 import utils
 import pdb
+
+start = time.time()
 try:
 
     conn = utils.persist.connection()
@@ -15,18 +18,23 @@ try:
     cur.execute('set character_set_server=utf8')
     conn.commit()
     mode = re.compile(r'\d+')
-    with open('d:/tianchi/music/mars_tianchi_songs.csv') as file:
+    with open('d:/tianchi/music/mars_tianchi_user_actions.csv') as file:
         lines = file.readlines()
-        for line in lines:
-            items = line.split(',')
-            sql = 'insert into songs(song_id, artist_id, publish_time, song_init_plays, launguage,\
-                    gender) values ("%s", "%s", "%s", %d, %d, %d)' % (items[0], items[1], \
-                                    items[2], int(items[3]), int(items[4]), int(items[5]))
+        for index, line in enumerate(lines):
+            items = line.strip().split(',')
+            sql = 'insert into useraction(user_id, song_id, gmt_time, action_type, DS) values \
+                                        ("%s", "%s", "%s", "%s", "%s")' % tuple(items)
             cur.execute(sql)
+            print index
     conn.commit()
     conn.close()
 
 except Exception as e:
     pdb.set_trace()
+    conn.commit()
     conn.close()
     print e
+
+end = time.time()
+
+print (end - start)

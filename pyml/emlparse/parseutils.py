@@ -144,12 +144,12 @@ def write_table(datas, logger):
             # print datalst
             try:
                 datasql = '''insert into result(subject, company_name, matches, contact_name, mobile,\
-                        phone, address, email_address, recive_email, content, time_stamp, uuid) values\
-                         ("%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", "%s", %d, "%s")''' % (datalst[0], datalst[1], \
+                        phone, address, email_address, recive_email, content, time_stamp, uuid, store_path, inbox_time) values\
+                         ("%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", "%s")''' % (datalst[0], datalst[1], \
                          datalst[2], datalst[3], datalst[4], datalst[5], datalst[6], datalst[7], datalst[8],\
-                            datalst[9].replace('"', r'\"'), datalst[10], datalst[11])
+                            datalst[9].replace('"', r'\"'), datalst[10], datalst[11], datalst[12], datalst[13])
             except:
-                pass
+                traceback.print_exc()
             # print datasql
             cur.execute(datasql)
         conn.commit()

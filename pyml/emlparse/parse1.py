@@ -6,7 +6,9 @@ import codecs
 from email import utils
 import re
 reload(sys)
+from HTMLParser import HTMLParser
 import parseutils
+from email import Header
 import os
 import json
 import pdb
@@ -25,6 +27,22 @@ emailp = re.compile('\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}')
 
 family_dct = get_family_dct()
 
+def decode_item(item):
+        if isinstance(item, str) and item.startswith('=?') :
+            _item = "?=\r\n=?".join(item.split("?==?"))
+            decodefrag = Header.decode_header(_item)
+            subj_fragments = []
+            for s, enc in decodefrag:
+                if enc is None:
+                    subj_fragments.append(s)
+                    continue
+                if enc.lower() in ('gb2312', 'gbk', 'gb_1988-80'):
+                    enc = 'gb18030'
+                s = unicode(s, enc).encode('utf8', 'replace')
+                subj_fragments.append(s)
+            return ''.join(subj_fragments)
+        return item
+
 def check_name(name):
     if len(name) > 10:
         return False
@@ -40,12 +58,19 @@ def check_address(address):
     return True
 
 def html_parser(content):
-    soup = BeautifulSoup(content)
-    spanlst = soup.find_all('span')
-    contentlst = []
-    for span in spanlst:
-        contentlst.append(span.text)
-    return contentlst
+    content = content.strip()
+    result = []
+    parser = HTMLParser()
+    parser.handle_data = result.append
+    parser.feed(content)
+    parser.close()
+    return ''.join(result)
+    # soup = BeautifulSoup(content)
+    # spanlst = soup.find_all('span')
+    # contentlst = []
+    # for span in spanlst:
+    #     contentlst.append(span.text)
+    # return contentlst
 
 #如果是bugmail的话，只返回邮件地址
 #不是的话则返回字典，里面是一些能提取到的信息
@@ -230,5 +255,5 @@ if __name__ == '__main__':
         msg = email.message_from_file(fp)
         pdb.set_trace()
         content = parseutils.get_mail_content(msg)
-        parse_eml(msg, content)
+        rst = parse_eml(msg, content)
         fp.close()

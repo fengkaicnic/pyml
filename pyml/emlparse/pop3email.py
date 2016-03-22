@@ -139,16 +139,17 @@ def generate_name(msg, folder_path):
     m.update(msg.get('message-id', 'none'))
     m.update(msg.get('From', 'none'))
     m.update(msg.get('Subject', 'None'))
+    inbox_time = time.strftime('%Y-%m-%d %H:%M:%S', mailtime)
     if '@' in utils.parseaddr(msg.get('From'))[1]:
         fle_name = time.strftime("%d-%H%M%S-",mailtime) + m.hexdigest()+"-"+ utils.parseaddr(msg.get('From'))[1]+".eml"
     else:
-        fle_name = time.strftime("%d-%H%M%S-",mailtime) + m.hexdigest()+"-.eml"
+        fle_name = time.strftime("%d-%H%M%S-",mailtime) + m.hexdigest()+".eml"
     folder = time.strftime('%Y%m', mailtime)
     path.append(folder)
     if not os.path.exists('/'.join(path)):
         os.makedirs('/'.join(path))
     path.append(fle_name)
-    return (flag, '/'.join(path), m.hexdigest())
+    return (flag, inbox_time, '/'.join(path), m.hexdigest())
 
 def generate_name_old(mailtm, folder_path):
     path = [folder_path]
@@ -233,7 +234,7 @@ def handle_eml(msg_content, folder_path, user):
     # nick = utils.parseaddr(msg.get('From'))[0]
     nick = fmail.split(' ')[0]
     mailtm = msg.get('date')
-    flag, name, uuid = generate_name(msg, folder_path)
+    flag, inbox_time, name, uuid = generate_name(msg, folder_path)
     if flag == 0:         #如果是正常邮件的话则走这个过程
         if os.path.isfile(name):
             return 1
@@ -253,6 +254,8 @@ def handle_eml(msg_content, folder_path, user):
             lines.append(content)
             lines.append(int(time.time()))
             lines.append(uuid)
+            lines.append(name)
+            lines.append(inbox_time)
             # parseutils.write_table([','.join(lines)])
             parseutils.write_table([lines], logger)
             write_mail(name, msg_content)
