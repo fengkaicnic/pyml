@@ -148,7 +148,7 @@ def generate_name(msg, folder_path):
     if not os.path.exists('/'.join(path)):
         os.makedirs('/'.join(path))
     path.append(fle_name)
-    return (flag, '/'.join(path))
+    return (flag, '/'.join(path), m.hexdigest())
 
 def generate_name_old(mailtm, folder_path):
     path = [folder_path]
@@ -233,7 +233,7 @@ def handle_eml(msg_content, folder_path, user):
     # nick = utils.parseaddr(msg.get('From'))[0]
     nick = fmail.split(' ')[0]
     mailtm = msg.get('date')
-    flag, name = generate_name(msg, folder_path)
+    flag, name, uuid = generate_name(msg, folder_path)
     if flag == 0:         #如果是正常邮件的话则走这个过程
         if os.path.isfile(name):
             return 1
@@ -241,17 +241,18 @@ def handle_eml(msg_content, folder_path, user):
             rst = parseutils.generate_table_data(subject, nick)
             lines = []
             lines.append(subject.strip())
-            lines.append(rst[1])
+            lines.append(rst[1].replace('"', ''))
             lines.append(rst[0])
             result = parse_eml(msg, content)
             lines.append(result.get(u'联系人', '').strip())
             lines.append(result.get(u'手机', '').strip())
             lines.append(result.get(u'座机', '').strip())
             lines.append(result.get(u'地址', '').strip())
-            lines.append(from_mail.strip())
+            lines.append(from_mail.strip().replace('"', ''))
             lines.append(user.strip())
             lines.append(content)
             lines.append(int(time.time()))
+            lines.append(uuid)
             # parseutils.write_table([','.join(lines)])
             parseutils.write_table([lines], logger)
             write_mail(name, msg_content)

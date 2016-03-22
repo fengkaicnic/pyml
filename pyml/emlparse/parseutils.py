@@ -5,6 +5,7 @@ from DBUtils import PersistentDB
 import email
 from naren_solr import sales_solr
 import pdb
+from HTMLParser import HTMLParser
 from bs4 import BeautifulSoup
 import os
 reload(sys)
@@ -48,12 +49,13 @@ def decode_nck(nick):
 
 
 def html_parser(content):
-    soup = BeautifulSoup(content)
-    spanlst = soup.find_all('span')
-    contentlst = []
-    for span in spanlst:
-        contentlst.append(span.text)
-    return contentlst
+    content = content.strip()
+    result = []
+    parser = HTMLParser()
+    parser.handle_data = result.append
+    parser.feed(content)
+    parser.close()
+    return ''.join(result)
 
 
 def get_mail_content(msg):
@@ -63,10 +65,11 @@ def get_mail_content(msg):
             if name:
                 print 'attachment:', name
                 continue
-            if bar.get_content_type() == 'text/plain':
-                data = bar.get_payload(decode=True)
-            else:
-                data = '\n'.join(html_parser(bar.get_payload(decode=True)))
+            # if bar.get_content_type() == 'text/plain':
+            #     data = bar.get_payload(decode=True)
+            # else:
+            #     data = html_parser(bar.get_payload(decode=True))
+            data = bar.get_payload(decode=True)
             try:
                 if bar.get_content_charset() == 'gb2312':
                     # print data.decode('gbk').encode('utf-8')
@@ -75,12 +78,14 @@ def get_mail_content(msg):
                     # print data.decode(bar.get_content_charset()).encode('utf-8')
                     content = data.decode(bar.get_content_charset() and \
                                           bar.get_content_charset() or 'utf8').encode('utf-8')
-                    return content
+                    # return content
             except UnicodeDecodeError:
                 # print data
                 content = data
-                return content
-    return content
+                # return content
+            if bar.get_content_type() == 'text/html':
+                content = html_parser(content)
+            return content
 
 
 def generate_table_data(subject, nick):
@@ -138,10 +143,11 @@ def write_table(datas, logger):
             datalst = data
             # print datalst
             try:
-                datasql = 'insert into result(subject, company_name, matches, contact_name, mobile,\
-                        phone, address, email_address, recive_email, content, time_stamp) values\
-                         ("%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", "%s", %d)' % (datalst[0], datalst[1], \
-                         datalst[2], datalst[3], datalst[4], datalst[5], datalst[6], datalst[7], datalst[8], datalst[9].replace('"', '\"'), datalst[10])
+                datasql = '''insert into result(subject, company_name, matches, contact_name, mobile,\
+                        phone, address, email_address, recive_email, content, time_stamp, uuid) values\
+                         ("%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", "%s", %d, "%s")''' % (datalst[0], datalst[1], \
+                         datalst[2], datalst[3], datalst[4], datalst[5], datalst[6], datalst[7], datalst[8],\
+                            datalst[9].replace('"', r'\"'), datalst[10], datalst[11])
             except:
                 pass
             # print datasql
