@@ -67,7 +67,7 @@ def main():
     train_words, train_tags, test_words, test_tags = input_data(train_file, test_file)
     train_data, test_data = vectorize(train_words, test_words)
     clf = train_clf(train_data, train_tags)
-    # joblib.dump(clf, 'clf.model')
+    joblib.dump(clf, 'clf.model')
     pred = clf.predict(test_data)
     evaluate(numpy.asarray(test_tags), pred)
 

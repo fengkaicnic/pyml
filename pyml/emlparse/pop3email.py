@@ -309,8 +309,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--path', default='d:/pop3', help='the path to store result')
     parser.add_argument('--num', type=int, default=5, help='the repeat num to terminate the program')
-    parser.add_argument('--user', default='nrall001@163.com', help='the user of the email')
-    parser.add_argument('--password', default='nr1531032', help='the password of the email')
+    # parser.add_argument('--user', default='nrall001@163.com', help='the user of the email')
+    # parser.add_argument('--password', default='nr1531032', help='the password of the email')
+    parser.add_argument('--user', default='nrall003@163.com', help='the user of the email')
+    parser.add_argument('--password', default='nr1338752', help='the password of the email')
     parser.add_argument('--pop3server', default='pop.163.com', help='the pop3 server of email')
     args = parser.parse_args()
     pth = args.path
