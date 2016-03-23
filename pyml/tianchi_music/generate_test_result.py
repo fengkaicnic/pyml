@@ -4,6 +4,7 @@ import json
 import re
 import time
 import utils
+import datetime
 import pdb
 
 start = time.time()
@@ -31,6 +32,16 @@ try:
         cur.execute(sql1)
         num = cur.fetchall()
         results[item[0]] += num[0][0]
+    dltim = datetime.datetime(2015, 9, 1)
+    rsttt = []
+    for key in results.iterkeys():
+        for i in range(60):
+            dm = dltim + datetime.timedelta(days=i)
+            rsttt.append(key + ',' + str(results[key]/180) + ',' + dm.strftime('%Y%m%d'))
+
+    with open('d:/tianchi/music/mars_tianchi_artist_plays_predict.csv', 'wb') as file:
+        file.writelines('\n'.join(rsttt))
+    pdb.set_trace()
     conn.commit()
     conn.close()
 

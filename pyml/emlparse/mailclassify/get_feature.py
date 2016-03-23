@@ -56,6 +56,7 @@ def generate_train_test():
         for line in lines:
             if random.randint(1, 3) == 1:
                 testlines.append(line.strip().split('|')[0] + ',0')
+                trainlines.append(line.strip().split('|')[0] + ',0')
             else:
                 trainlines.append(line.strip().split('|')[0] + ',0')
 
@@ -64,6 +65,7 @@ def generate_train_test():
         for line in lines:
             if random.randint(1, 3) == 1:
                 testlines.append(line.strip().split('|')[0] + ',1')
+                trainlines.append(line.strip().split('|')[0] + ',1')
             else:
                 trainlines.append(line.strip().split('|')[0] + ',1')
 
@@ -75,4 +77,5 @@ def generate_train_test():
 
 
 if __name__ == '__main__':
-    get_feature_word()
+    # get_feature_word()
+    generate_train_test()
