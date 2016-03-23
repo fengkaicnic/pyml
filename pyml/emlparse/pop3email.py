@@ -35,8 +35,9 @@ filter_words = ['智联', '汇总', '奖品', '确认', '提醒', '在线考评'
                 '会员', '注册', '51job', '已经有', '不合适', '最新职位', '手机',\
                 '简历', '跳槽',  '猎头', '网易考拉', '互联网淘金', '已投', '安全问题', '机会',\
                 '靠谱', '推荐']
+spam_words = ['自动回复', 'AutoReply']
 mailst = ['service@steelport.zhaopin.com', 'service@51job.com']
-subject_key = ['failure', 'Addressverification', u'错误', u'失败']
+subject_key = ['failure', 'Addressverification', u'错误', u'失败', '系统退信']
 mailtype={1:'bugmail', 2:'spam'}
 emailp = re.compile('\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}')
 
@@ -110,9 +111,9 @@ def check_from_subject(from_mail, subject):
     for key in subject_key:
         if key in subject:
             return 1    #/failure send
-    # for word in filter_words:
-    #     if word in subject:
-    #         return 2 #spam
+    for word in spam_words:
+        if word in subject:
+            return 2 #spam
     if not parseutils.predict_mail(subject):
         return 2
     print subject
@@ -131,7 +132,7 @@ def generate_name(msg, folder_path):
     from_email = msg.get('From')
     path = [folder_path]
     flag = 0
-    flag = check_from_subject(from_email, subject)  #检查邮件的类型
+    flag = check_from_subject(from_email, subject)  #检查邮件的类型:0 正常，1 错误，2 垃圾
     if flag: #根据邮件的类型，来分开存放
         path.append(mailtype[flag])
     mailtime = time.localtime(handle_time(mailtm))
@@ -232,7 +233,9 @@ def handle_eml(msg_content, folder_path, user):
         else:
             from_mail = ''
     # nick = utils.parseaddr(msg.get('From'))[0]
-    nick = fmail.split(' ')[0]
+    nick = ''
+    if fmail:
+        nick = fmail.split(' ')[0]
     mailtm = msg.get('date')
     flag, inbox_time, name, uuid = generate_name(msg, folder_path)
     if flag == 0:         #如果是正常邮件的话则走这个过程
@@ -254,7 +257,7 @@ def handle_eml(msg_content, folder_path, user):
             lines.append(content)
             lines.append(int(time.time()))
             lines.append(uuid)
-            lines.append(name)
+            lines.append(name[len(pth):])
             lines.append(inbox_time)
             # parseutils.write_table([','.join(lines)])
             parseutils.write_table([lines], logger)
@@ -265,7 +268,16 @@ def handle_eml(msg_content, folder_path, user):
         if os.path.isfile(name):
             return name
         if flag == 1:
-            result = parse_eml(msg, True)
+            result = parse_eml(msg, content, True)
+            lines = []
+            lines.append(subject.strip())
+            lines.append(result.get('bugemail', '').strip().replace('"', ''))
+            lines.append(user.strip())
+            lines.append(int(time.time()))
+            lines.append(uuid)
+            lines.append(name[len(pth):])
+            lines.append(inbox_time)
+            parseutils.write_error_mail([lines], logger)
         print decode_header(subject)[0][0].replace(' ', '')
         write_mail(name, msg_content)
         return result
@@ -307,7 +319,7 @@ if __name__ == '__main__':
     # pop3_server = 'pop.163.com'
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', default='d:/pop3', help='the path to store result')
+    parser.add_argument('--path', default='d:/pop31', help='the path to store result')
     parser.add_argument('--num', type=int, default=5, help='the repeat num to terminate the program')
     # parser.add_argument('--user', default='nrall001@163.com', help='the user of the email')
     # parser.add_argument('--password', default='nr1531032', help='the password of the email')
@@ -324,6 +336,7 @@ if __name__ == '__main__':
     eml_name_lst = []
     bug_eml_lst = []
     subject_lst = []
+    pdb.set_trace()
     bug_index = []
     pop3_server = args.pop3server
     user = args.user

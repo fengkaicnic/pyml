@@ -134,6 +134,27 @@ def get_mail_name(msg):
 def read_from_csv(path):
     pass
 
+def write_error_mail(datas, logger):
+    conn = persist.connection()
+    cur = conn.cursor()
+    try:
+        for data in datas:
+            try:
+                datasql = '''insert into error_mail(subject, email_address, recive_mail, time_stamp, \
+                              uuid, store_path, inbox_time) values ("%s", "%s", "%s", %d, "%s", "%s", "%s")\
+                              ''' % (data[0], data[1], data[2], data[3], data[4], data[5], data[6])
+            except:
+                traceback.print_exc()
+
+            cur.execute(datasql)
+        conn.commit()
+        cur.close()
+        conn.close()
+    except:
+        logger.exception("Exception Logged")
+        traceback.print_exc()
+        conn.close()
+
 #做测试用，传入的参数是[[], []]形式，以后要修改
 def write_table(datas, logger):
     conn = persist.connection()
