@@ -94,7 +94,7 @@ def decode_subject(subject):
             try:
                 subject = subject.decode('gb18030').encode('utf8')
             except:
-                pdb.set_trace()
+                pass
     return subject
 
 #检查邮件是否是垃圾邮件
@@ -336,7 +336,6 @@ if __name__ == '__main__':
     eml_name_lst = []
     bug_eml_lst = []
     subject_lst = []
-    pdb.set_trace()
     bug_index = []
     pop3_server = args.pop3server
     user = args.user
@@ -367,7 +366,6 @@ if __name__ == '__main__':
             flag += 1
             if flag > repeatnum:
                 break
-    pdb.set_trace()
     for result in resultlst:
         print json.dumps(result, encoding='utf8', ensure_ascii=False)
     print bug_index
