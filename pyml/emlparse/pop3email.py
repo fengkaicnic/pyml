@@ -296,7 +296,6 @@ def recive_eml(lst, bug_index):
     try:
         resp, lines, octets = server.retr(index+1)
         msg_content = '\r\n'.join(lines)
-#         print msg_content
         result = handle_eml(msg_content, folder_path, user)
         if isinstance(result, int):
             return [1]
