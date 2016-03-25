@@ -17,8 +17,8 @@ for key in content.iterkeys():
 
 pdb.set_trace()
 rst.append(content['selfappraise'].decode('utf8').encode('gbk'))
-rst.append(eval(content['education_history'])[0]['major'].encode('gbk').decode('gbk'))
+rst.append(eval(content['education_history'])[0]['major'].encode('gbk'))
 
 with open('d:/naren/data/test.txt', 'wb') as file:
-    file.writelines('\n'.join(rst))
+    file.writelines('\r\n'.join(rst))
 
