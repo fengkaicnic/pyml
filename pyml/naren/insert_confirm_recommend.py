@@ -15,15 +15,18 @@ path_confirm = 'd:/naren/data/confirm/'
 path_read = 'd:/naren/data/read/'
 path_recommend = 'd:/naren/data/recommend/'
 
+base_path = path_confirm
+
 def get_resume(cur, fname):
     resume_id = fname.split('-')[1].split('.')[0]
-    sql = 'select resume_id from profile where resume_id = %d' % int(resume_id)
+    pos_id = fname.split('-')[0]
+    sql = 'select resume_id from profile where resume_id = %d and pos_id = %d' % (int(resume_id), int(pos_id))
     cur.execute(sql)
     rst = cur.fetchall()
     if len(rst) == 0:
         return True
     else:
-        sql = 'update profile set confirm = 1 where resume_id = %d' % int(resume_id)
+        sql = 'update profile set confirm = 1 where resume_id = %d and pos_id = %d' % (int(resume_id), int(pos_id))
         cur.execute(sql)
         return False
 
@@ -44,13 +47,13 @@ try:
     cur.execute(table_sql)
     rst = cur.fetchall()
 
-    for fname in os.listdir(path_confirm):
+    for fname in os.listdir(base_path):
         if not get_resume(cur, fname):
             continue
         insertsql = ['insert into profile(']
         valuesql = [' values(']
         valuelst = []
-        with open(path_confirm + fname, 'r') as file:
+        with open(base_path + fname, 'r') as file:
             fobj = json.load(file)
             fobj['readflag'] = 0
             fobj['confirm'] = 1

@@ -11,11 +11,27 @@ import traceback
 
 start = time.time()
 
-path_confirm = 'd:/naren/data/confirm/'
 path_read = 'd:/naren/data/read/'
 path_recommend = 'd:/naren/data/recommend/'
+path_confirm = 'd:/naren/data/confirm/'
+READFLAG = 0
+RECOMMEND = 0
+CONFIRM = 1
 
-base_path = path_read
+base_path = path_confirm
+
+def get_resume(cur, fname):
+    resume_id = fname.split('-')[1].split('.')[0]
+    pos_id = fname.split('-')[0]
+    sql = 'select resume_id from education where resume_id = %d and pos_id = %d' % (int(resume_id), int(pos_id))
+    cur.execute(sql)
+    rst = cur.fetchall()
+    if len(rst) == 0:
+        return True
+    else:
+        sql = 'update education set confirm = 1 where resume_id = %d and pos_id = %d' % (int(resume_id), int(pos_id))
+        cur.execute(sql)
+        return False
 
 try:
     num = 0
@@ -33,6 +49,9 @@ try:
     rst = cur.fetchall()
 
     for fname in os.listdir(base_path):
+
+        if not get_resume(cur, fname):
+            continue
         with open(base_path + fname, 'r') as file:
             content = json.load(file)
             fobjlst = eval(content['education_history'])
@@ -41,9 +60,9 @@ try:
             insertsql = ['insert into education(']
             valuesql = [' values(']
             valuelst = []
-            fobj['readflag'] = 0
-            fobj['confirm'] = 1
-            fobj['recommend'] = 0
+            fobj['readflag'] = READFLAG
+            fobj['confirm'] = CONFIRM
+            fobj['recommend'] = RECOMMEND
             fobj['pos_id'] = int(fname.split('-')[0])
 
             for item in rst[1:]:

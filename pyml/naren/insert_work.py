@@ -15,17 +15,18 @@ path_confirm = 'd:/naren/data/confirm/'
 path_read = 'd:/naren/data/read/'
 path_recommend = 'd:/naren/data/recommend/'
 
-base_path = path_recommend
+base_path = path_confirm
 
 def get_resume(cur, fname):
     resume_id = fname.split('-')[1].split('.')[0]
-    sql = 'select resume_id from work where resume_id = %d' % int(resume_id)
+    pos_id = fname.split('-')[0]
+    sql = 'select resume_id from work where resume_id = %d and pos_id = %d' % (int(resume_id), int(pos_id))
     cur.execute(sql)
     rst = cur.fetchall()
     if len(rst) == 0:
         return True
     else:
-        sql = 'update work set recommend = 1 where resume_id = %d' % int(resume_id)
+        sql = 'update work set confirm = 1 where resume_id = %d and pos_id = %d' % (int(resume_id), int(pos_id))
         cur.execute(sql)
         return False
 
@@ -45,6 +46,7 @@ try:
     rst = cur.fetchall()
 
     for fname in os.listdir(base_path):
+
         if not get_resume(cur, fname):
             continue
 
@@ -57,8 +59,8 @@ try:
             valuesql = [' values(']
             valuelst = []
             fobj['readflag'] = 0
-            fobj['confirm'] = 0
-            fobj['recommend'] = 1
+            fobj['confirm'] = 1
+            fobj['recommend'] = 0
             fobj['pos_id'] = int(fname.split('-')[0])
 
             for item in rst[1:]:
