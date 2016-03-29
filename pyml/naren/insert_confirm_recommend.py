@@ -23,7 +23,7 @@ def get_resume(cur, fname):
     if len(rst) == 0:
         return True
     else:
-        sql = 'update profile set recommend = 1 where resume_id = %d' % int(resume_id)
+        sql = 'update profile set confirm = 1 where resume_id = %d' % int(resume_id)
         cur.execute(sql)
         return False
 
@@ -53,8 +53,8 @@ try:
         with open(path_confirm + fname, 'r') as file:
             fobj = json.load(file)
             fobj['readflag'] = 0
-            fobj['confirm'] = 0
-            fobj['recommend'] = 1
+            fobj['confirm'] = 1
+            fobj['recommend'] = 0
             fobj['pos_id'] = int(fname.split('-')[0])
 
         for item in rst[1:]:

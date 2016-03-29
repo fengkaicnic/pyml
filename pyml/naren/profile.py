@@ -16,6 +16,7 @@ for key in content.iterkeys():
     # rst.append(key + u':' + content[key].decode('utf8'))
 
 pdb.set_trace()
+
 rst.append(content['selfappraise'].decode('utf8').encode('gbk'))
 rst.append(eval(content['education_history'])[0]['major'].encode('gbk'))
 
