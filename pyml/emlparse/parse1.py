@@ -243,7 +243,7 @@ def parse_eml_string(path):
 
 if __name__ == '__main__':
     # path = 'd:/nreml'
-    path = 'd:/nreml/tst'
+    path = 'd:/nreml/bug'
     lst = os.listdir(path)
     for pth in lst:
         pth = path + '/' + pth
