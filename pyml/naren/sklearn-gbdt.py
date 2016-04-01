@@ -1,6 +1,11 @@
 import pdb
 import numpy as np
 from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.externals import joblib
+
+import time
+
+start = time.time()
 gbdt=GradientBoostingRegressor(
   loss='ls',
   learning_rate=0.1,
@@ -26,6 +31,7 @@ test_id=test_feat[:, 148]
 test_feat = test_feat[:, :148]
 print train_feat.shape, train_id.shape, test_feat.shape, test_id.shape
 gbdt.fit(train_feat, train_id)
+joblib.dump(gbdt, 'model')
 pred=gbdt.predict(test_feat)
 total_err=0
 num = 0.0
@@ -39,3 +45,5 @@ for i in range(pred.shape[0]):
     # total_err+=err*err
 # print total_err/pred.shape[0]
 print num / pred.shape[0]
+end = time.time()
+print end - start
