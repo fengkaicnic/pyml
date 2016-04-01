@@ -140,7 +140,7 @@ def write_error_mail(datas, logger):
     try:
         for data in datas:
             try:
-                datasql = '''insert into error_mail(subject, email_address, recive_mail, time_stamp, \
+                datasql = '''insert into error_mail_test(subject, email_address, recive_mail, time_stamp, \
                               uuid, store_path, inbox_time) values ("%s", "%s", "%s", %d, "%s", "%s", "%s")\
                               ''' % (data[0], data[1], data[2], data[3], data[4], data[5], data[6])
             except:
@@ -164,7 +164,7 @@ def write_table(datas, logger):
             datalst = data
             # print datalst
             try:
-                datasql = '''insert into result(subject, company_name, matches, contact_name, mobile,\
+                datasql = '''insert into result_test(subject, company_name, matches, contact_name, mobile,\
                         phone, address, email_address, recive_email, content, time_stamp, uuid, store_path, inbox_time) values\
                          ("%s", "%s", %d, "%s", "%s", "%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", "%s")''' % (datalst[0], datalst[1], \
                          datalst[2], datalst[3], datalst[4], datalst[5], datalst[6], datalst[7], datalst[8],\

@@ -218,11 +218,13 @@ def write_eml_name():
 #调用generate_name来生成邮件存储路径和判断邮件类型
 #如果是正常邮件，则检查邮件是否已经存储，已存则直接返回1，未存的话就解析再存储
 #如果是垃圾邮件，那就存储，然后解析出from_email就可以
-def handle_eml(msg_content, folder_path, user):
+def handle_eml(msg_content, folder_path, user, index):
     # fp = codecs.open(path, 'r', encoding='gbk')
     msg = email.message_from_string(msg_content)
     subject = msg.get('Subject')
     subject = decode_subject(subject)
+    if subject == u'应聘检验员':
+        pdb.set_trace()
     fmail = msg.get('From')
     from_mail = utils.parseaddr(msg.get('From'))[1]
     content = parseutils.get_mail_content(msg)
@@ -296,7 +298,7 @@ def recive_eml(lst, bug_index):
     try:
         resp, lines, octets = server.retr(index+1)
         msg_content = '\r\n'.join(lines)
-        result = handle_eml(msg_content, folder_path, user)
+        result = handle_eml(msg_content, folder_path, user, index)
         if isinstance(result, int):
             return [1]
         else:

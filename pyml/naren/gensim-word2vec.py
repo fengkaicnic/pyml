@@ -29,7 +29,7 @@ if __name__ == '__main__':
 
     pdb.set_trace()
  
-    model = Word2Vec(LineSentence(inp), size=400, window=5, min_count=1,
+    model = Word2Vec(LineSentence(inp), size=100, window=5, min_count=1,
             workers=multiprocessing.cpu_count())
  
     # trim unneeded model memory = use(much) less RAM
