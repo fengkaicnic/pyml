@@ -48,15 +48,18 @@ def get_position_feature(com_position, pro_position):
 
     return len(com_pos_lst) / float(total)
 
-def get_description_feature(com_description, pro_hisprojects, pro_description, pro_otherinfo):
+
+def get_description_feature(com_description, pro_hisprojects, pro_descriptions, pro_otherinfo):
     try:
         com_seg = jieba.cut(com_description, cut_all=False)
         comlst = [seg.lower() for seg in com_seg if keyword_dct.has_key(seg.lower())]
         description_feature = [0 for i in range(len(keyword_dct))]
         his_seg = jieba.cut(pro_hisprojects, cut_all=False)
         hislst = [seg.lower() for seg in his_seg if keyword_dct.has_key(seg.lower())]
-        des_seg = jieba.cut(pro_description, cut_all=False)
-        deslst = [seg.lower() for seg in des_seg if keyword_dct.has_key(seg.lower())]
+        deslst = []
+        for description in pro_descriptions:
+            des_seg = jieba.cut(description[0], cut_all=False)
+            deslst += [seg.lower() for seg in des_seg if keyword_dct.has_key(seg.lower())]
         oth_seg = jieba.cut(pro_otherinfo, cut_all=False)
         othlst = [seg.lower() for seg in oth_seg if keyword_dct.has_key(seg.lower())]
         feature_lst = []
@@ -74,23 +77,13 @@ def get_description_feature(com_description, pro_hisprojects, pro_description, p
 
     return description_feature
 
-try:
-    conn = utils.persist.connection()
-    cur = conn.cursor()
-    cur.execute('set character_set_client=utf8')
-    cur.execute('set character_set_connection=utf8')
-    cur.execute('set character_set_database=utf8')
-    cur.execute('set character_set_results=utf8')
-    cur.execute('set character_set_server=utf8')
-    conn.commit()
-
+def get_feature(cur, feature_lines, flag):
     sql = 'select pos_id, count(*) as num from profile where recommend = 1 and confirm = 1 group by pos_id'
 
     cur.execute(sql)
-    company_lst = []
 
     rst = cur.fetchall()
-    feature_lines = []
+
     for term in rst:
         # print str(term[0]) + ':' + str(term[1])
         sql1 = 'select low_income, description, low_workage, position_name, \
@@ -107,7 +100,6 @@ try:
         pro_decription = ''
         pro_hisprojects = ''
         pro_otherinfo = ''
-        com_feature = []
         for compy in company_rst:
             com_lst = []
             low_income = compy[0]
@@ -128,9 +120,8 @@ try:
             # print compy[3]
             # print compy[4]
 
-        sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, work.description from profile\
-                left join work on profile.pos_id = work.pos_id and profile.resume_id = work.resume_id where \
-                 profile.pos_id = %d and profile.recommend = 1 and profile.confirm = 1' % term[0]
+        sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
+                 pos_id = %d and recommend = 1 and confirm = %d' % (term[0], flag)
 
         cur.execute(sqlp)
         profile = cur.fetchall()
@@ -146,17 +137,35 @@ try:
             pro_low_income = int(low_income) / 5000
             pro_hisprojects = pro[3]
             pro_otherinfo = pro[4]
-            pro_decription = pro[5]
+            resume_id = pro[5]
+            sql_work = 'select description from work where pos_id = %d and resume_id = %d' % (term[0], resume_id)
+            cur.execute(sql_work)
 
-        position_feature = get_position_feature(com_position, pro_position)
-        descrip_feature = get_description_feature(com_description, pro_hisprojects, pro_decription, pro_otherinfo)
-        com_feature.append(com_low_income)
-        com_feature.append(pro_low_income)
-        com_feature.append(round(position_feature, 3))
-        com_feature += descrip_feature
-        com_feature.append(1)
-        feature_lines.append(','.join(map(lambda x: str(x), com_feature)))
+            pro_decription = cur.fetchall()
 
+            position_feature = get_position_feature(com_position, pro_position)
+            com_feature = []
+            descrip_feature = get_description_feature(com_description, pro_hisprojects, pro_decription, pro_otherinfo)
+            com_feature.append(com_low_income)
+            com_feature.append(pro_low_income)
+            com_feature.append(round(position_feature, 3))
+            com_feature += descrip_feature
+            com_feature.append(flag)
+            feature_lines.append(','.join(map(lambda x: str(x), com_feature)))
+
+try:
+    conn = utils.persist.connection()
+    cur = conn.cursor()
+    cur.execute('set character_set_client=utf8')
+    cur.execute('set character_set_connection=utf8')
+    cur.execute('set character_set_database=utf8')
+    cur.execute('set character_set_results=utf8')
+    cur.execute('set character_set_server=utf8')
+    conn.commit()
+    feature_lines = []
+
+    get_feature(cur, feature_lines, 1)
+    get_feature(cur, feature_lines, 0)
     with open('d:/naren/recommend/train', 'wb') as file:
         file.writelines('\n'.join(feature_lines))
     conn.close()
