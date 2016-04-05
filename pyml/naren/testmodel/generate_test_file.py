@@ -71,15 +71,6 @@ def get_description_feature(com_description, pro_hisprojects, pro_descriptions, 
         for key in com_count.keys():
             description_feature[keyword_dct[key]] = np.exp(pro_count.get(key, 0.0) / float(com_count[key]))
 
-        # for seg in hislst:
-        #     if seg in comlst:
-        #         description_feature[keyword_dct[seg]] += 1
-        # for seg in deslst:
-        #     if seg in comlst:
-        #         description_feature[keyword_dct[seg]] += 1
-        # for seg in othlst:
-        #     if seg in comlst:
-        #         description_feature[keyword_dct[seg]] += 1
     except:
         pdb.set_trace()
         traceback.print_exc()
@@ -124,21 +115,14 @@ def get_feature(cur, feature_lines, flag):
 
             keywords = get_keywords(compy[1])
             com_description = compy[1]
-            # print json.dumps(keywords, encoding='utf8', ensure_ascii=False)
-            # print compy[2]
-            # print json.dumps(get_keywords(compy[3]), encoding='utf8', ensure_ascii=False)
-            # print compy[3]
-            # print compy[4]
 
         sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
                  pos_id = %d and recommend = %d and confirm = %d limit 15' % (term[0], flag, flag)
 
         cur.execute(sqlp)
         profile = cur.fetchall()
-        # pdb.set_trace()
 
         for pro in profile:
-            # print pro[0]
             incomes = salaryp.search(pro[0])
             pro_position = pro[2]
             if incomes:
@@ -177,7 +161,6 @@ try:
     conn.commit()
     feature_lines = []
 
-    # get_feature(cur, feature_lines, 1)
     get_feature(cur, feature_lines, 0)
     with open('d:/naren/recommend/test_model', 'wb') as file:
         file.writelines('\n'.join(feature_lines))
