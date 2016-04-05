@@ -4,12 +4,12 @@ import time
 import utils
 reload(sys)
 import pdb
+from collections import Counter
 import os
 import jieba
 import re
 import traceback
 import numpy as np
-from collections import Counter
 import json
 
 sys.setdefaultencoding('utf8')
@@ -18,11 +18,11 @@ start = time.time()
 
 salaryp = re.compile('\d+')
 
-jieba.load_userdict('textfile/dict.txt')
+jieba.load_userdict('../textfile/dict.txt')
 
 keyword_dct = {}
 num = 0
-with open('textfile/dict.txt', 'r') as file:
+with open('../textfile/dict.txt', 'r') as file:
     lines = file.readlines()
     for line in lines:
         if not keyword_dct.has_key(line.strip().lower().decode('utf8')):
@@ -95,6 +95,7 @@ def get_feature(cur, feature_lines, flag):
     rst = cur.fetchall()
 
     for term in rst:
+        # print str(term[0]) + ':' + str(term[1])
         sql1 = 'select low_income, description, low_workage, position_name, \
                 education from company where position_id = %d' % term[0]
 
@@ -129,17 +130,15 @@ def get_feature(cur, feature_lines, flag):
             # print compy[3]
             # print compy[4]
 
-        if flag == 0:
-            sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
-                 pos_id = %d and recommend = %d and confirm = %d limit 22' % (term[0], flag, flag)
-        else:
-            sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
-                 pos_id = %d and recommend = %d and confirm = %d' % (term[0], flag, flag)
+        sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
+                 pos_id = %d and recommend = %d and confirm = %d limit 15' % (term[0], flag, flag)
 
         cur.execute(sqlp)
         profile = cur.fetchall()
+        # pdb.set_trace()
 
         for pro in profile:
+            # print pro[0]
             incomes = salaryp.search(pro[0])
             pro_position = pro[2]
             if incomes:
@@ -163,6 +162,8 @@ def get_feature(cur, feature_lines, flag):
             com_feature.append(round(position_feature, 3))
             com_feature += descrip_feature
             com_feature.append(flag)
+            com_feature.append(term[0])
+            com_feature.append(resume_id)
             feature_lines.append(','.join(map(lambda x: str(x), com_feature)))
 
 try:
@@ -176,9 +177,9 @@ try:
     conn.commit()
     feature_lines = []
 
-    get_feature(cur, feature_lines, 1)
+    # get_feature(cur, feature_lines, 1)
     get_feature(cur, feature_lines, 0)
-    with open('d:/naren/recommend/data', 'wb') as file:
+    with open('d:/naren/recommend/test_model', 'wb') as file:
         file.writelines('\n'.join(feature_lines))
     conn.close()
 

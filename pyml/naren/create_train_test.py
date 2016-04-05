@@ -7,7 +7,12 @@ with open('d:/naren/recommend/data', 'r') as file:
 
 trains = []
 
+num = 0
+
 for line in lines:
+    num += 1
+    if num == 5721:
+        break
     if random.randint(1, 3) == 1:
         tests.append(line.strip())
     else:

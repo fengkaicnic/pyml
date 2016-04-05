@@ -22,13 +22,13 @@ gbdt=GradientBoostingRegressor(
   max_leaf_nodes=None,
   warm_start=False
 )
-# pdb.set_trace()
+pdb.set_trace()
 train_feat=np.genfromtxt("d:/naren/recommend/train-data", delimiter=',', dtype=np.float32)
-train_id=train_feat[:, 148]
-train_feat = train_feat[:, :148]
+train_id=train_feat[:, 145]
+train_feat = train_feat[:, :145]
 test_feat=np.genfromtxt("d:/naren/recommend/test-data", delimiter=',', dtype=np.float32)
-test_id=test_feat[:, 148]
-test_feat = test_feat[:, :148]
+test_id=test_feat[:, 145]
+test_feat = test_feat[:, :145]
 print train_feat.shape, train_id.shape, test_feat.shape, test_id.shape
 gbdt.fit(train_feat, train_id)
 joblib.dump(gbdt, 'model')
@@ -37,7 +37,7 @@ total_err=0
 num = 0.0
 for i in range(pred.shape[0]):
     print pred[i], test_id[i]
-    if pred[i] > 0.5 and test_id[i] == 1.0:
+    if pred[i] >= 0.5 and test_id[i] == 1.0:
         num += 1
     elif pred[i] < 0.5 and test_id[i] == 0.0:
         num += 1
@@ -45,5 +45,6 @@ for i in range(pred.shape[0]):
     # total_err+=err*err
 # print total_err/pred.shape[0]
 print num / pred.shape[0]
+
 end = time.time()
 print end - start

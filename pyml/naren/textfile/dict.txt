@@ -30,9 +30,7 @@ Redis
 vs
 java
 高级
-软件
 工程师
-开发
 J2EE
 Servlet
 Struts
@@ -102,7 +100,6 @@ PHP
 h5
 测试
 运维
-系统
 android
 人力资源
 hr
