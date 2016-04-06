@@ -24,11 +24,11 @@ gbdt=GradientBoostingRegressor(
 )
 pdb.set_trace()
 train_feat=np.genfromtxt("d:/naren/recommend/train-data", delimiter=',', dtype=np.float32)
-train_id=train_feat[:, 145]
-train_feat = train_feat[:, :145]
+train_id=train_feat[:, train_feat.shape[1]-1]
+train_feat = train_feat[:, :train_feat.shape[1]-1]
 test_feat=np.genfromtxt("d:/naren/recommend/test-data", delimiter=',', dtype=np.float32)
-test_id=test_feat[:, 145]
-test_feat = test_feat[:, :145]
+test_id=test_feat[:, test_feat.shape[1]-1]
+test_feat = test_feat[:, :test_feat.shape[1]-1]
 print train_feat.shape, train_id.shape, test_feat.shape, test_id.shape
 gbdt.fit(train_feat, train_id)
 joblib.dump(gbdt, 'model')

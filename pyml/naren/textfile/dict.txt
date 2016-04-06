@@ -17,6 +17,7 @@ CSS
 精通
 网页制作
 熟练
+宣传
 AJAX
 Framework
 SQL
@@ -61,6 +62,10 @@ Flash
 图片
 页面
 兼容性
+文案
+策划
+撰写
+文稿
 Photoshop
 Dreamweaver
 iOS

@@ -20,6 +20,7 @@ try:
     cur.execute('set character_set_results=utf8')
     cur.execute('set character_set_server=utf8')
     conn.commit()
+
     mode = re.compile(r'\d+')
     path = 'd:/naren/recommend/email_log1/'
     for fle in os.listdir(path):
@@ -49,7 +50,7 @@ try:
         for experience in workexperience:
             try:
                 sql = '''insert into mail_work(wage, unit_name, scale, description, start_time, \
-                    trade, position_name, unittype, end_time, department, resume_id, pos_id) values("%s","%s",\
+                    trade, position_name, unittype, end_time, department, resume_id, position_id) values("%s","%s",\
                     "%s", "%s", "%s", "%s","%s","%s","%s","%s", %d, %d)''' % (experience['wage'], \
                     experience['unit_name'], experience['scale'], experience['description'], experience['start_time'], \
                     experience['trade'], experience['position_name'], experience['unittype'], experience['end_time'], \

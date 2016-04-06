@@ -51,11 +51,12 @@ try:
 
             sql = '''insert into mail_profile(gender, latesttitle, latestcollege, selfappraise, latestcompany,\
                 latestdegree, curemploystatus, dessalary, age, desworkproperty, destitle, \
-                desindustry, desworklocation, position_id) values("%s", "%s", "%s", "%s", "%s", "%s", "%s",\
-                "%s", %d, "%s", "%s", "%s", "%s", "%s")''' % (resume['sex'], resume['latesttitle'], \
+                desindustry, desworklocation, position_id, resume_id) values("%s", "%s", "%s", "%s", "%s", "%s", "%s",\
+                "%s", %d, "%s", "%s", "%s", "%s", %d, %d)''' % (resume['sex'], resume['latesttitle'], \
                 resume['latestcollege'], resume['selfappraise'], resume['latestcompany'], resume['latestdegree'],\
                 resume['curemploystatus'], resume['dessalary'], resume.get('age', 100), resume['desworkproperty'], \
-                resume['destitle'], resume['desindustry'], resume['desworklocation'], position['position_j51_id'])
+                resume['destitle'], resume['desindustry'], resume['desworklocation'], \
+                int(position['position_distinct_id']), int(resume['resume_id']))
 
             cur.execute(sql)
         except:

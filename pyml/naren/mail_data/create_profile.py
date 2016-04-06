@@ -11,7 +11,7 @@ try:
                   selfappraise varchar(255), latestcompany varchar(255), latestdegree varchar(19), \
                   curemploystatus varchar(255), dessalary varchar(96), age int, desworkproperty varchar(128), \
                   destitle varchar(128), desindustry varchar(128), certificates varchar(64), \
-                  desworklocation varchar(128))'
+                  desworklocation varchar(128), position_id int, resume_id int)'
 
     scoretol = cur.execute(companysql)
     conn.commit()

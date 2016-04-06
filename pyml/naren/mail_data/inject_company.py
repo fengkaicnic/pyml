@@ -44,9 +44,9 @@ try:
 
         com_pro_inf = eval(com_lines)
         position = com_pro_inf['position']
-        sql = '''insert into mail_company(position_name, low_workage, description, position_id)\
-              values("%s", "%s", "%s", "%s")''' % (position['name'].replace('"', '“'), position['low_workage'], \
-              position['description'].replace('"', '“'), position['position_j51_id'])
+        sql = '''insert into mail_company(position_name, low_workage, low_income, high_income, description, position_id)\
+              values("%s", "%s", "%s", "%s", "%s", %d)''' % (position['name'].replace('"', '“'), position['low_workage'], \
+              position['low_income'], position['high_income'], position['description'].replace('"', '“'), position['position_distinct_id'])
         try:
             cur.execute(sql)
         except:
