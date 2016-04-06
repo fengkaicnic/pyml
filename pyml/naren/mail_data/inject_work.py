@@ -10,7 +10,6 @@ import utils
 import traceback
 import pdb
 
-
 try:
 
     conn = utils.persist.connection()
@@ -46,21 +45,21 @@ try:
 
         resume = com_pro_inf['resume']
         position = com_pro_inf['position']
+        workexperience = resume['work_experience']
+        for experience in workexperience:
+            try:
+                sql = '''insert into mail_work(wage, unit_name, scale, description, start_time, \
+                    trade, position_name, unittype, end_time, department, resume_id, pos_id) values("%s","%s",\
+                    "%s", "%s", "%s", "%s","%s","%s","%s","%s", %d, %d)''' % (experience['wage'], \
+                    experience['unit_name'], experience['scale'], experience['description'], experience['start_time'], \
+                    experience['trade'], experience['position_name'], experience['unittype'], experience['end_time'], \
+                    experience['department'], int(resume['resume_id']), int(position['position_distinct_id']))
 
-        try:
 
-            sql = '''insert into mail_profile(gender, latesttitle, latestcollege, selfappraise, latestcompany,\
-                latestdegree, curemploystatus, dessalary, age, desworkproperty, destitle, \
-                desindustry, desworklocation, position_id) values("%s", "%s", "%s", "%s", "%s", "%s", "%s",\
-                "%s", %d, "%s", "%s", "%s", "%s", "%s")''' % (resume['sex'], resume['latesttitle'], \
-                resume['latestcollege'], resume['selfappraise'], resume['latestcompany'], resume['latestdegree'],\
-                resume['curemploystatus'], resume['dessalary'], resume.get('age', 100), resume['desworkproperty'], \
-                resume['destitle'], resume['desindustry'], resume['desworklocation'], position['position_j51_id'])
-
-            cur.execute(sql)
-        except:
-            pdb.set_trace()
-            traceback.print_exc()
+                cur.execute(sql)
+            except:
+                pdb.set_trace()
+                traceback.print_exc()
     conn.commit()
     conn.close()
 

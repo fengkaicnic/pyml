@@ -22,7 +22,7 @@ try:
     cur.execute('set character_set_server=utf8')
     conn.commit()
     mode = re.compile(r'\d+')
-    path = 'd:/naren/recommend/email_log/'
+    path = 'd:/naren/recommend/email_log1/'
     for fle in os.listdir(path):
         with open(path + fle, 'r') as file:
             lines = file.readline()
@@ -39,6 +39,8 @@ try:
         com_lines = com_lines.replace('"}', "'''}")
         com_lines = com_lines.replace('":', "''':")
         com_lines = com_lines.replace('{"', "{'''")
+
+        com_lines = com_lines.replace('"', '“')
 
         com_pro_inf = eval(com_lines)
         position = com_pro_inf['position']
