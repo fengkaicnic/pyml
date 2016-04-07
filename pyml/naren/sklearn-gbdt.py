@@ -22,7 +22,7 @@ gbdt=GradientBoostingRegressor(
   max_leaf_nodes=None,
   warm_start=False
 )
-pdb.set_trace()
+
 train_feat=np.genfromtxt("d:/naren/recommend/train-data", delimiter=',', dtype=np.float32)
 train_id=train_feat[:, train_feat.shape[1]-1]
 train_feat = train_feat[:, :train_feat.shape[1]-1]
