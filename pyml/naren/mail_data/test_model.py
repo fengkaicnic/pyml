@@ -3,8 +3,8 @@ import numpy as np
 
 test_feat=np.genfromtxt("d:/naren/recommend/test_model_mail", delimiter=',', dtype=np.float32)
 
-test_id=test_feat[:, test_feat.shape[1] - 3]
-test_feat = test_feat[:, :test_feat.shape[1] - 3]
+test_id=test_feat[:, test_feat.shape[1] - 1]
+test_feat = test_feat[:, :test_feat.shape[1] - 1]
 
 gbdt = joblib.load('../model')
 

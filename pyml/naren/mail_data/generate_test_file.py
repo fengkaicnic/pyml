@@ -22,6 +22,8 @@ jieba.load_userdict('../textfile/dict.txt')
 
 keyword_dct = {}
 num = 0
+
+
 with open('../textfile/dict.txt', 'r') as file:
     lines = file.readlines()
     for line in lines:
@@ -54,6 +56,40 @@ def get_position_feature(com_position, pro_position):
 
 
 def get_description_feature(com_description, pro_hisprojects, pro_descriptions, pro_otherinfo):
+
+    description_feature = []
+
+    try:
+        com_seg = jieba.cut(com_description, cut_all=False)
+        comlst = [seg.lower() for seg in com_seg if keyword_dct.has_key(seg.lower())]
+        his_seg = jieba.cut(pro_hisprojects, cut_all=False)
+        hislst = [seg.lower() for seg in his_seg if keyword_dct.has_key(seg.lower())]
+        deslst = []
+        for description in pro_descriptions:
+            des_seg = jieba.cut(description[0], cut_all=False)
+            deslst += [seg.lower() for seg in des_seg if keyword_dct.has_key(seg.lower())]
+        oth_seg = jieba.cut(pro_otherinfo, cut_all=False)
+        othlst = [seg.lower() for seg in oth_seg if keyword_dct.has_key(seg.lower())]
+        feature_lst = []
+        pro_dec_lst = hislst + deslst + othlst
+        com_count = Counter(comlst)
+        pro_count = Counter(pro_dec_lst)
+        description_feature.append(len(com_count))
+        inter_con = set(com_count.keys()).intersection(set(pro_count.keys()))
+        description_feature.append(len(inter_con))
+        description_feature.append(len(comlst))
+        # pdb.set_trace()
+        description_feature.append(reduce(lambda x, y:x+y, [com_count[key] for key in inter_con] + [0]))
+        description_feature.append(reduce(lambda x, y:x+y, [pro_count[key] for key in inter_con] + [0]))
+
+    except:
+        pdb.set_trace()
+        traceback.print_exc()
+
+    return description_feature
+
+
+def get_description_feature_old(com_description, pro_hisprojects, pro_descriptions, pro_otherinfo):
     try:
         com_seg = jieba.cut(com_description, cut_all=False)
         comlst = [seg.lower() for seg in com_seg if keyword_dct.has_key(seg.lower())]
@@ -99,7 +135,6 @@ def get_feature(cur, feature_lines, flag):
 
         com_lst = []
         low_income = int(compy[3])
-        pdb.set_trace()
         if low_income < 500 and low_income > 0:
             low_income = (low_income * 8000) / 12
         com_low_income = low_income / 5000
@@ -112,7 +147,7 @@ def get_feature(cur, feature_lines, flag):
         keywords = get_keywords(compy[1])
         com_description = compy[1]
 
-        sqlp = 'select dessalary, destitle, resume_id, selfappraise from mail_profile where \
+        sqlp = 'select dessalary, latesttitle , resume_id, selfappraise from mail_profile where \
                  position_id = %d' % (position_id)
 
         cur.execute(sqlp)
@@ -141,8 +176,8 @@ def get_feature(cur, feature_lines, flag):
             com_feature.append(round(position_feature, 3))
             com_feature += descrip_feature
             com_feature.append(flag)
-            com_feature.append(position_id)
-            com_feature.append(resume_id)
+            # com_feature.append(position_id)
+            # com_feature.append(resume_id)
             feature_lines.append(','.join(map(lambda x: str(x), com_feature)))
 
 try:

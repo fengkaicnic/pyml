@@ -4,12 +4,12 @@ import time
 import utils
 reload(sys)
 import pdb
-from collections import Counter
 import os
 import jieba
 import re
 import traceback
 import numpy as np
+from collections import Counter
 import json
 
 sys.setdefaultencoding('utf8')
@@ -51,7 +51,7 @@ def get_position_feature(com_position, pro_position):
     return 1 - len(com_pos_lst) / float(total)
 
 
-def get_description_feature(com_description, pro_hisprojects, pro_descriptions, pro_otherinfo):
+def get_description_feature(com_description, pro_hisprojects, pro_descriptions, pro_otherinfo, skills):
 
     description_feature = []
 
@@ -105,6 +105,15 @@ def get_description_feature_old(com_description, pro_hisprojects, pro_descriptio
         for key in com_count.keys():
             description_feature[keyword_dct[key]] = np.exp(pro_count.get(key, 0.0) / float(com_count[key]))
 
+        # for seg in hislst:
+        #     if seg in comlst:
+        #         description_feature[keyword_dct[seg]] += 1
+        # for seg in deslst:
+        #     if seg in comlst:
+        #         description_feature[keyword_dct[seg]] += 1
+        # for seg in othlst:
+        #     if seg in comlst:
+        #         description_feature[keyword_dct[seg]] += 1
     except:
         pdb.set_trace()
         traceback.print_exc()
@@ -120,7 +129,6 @@ def get_feature(cur, feature_lines, flag):
     rst = cur.fetchall()
 
     for term in rst:
-        # print str(term[0]) + ':' + str(term[1])
         sql1 = 'select low_income, description, low_workage, position_name, \
                 education from company where position_id = %d' % term[0]
 
@@ -149,9 +157,18 @@ def get_feature(cur, feature_lines, flag):
 
             keywords = get_keywords(compy[1])
             com_description = compy[1]
+            # print json.dumps(keywords, encoding='utf8', ensure_ascii=False)
+            # print compy[2]
+            # print json.dumps(get_keywords(compy[3]), encoding='utf8', ensure_ascii=False)
+            # print compy[3]
+            # print compy[4]
 
-        sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
-                 pos_id = %d and recommend = %d and confirm = %d limit 15' % (term[0], flag, flag)
+        if flag == 0:
+            sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
+                 pos_id = %d and recommend = %d and confirm = %d limit 22' % (term[0], flag, flag)
+        else:
+            sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
+                 pos_id = %d and recommend = %d and confirm = %d' % (term[0], flag, flag)
 
         cur.execute(sqlp)
         profile = cur.fetchall()
@@ -166,6 +183,7 @@ def get_feature(cur, feature_lines, flag):
             pro_low_income = int(low_income) / 5000
             pro_hisprojects = pro[3]
             pro_otherinfo = pro[4]
+            pro_skills = pro[1]
             resume_id = pro[5]
             sql_work = 'select description from work where pos_id = %d and resume_id = %d' % (term[0], resume_id)
             cur.execute(sql_work)
@@ -174,14 +192,13 @@ def get_feature(cur, feature_lines, flag):
 
             position_feature = get_position_feature(com_position, pro_position)
             com_feature = []
-            descrip_feature = get_description_feature(com_description, pro_hisprojects, pro_decription, pro_otherinfo)
+            descrip_feature = get_description_feature(com_description, pro_hisprojects, \
+                                                      pro_decription, pro_otherinfo, pro_skills)
             com_feature.append(com_low_income)
             com_feature.append(pro_low_income)
             com_feature.append(round(position_feature, 3))
             com_feature += descrip_feature
             com_feature.append(flag)
-            com_feature.append(term[0])
-            com_feature.append(resume_id)
             feature_lines.append(','.join(map(lambda x: str(x), com_feature)))
 
 try:
@@ -195,8 +212,9 @@ try:
     conn.commit()
     feature_lines = []
 
+    get_feature(cur, feature_lines, 1)
     get_feature(cur, feature_lines, 0)
-    with open('d:/naren/recommend/test_model', 'wb') as file:
+    with open('d:/naren/recommend/data', 'wb') as file:
         file.writelines('\n'.join(feature_lines))
     conn.close()
 
