@@ -17,9 +17,9 @@ num = 0.0
 
 for i in range(pred.shape[0]):
     print pred[i], test_id[i]
-    if pred[i] >= 0.50 and test_id[i] == 1.0:
+    if pred[i] >= 0.55 and test_id[i] == 1.0:
         num += 1
-    elif pred[i] < 0.50 and test_id[i] == 0.0:
+    elif pred[i] < 0.55 and test_id[i] == 0.0:
         num += 1
 
 
