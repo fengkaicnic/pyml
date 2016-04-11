@@ -48,6 +48,6 @@ print 'recall:'
 
 print metrics.recall_score(test_id, pred_id)
 fpr, tpr, thresholds = metrics.roc_curve(test_id, pred)
-pdb.set_trace()
+# pdb.set_trace()
 #
 print metrics.auc(fpr, tpr)
