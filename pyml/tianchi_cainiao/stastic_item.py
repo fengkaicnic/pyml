@@ -35,7 +35,7 @@ try:
     start_date = datetime.datetime(2014, 10, 1)
     item_date = datetime.datetime(2015, 12, 27)
     tem_dct = {}
-    for num in range(100):
+    for num in range(12):
         if item_date - datetime.timedelta(num * 14) < start_date:
             break
         e_date = (item_date - datetime.timedelta(num * 14)).strftime('%Y%m%d')

@@ -122,7 +122,7 @@ def get_description_feature_old(com_description, pro_hisprojects, pro_descriptio
     return description_feature
 
 def get_feature(cur, feature_lines, flag):
-    sql = 'select pos_id, count(*) as num from profile where recommend = 1 and confirm = 1 group by pos_id'
+    sql = 'select pos_id, count(*) as num from profile where recommend = 1 and confirm = 1 and flag="new" group by pos_id'
 
     cur.execute(sql)
 
@@ -165,17 +165,26 @@ def get_feature(cur, feature_lines, flag):
 
         if flag == 0:
             sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
-                 pos_id = %d and recommend = %d and confirm = %d limit 22' % (term[0], flag, flag)
+                 pos_id = %d and recommend = %d and confirm = %d and flag="new"' % (term[0], flag, flag)
         else:
             sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
-                 pos_id = %d and recommend = %d and confirm = %d' % (term[0], flag, flag)
+                 pos_id = %d and recommend = %d and confirm = %d and flag="new"' % (term[0], flag, flag)
 
         cur.execute(sqlp)
         profile = cur.fetchall()
 
         for pro in profile:
             incomes = salaryp.search(pro[0])
-            pro_position = pro[2]
+            resume_id = pro[5]
+            # pro_position = pro[2]
+            pos_sql = 'select position_name from work where pos_id = %d and resume_id = %d order by end_time desc' % (term[0], resume_id)
+            cur.execute(pos_sql)
+            pos_rst = cur.fetchall()
+            try:
+                pro_position = pos_rst[0][0]
+            except:
+                # pdb.set_trace()
+                pro_position = pro[2]
             if incomes:
                 low_income = incomes.group(0)
             else:
@@ -184,7 +193,7 @@ def get_feature(cur, feature_lines, flag):
             pro_hisprojects = pro[3]
             pro_otherinfo = pro[4]
             pro_skills = pro[1]
-            resume_id = pro[5]
+
             sql_work = 'select description from work where pos_id = %d and resume_id = %d' % (term[0], resume_id)
             cur.execute(sql_work)
 
@@ -199,6 +208,8 @@ def get_feature(cur, feature_lines, flag):
             com_feature.append(round(position_feature, 3))
             com_feature += descrip_feature
             com_feature.append(flag)
+            com_feature.append(term[0])
+            com_feature.append(resume_id)
             feature_lines.append(','.join(map(lambda x: str(x), com_feature)))
 
 try:

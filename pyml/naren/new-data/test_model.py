@@ -5,8 +5,10 @@ import pdb
 
 test_feat=np.genfromtxt("d:/naren/recommend/new-data", delimiter=',', dtype=np.float32)
 
-test_id=test_feat[:, test_feat.shape[1] - 1]
-test_feat = test_feat[:, :test_feat.shape[1] - 1]
+pos_id = test_feat[:, test_feat.shape[1] - 2]
+resume_id = test_feat[:, test_feat.shape[1] - 1]
+test_id=test_feat[:, test_feat.shape[1] - 3]
+test_feat = test_feat[:, :test_feat.shape[1] - 3]
 
 
 gbdt = joblib.load('../model')
@@ -23,20 +25,20 @@ nt_num = 0
 
 
 for i in range(pred.shape[0]):
-    print pred[i], test_id[i]
-    if pred[i] >= 0.55 and test_id[i] == 1.0:
+    print pred[i], test_id[i], int(pos_id[i]), int(resume_id[i])
+    if pred[i] >= 0.5 and test_id[i] == 1.0:
         num += 1
         tt_num += 1
-    elif pred[i] < 0.55 and test_id[i] == 0.0:
+    elif pred[i] < 0.5 and test_id[i] == 0.0:
         num += 1
         nf_num += 1
-    elif pred[i] >= 0.55 and test_id[i] == 0.0:
+    elif pred[i] >= 0.5 and test_id[i] == 0.0:
         tf_num += 1
-    elif pred[i] < 0.55 and test_id[i] == 1.0:
+    elif pred[i] < 0.5 and test_id[i] == 1.0:
         nt_num += 1
 
 print num / pred.shape[0]
-pred_id = map(lambda x:x>=0.55 and 1.0 or 0.0, pred)
+pred_id = map(lambda x:x>=0.5 and 1.0 or 0.0, pred)
 print metrics.accuracy_score(test_id, pred_id)
 print str(tf_num) + '   ' + str(tt_num)
 print str(nf_num) + '   ' + str(nt_num)

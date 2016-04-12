@@ -59,6 +59,7 @@ try:
             fobj['confirm'] = 1
             fobj['recommend'] = 0
             fobj['pos_id'] = int(fname.split('-')[0])
+            fobj['flag'] = 'old'
 
         for item in rst[1:]:
             insertsql.append(item[0])
