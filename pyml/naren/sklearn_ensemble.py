@@ -55,17 +55,18 @@ train_f = train_feat[t_num:, :]
 pred_lst = []
 pred = []
 
-for i in range(15):
+for i in range(50):
     train_set = get_sample(train_f, f_num, t_num)
     train_data = np.vstack((train_p, train_set))
     train_id=train_data[:, train_data.shape[1]-1]
     train_data = train_data[:, :train_data.shape[1]-1]
     gbdt.fit(train_data, train_id)
+    joblib.dump(gbdt, 'models/model'+str(i))
     pred_lst.append(gbdt.predict(test_feat))
 
 for i in range(test_id.shape[0]):
     lst = map(lambda tem:tem[i], pred_lst)
-    lst = map(lambda x:x > 0.5 and 1 or 0, lst)
+    lst = map(lambda x:x > 0.57 and 1 or 0, lst)
     if lst.count(1) >= lst.count(0):
         pred.append(1.0)
     else:
