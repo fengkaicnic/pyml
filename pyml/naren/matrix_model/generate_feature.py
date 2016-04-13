@@ -72,13 +72,18 @@ def get_description_feature(com_description, pro_hisprojects, pro_descriptions, 
         pro_dec_lst = hislst + deslst + othlst
         com_count = Counter(comlst)
         pro_count = Counter(pro_dec_lst)
+        description_feature.append(len(comlst))
         description_feature.append(len(com_count))
         inter_con = set(com_count.keys()).intersection(set(pro_count.keys()))
-        description_feature.append(len(inter_con))
-        description_feature.append(len(comlst))
+        # description_feature.append(len(inter_con))
+        description_feature.append(len(inter_con)/float(len(com_count)))
+        com_inter_num = reduce(lambda x, y:x+y, [com_count[key] for key in inter_con] + [0])
+        pro_inter_num = reduce(lambda x, y:x+y, [pro_count[key] for key in inter_con] + [0])
+        description_feature.append(float(com_inter_num)/len(comlst))
+        description_feature.append(float(pro_inter_num)/(len(pro_dec_lst)+0.001))
         # pdb.set_trace()
-        description_feature.append(reduce(lambda x, y:x+y, [com_count[key] for key in inter_con] + [0]))
-        description_feature.append(reduce(lambda x, y:x+y, [pro_count[key] for key in inter_con] + [0]))
+        description_feature.append()
+        description_feature.append()
 
     except:
         pdb.set_trace()
