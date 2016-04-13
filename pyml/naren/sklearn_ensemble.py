@@ -66,7 +66,7 @@ for i in range(50):
 
 for i in range(test_id.shape[0]):
     lst = map(lambda tem:tem[i], pred_lst)
-    lst = map(lambda x:x > 0.57 and 1 or 0, lst)
+    lst = map(lambda x:x > 0.5 and 1 or 0, lst)
     if lst.count(1) >= lst.count(0):
         pred.append(1.0)
     else:

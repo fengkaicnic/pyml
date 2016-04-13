@@ -11,9 +11,9 @@ import traceback
 
 start = time.time()
 
-path_read = 'd:/naren/data/read/'
-path_recommend = 'd:/naren/data/recommend/'
-path_confirm = 'd:/naren/data/confirm/'
+path_read = 'd:/naren/new-data/read/'
+path_recommend = 'd:/naren/new-data/recommend/'
+path_confirm = 'd:/naren/new-data/confirm/'
 READFLAG = 0
 RECOMMEND = 0
 CONFIRM = 1
@@ -64,6 +64,7 @@ try:
             fobj['confirm'] = CONFIRM
             fobj['recommend'] = RECOMMEND
             fobj['pos_id'] = int(fname.split('-')[0])
+            fobj['flag'] = 'new'
 
             for item in rst[1:]:
                 insertsql.append(item[0])

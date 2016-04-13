@@ -40,8 +40,8 @@ def get_keywords(content):
     return keywords
 
 def get_position_feature(com_position, pro_position):
-    comseg = jieba.cut(com_position, cut_all=False)
-    proseg = jieba.cut(pro_position, cut_all=False)
+    comseg = jieba.cut(com_position.lower(), cut_all=False)
+    proseg = jieba.cut(pro_position.lower(), cut_all=False)
     com_pos_lst = [seg for seg in comseg]
     total = len(com_pos_lst)
     for seg in proseg:
@@ -130,12 +130,14 @@ def get_feature(cur, feature_lines, flag):
 
     for term in rst:
         sql1 = 'select low_income, description, low_workage, position_name, \
-                education from company where position_id = %d' % term[0]
+                education, workage, degree from company where position_id = %d' % term[0]
 
         cur.execute(sql1)
         company_rst = cur.fetchall()
         # pdb.set_trace()
         com_low_income = 0
+        com_workage = 0
+        com_degree = 0
         pro_low_income = 0
         com_position = ''
         pro_position = ''
@@ -144,30 +146,27 @@ def get_feature(cur, feature_lines, flag):
         pro_hisprojects = ''
         pro_otherinfo = ''
         for compy in company_rst:
-            com_lst = []
+            # com_lst = []
             low_income = compy[0]
             if low_income < 500 and low_income > 0:
                 low_income = (low_income * 8000) / 12
             com_low_income = low_income / 5000
             low_workage = compy[2]
             com_position = compy[3]
+            com_workage = compy[5]
+            com_degree = compy[6]
             if not low_workage:
                 low_workage = 0
-            com_lst.append(low_workage)
+            # com_lst.append(low_workage)
 
             keywords = get_keywords(compy[1])
             com_description = compy[1]
-            # print json.dumps(keywords, encoding='utf8', ensure_ascii=False)
-            # print compy[2]
-            # print json.dumps(get_keywords(compy[3]), encoding='utf8', ensure_ascii=False)
-            # print compy[3]
-            # print compy[4]
 
         if flag == 0:
-            sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
+            sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id, workage, degree from profile where \
                  pos_id = %d and recommend = %d and confirm = %d and flag="new"' % (term[0], flag, flag)
         else:
-            sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
+            sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id, workage, degree from profile where \
                  pos_id = %d and recommend = %d and confirm = %d and flag="new"' % (term[0], flag, flag)
 
         cur.execute(sqlp)
@@ -203,8 +202,14 @@ def get_feature(cur, feature_lines, flag):
             com_feature = []
             descrip_feature = get_description_feature(com_description, pro_hisprojects, \
                                                       pro_decription, pro_otherinfo, pro_skills)
+            pro_workage = pro[6]
+            pro_degree = pro[7]
             com_feature.append(com_low_income)
             com_feature.append(pro_low_income)
+            com_feature.append(com_workage)
+            com_feature.append(pro_workage - com_workage)
+            com_feature.append(com_degree)
+            com_feature.append(pro_degree - com_degree)
             com_feature.append(round(position_feature, 3))
             com_feature += descrip_feature
             com_feature.append(flag)

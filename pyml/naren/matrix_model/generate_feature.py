@@ -20,6 +20,8 @@ salaryp = re.compile('\d+')
 
 jieba.load_userdict('../textfile/dict.txt')
 
+education_dct = {'初中及以下':0, '初中':0, '高中':1, '大专':2, '本科':3, '硕士':4, '博士':5, '博士后':6}
+
 keyword_dct = {}
 num = 0
 with open('../textfile/dict.txt', 'r') as file:
@@ -130,7 +132,7 @@ def get_feature(cur, feature_lines, flag):
 
     for term in rst:
         sql1 = 'select low_income, description, low_workage, position_name, \
-                education from company where position_id = %d' % term[0]
+                education, workage, degree from company where position_id = %d' % term[0]
 
         cur.execute(sql1)
         company_rst = cur.fetchall()
@@ -138,6 +140,8 @@ def get_feature(cur, feature_lines, flag):
         com_low_income = 0
         pro_low_income = 0
         com_position = ''
+        com_workage = 0
+        com_degree = 0
         pro_position = ''
         com_description = ''
         pro_decription = ''
@@ -154,20 +158,18 @@ def get_feature(cur, feature_lines, flag):
             if not low_workage:
                 low_workage = 0
             com_lst.append(low_workage)
+            com_workage = compy[5]
+            com_degree = compy[6]
 
             keywords = get_keywords(compy[1])
             com_description = compy[1]
-            # print json.dumps(keywords, encoding='utf8', ensure_ascii=False)
-            # print compy[2]
-            # print json.dumps(get_keywords(compy[3]), encoding='utf8', ensure_ascii=False)
-            # print compy[3]
-            # print compy[4]
+
         try:
             if flag == 0:
-                sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
+                sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id, workage, degree from profile where \
                      pos_id = %d and recommend = %d and confirm = %d and flag="old"' % (term[0], flag, flag)
             else:
-                sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id from profile where \
+                sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id, workage, degree from profile where \
                      pos_id = %d and recommend = %d and confirm = %d and flag= "old"' % (term[0], flag, flag)
 
             cur.execute(sqlp)
@@ -204,6 +206,12 @@ def get_feature(cur, feature_lines, flag):
                                                       pro_decription, pro_otherinfo, pro_skills)
             com_feature.append(com_low_income)
             com_feature.append(pro_low_income)
+            pro_workage = pro[6]
+            pro_degree = pro[7]
+            com_feature.append(com_workage)
+            com_feature.append(pro_workage - com_workage)
+            com_feature.append(com_degree)
+            com_feature.append(pro_degree - com_degree)
             com_feature.append(round(position_feature, 3))
             com_feature += descrip_feature
             com_feature.append(flag)
