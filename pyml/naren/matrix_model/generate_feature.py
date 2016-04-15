@@ -52,8 +52,8 @@ def get_position_feature(com_position, pro_position):
 
     return 1 - len(com_pos_lst) / float(total)
 
-
 def get_description_feature(com_description, pro_hisprojects, pro_descriptions, pro_otherinfo, skills):
+
 
     description_feature = []
 
@@ -81,9 +81,6 @@ def get_description_feature(com_description, pro_hisprojects, pro_descriptions, 
         pro_inter_num = reduce(lambda x, y:x+y, [pro_count[key] for key in inter_con] + [0])
         description_feature.append(float(com_inter_num)/len(comlst))
         description_feature.append(float(pro_inter_num)/(len(pro_dec_lst)+0.001))
-        # pdb.set_trace()
-        description_feature.append()
-        description_feature.append()
 
     except:
         pdb.set_trace()
