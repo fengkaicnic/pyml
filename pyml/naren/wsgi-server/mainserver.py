@@ -28,7 +28,6 @@ class WrapHandler(tornado.web.RequestHandler):
 
 class ProfileHandler(tornado.web.RequestHandler):
     def post(self):
-        pdb.set_trace()
         body = self.request.body
         body = eval(body)
         profile_json = body['profile']

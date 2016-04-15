@@ -21,11 +21,11 @@ def get_resume(cur, fname):
 
 def insert_position_resume(cur, pos_id, resume_id):
     try:
-        prsql = 'insert into pos_resume(pos_id, resume_id) values(%d, %d)' % (pos_id, resume_id)
+        prsql = 'insert into pos_resume(pos_id, resume_id) values(%d, %d)' % (int(pos_id), int(resume_id))
         cur.execute(prsql)
 
     except Exception as e:
-        pdb.set_trace()
+        # pdb.set_trace()
         traceback.print_exc()
         print e
 
@@ -40,7 +40,81 @@ def update_position_resume(cur, body):
     except:
         traceback.print_exc()
 
-def insert_profile(fobj, pos_id):
+def insert_education(cur, content):
+    table_sql = 'select column_name, data_type from information_schema.columns where table_schema="wsgiserver" and table_name="education"'
+    cur.execute(table_sql)
+    rst = cur.fetchall()
+
+    fobjlst = eval(content['education_history'])
+
+    for fobj in fobjlst:
+        insertsql = ['insert into education(']
+        valuesql = [' values(']
+        valuelst = []
+
+        for item in rst[1:]:
+            insertsql.append(item[0])
+            insertsql.append(',')
+            if item[1] == 'int':
+                valuesql.append('%d')
+                if fobj[item[0]] == '':
+                    valuelst.append(0)
+                else:
+                    valuelst.append(int(fobj[item[0]]))
+            else:
+                valuesql.append('"%s"')
+                valuelst.append(str(fobj[item[0]]).replace('"', '“').replace('\'', '‘'))
+            valuesql.append(',')
+        insertsql.pop()
+        insertsql.append(')')
+        valuesql.pop()
+        valuesql.append(')')
+        allsql = insertsql + valuesql
+        # pdb.set_trace()
+        sql = ''.join(allsql) % tuple(valuelst)
+        try:
+            cur.execute(sql)
+        except:
+            # pdb.set_trace()
+            traceback.print_exc()
+
+def insert_work(cur, content):
+    table_sql = 'select column_name, data_type from information_schema.columns where table_schema="wsgiserver" and table_name="work"'
+    cur.execute(table_sql)
+    rst = cur.fetchall()
+
+    fobjlst = eval(content['work_history'])
+
+    for fobj in fobjlst:
+        insertsql = ['insert into work(']
+        valuesql = [' values(']
+        valuelst = []
+
+        for item in rst[1:]:
+            insertsql.append(item[0])
+            insertsql.append(',')
+            if item[1] == 'int':
+                valuesql.append('%d')
+                if fobj[item[0]] == '':
+                    valuelst.append(0)
+                else:
+                    valuelst.append(int(fobj[item[0]]))
+            else:
+                valuesql.append('"%s"')
+                valuelst.append(str(fobj[item[0]]).replace('"', '“').replace('\'', '‘'))
+            valuesql.append(',')
+        insertsql.pop()
+        insertsql.append(')')
+        valuesql.pop()
+        valuesql.append(')')
+        allsql = insertsql + valuesql
+        sql = ''.join(allsql) % tuple(valuelst)
+        try:
+            cur.execute(sql)
+        except:
+            traceback.print_exc()
+
+def insert_profile(fobj, pos_id=None):
     try:
         num = 0
         conn = utils.persist.connection()
@@ -55,7 +129,7 @@ def insert_profile(fobj, pos_id):
 
         resume_id = fobj['resume_id']
 
-        check_r = 'select id from profile where resume_id = %d' % resume_id
+        check_r = 'select id from profile where resume_id = %d' % int(resume_id)
 
         cur.execute(check_r)
         rst = cur.fetchall()
@@ -97,13 +171,17 @@ def insert_profile(fobj, pos_id):
                 cur.execute(sql)
             except:
                 num += 1
-                pdb.set_trace()
+                # pdb.set_trace()
                 traceback.print_exc()
-        insert_position_resume(cur, pos_id, resume_id)
+            # pdb.set_trace()
+            insert_education(cur, fobj)
+            insert_work(cur, fobj)
+        if pos_id:
+            insert_position_resume(cur, pos_id, resume_id)
         conn.commit()
         conn.close()
     except Exception as e:
-        pdb.set_trace()
+        # pdb.set_trace()
         traceback.print_exc()
         conn.close()
         print e
@@ -117,7 +195,7 @@ def update_profile(body):
     flag = body['confirm']
 
     update_sql = 'update pos_resume set %s = 1 where pos_id = %d and resume_id = %d'\
-                 % (flag, pos_id, resume_id)
+                 % (flag, int(pos_id), int(resume_id))
 
     cur.execute(update_sql)
     conn.commit()
