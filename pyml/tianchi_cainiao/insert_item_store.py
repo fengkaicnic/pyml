@@ -6,6 +6,7 @@ import sys
 import re
 reload(sys)
 sys.setdefaultencoding('utf8')
+
 import utils
 import traceback
 import pdb
@@ -25,7 +26,7 @@ try:
     cur.execute('set character_set_server=utf8')
     conn.commit()
     mode = re.compile(r'\d+')
-    with open('d:/tianchi/cainiao/item_store_feature1.csv') as file:
+    with open('e:/tianchi/cainiao/item_store_feature1.csv') as file:
         lines = file.readlines()
 
     table_sql = 'select column_name, data_type from information_schema.columns where \
