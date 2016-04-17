@@ -30,8 +30,8 @@ try:
         id = term[0]
         term = term[1]
         more_les = term.split('_')
-        more = float(more_les[0])
-        less = float(more_les[1])
+        more = float(more_les[1])
+        less = float(more_les[0])
         sqlr = 'update config set more=%f , less=%f where id = %d' % (more, less, id)
         cur.execute(sqlr)
 
