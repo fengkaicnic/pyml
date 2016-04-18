@@ -11,6 +11,8 @@ import tornado.web
 sys.setdefaultencoding('utf8')
 from position import handleposition
 from profile import handleprofile
+from model import generate_feature
+from model import gbdt_model
 
 from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
@@ -50,13 +52,29 @@ class PositionResumeHandler(tornado.web.RequestHandler):
         handleprofile.update_profile(body)
 
 
+class ModelHandler(tornado.web.RequestHandler):
+    def post(self):
+        body = self.request.body
+        body = eval(body)
+        action = body['action']
+        if action == 'train':
+            # generate_feature.generate_train()
+            gbdt_model.train_model()
+        else:
+            pos_id = body['pos_id']
+            resume_id = body['resume_id']
+            score = gbdt_model.predict_data(pos_id, resume_id)
+            self.write(score)
+
+
 if __name__ == "__main__":
     tornado.options.parse_command_line()
     app = tornado.web.Application(
         handlers=[
             (r"/profile", ProfileHandler),
             (r"/position", PositionHandler),
-            (r"/pos_resume", PositionResumeHandler)
+            (r"/pos_resume", PositionResumeHandler),
+            (r"/model", ModelHandler)
         ]
     )
     http_server = tornado.httpserver.HTTPServer(app)

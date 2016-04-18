@@ -13,10 +13,10 @@ import pdb
 
 import time
 
-path = 'd:/naren/wsgi-server/resumes/confirm/'
+path = 'd:/naren/wsgi-server/resumes/recommend/'
 company_lst = []
 requrl = 'http://localhost:8000/pos_resume'
-confirm = 'hr_confirm'
+confirm = 'hunter_confirm'
 
 start = time.time()
 

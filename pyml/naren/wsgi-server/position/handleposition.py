@@ -19,7 +19,7 @@ def get_resume(cur, fname):
     else:
         return False
 
-def insert_company(fobj):
+def insert_company(fobj, type=None):
     try:
         num = 0
         conn = utils.persist.connection()
@@ -35,6 +35,8 @@ def insert_company(fobj):
         table_sql = 'select column_name, data_type from information_schema.columns where table_schema="wsgiserver" and table_name="company"'
         cur.execute(table_sql)
         rst = cur.fetchall()
+
+        fobj['type'] = type
 
         insertsql = ['insert into company(']
         valuesql = [' values(']
