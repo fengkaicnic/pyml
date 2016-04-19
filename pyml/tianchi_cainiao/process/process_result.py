@@ -1,6 +1,6 @@
 import os
 
-with open('d:/tianchi/result-01-adj.csv', 'r') as file:
+with open('d:/tianchi/result-55.csv', 'r') as file:
     lines = file.readlines()
 
 store = 0.0

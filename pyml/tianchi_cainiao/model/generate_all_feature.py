@@ -10,6 +10,8 @@ start = time.time()
 
 store_code = 5
 
+period = 7
+
 try:
 
     conn = utils.persist.connection()
@@ -26,17 +28,17 @@ try:
         # for num in range(5):
         for num in [4, 5, 6, 7, 8]:
             rst_ls = []
-            if item_date - datetime.timedelta(num * 14) < start_date:
+            if item_date - datetime.timedelta(num * period) < start_date:
                 break
-            e_date = (item_date - datetime.timedelta(num * 14)).strftime('%Y%m%d')
-            s_date = (item_date - datetime.timedelta((num + 1) * 14)).strftime('%Y%m%d')
+            e_date = (item_date - datetime.timedelta(num * period)).strftime('%Y%m%d')
+            s_date = (item_date - datetime.timedelta((num + 1) * period)).strftime('%Y%m%d')
             sql_num = 'select sum(qty_alipay_njhs) from item_feature where \
                          date <= "%s" and date > "%s" and item_id = %d' % (e_date, s_date, term_id)
             cur.execute(sql_num)
             r_num = cur.fetchall()
             
             en_date = s_date
-            st_date = (item_date - datetime.timedelta((num + 2) * 14)).strftime('%Y%m%d')
+            st_date = (item_date - datetime.timedelta((num + 2) * period)).strftime('%Y%m%d')
             sql = 'select sum(pv_ipv), sum(pv_uv), sum(cart_ipv), sum(cart_uv), sum(collect_uv), sum(ss_pv_ipv), sum(ss_pv_uv), sum(qty_alipay_njhs)\
              from item_feature where date > "%s" and date <= "%s" and item_id = %d' % (st_date, en_date, term_id)
             cur.execute(sql)
@@ -58,7 +60,7 @@ try:
     conn.commit()
     conn.close()
     
-    with open('d:/tianchi/model/train_store_all.csv', 'wb') as file:
+    with open('d:/tianchi/model/train_store_all_%d.csv' % period, 'wb') as file:
         file.writelines('\n'.join(result_lst))
 
 except Exception as e:

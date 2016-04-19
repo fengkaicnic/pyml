@@ -21,6 +21,7 @@ class ReverseHandler(tornado.web.RequestHandler):
     def get(self, input):
         self.write(input[::-1])
 
+
 class WrapHandler(tornado.web.RequestHandler):
     def post(self):
         text = self.get_argument('text')
@@ -35,6 +36,7 @@ class ProfileHandler(tornado.web.RequestHandler):
         profile_json = body['profile']
         company_id = body['pos_id']
         handleprofile.insert_profile(profile_json, company_id)
+        self.write({'err_code':0})
 
 
 class PositionHandler(tornado.web.RequestHandler):
@@ -43,6 +45,7 @@ class PositionHandler(tornado.web.RequestHandler):
         body = eval(body)
         position_json = body['company']
         handleposition.insert_company(position_json)
+        self.write({'err_code':0})
 
 
 class PositionResumeHandler(tornado.web.RequestHandler):
@@ -63,11 +66,12 @@ class ModelHandler(tornado.web.RequestHandler):
         if action == 'train':
             generate_feature.generate_train()
             gbdt_model.train_model()
+            self.write({'err_code':0})
         else:
             pos_id = body['pos_id']
             resume_id = body['resume_id']
             score = gbdt_model.predict_data(pos_id, resume_id)
-            self.write(str(score))
+            self.write({'err_code':0, 'predict_score':score})
 
 
 if __name__ == "__main__":

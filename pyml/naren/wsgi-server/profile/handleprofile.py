@@ -223,13 +223,6 @@ def check_position_resume(body):
     if not rst:
         result_dc['need_profile'] = 1
 
-    if len(result_dc) == 2:
-        result_dc['error_code'] = 3
-    elif result_dc['need_position']:
-        result_dc['error_code'] = 1
-    elif result_dc['need_profile']:
-        result_dc['error_code'] = 2
-    else:
-        result_dc['error_code'] = 0
+    result_dc['err_code'] = 0
 
     return result_dc
