@@ -1,10 +1,3 @@
-#coding:utf8
-#this program is to generate two week data
-#two week datas amt_alipay
-#but the result is some week the amt_alipay
-#is 0, maybe periodicity but can not prove
-#the conclusion
-
 import os
 import json
 import sys
@@ -12,7 +5,6 @@ import re
 reload(sys)
 sys.setdefaultencoding('utf8')
 import utils
-import types
 import traceback
 import datetime
 import pdb
@@ -24,19 +16,14 @@ try:
 
     conn = utils.persist.connection()
     cur = conn.cursor()
-    cur.execute('set character_set_client=utf8')
-    cur.execute('set character_set_connection=utf8')
-    cur.execute('set character_set_database=utf8')
-    cur.execute('set character_set_results=utf8')
-    cur.execute('set character_set_server=utf8')
-    conn.commit()
+
     sql = 'select distinct(item_id) from config'
     cur.execute(sql)
     rst = cur.fetchall()
     start_date = datetime.datetime(2014, 10, 1)
     item_date = datetime.datetime(2015, 12, 27)
     tem_dct = {}
-    for num in range(32):
+    for num in range(12):
         if item_date - datetime.timedelta(num * 14) < start_date:
             break
         e_date = (item_date - datetime.timedelta(num * 14)).strftime('%Y%m%d')
@@ -61,11 +48,6 @@ try:
         tems = tem_dct[key]
         lines.append(str(key))
         for tem in tems:
-            for index, x in enumerate(tem[::-1]):
-                if type(x) is types.IntType:
-                    tem.pop()
-                else:
-                    break
             lines.append(','.join(map(lambda x:str(x), tem)))
 
     with open('d:/tianchi/test_tem', 'wb') as file:
@@ -74,6 +56,7 @@ try:
 
     conn.commit()
     conn.close()
+
 
 except Exception as e:
     traceback.print_exc()

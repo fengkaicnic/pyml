@@ -32,43 +32,48 @@ def insert_company(fobj, type=None):
         conn.commit()
         mode = re.compile(r'\d+')
 
-        table_sql = 'select column_name, data_type from information_schema.columns where table_schema="wsgiserver" and table_name="company"'
-        cur.execute(table_sql)
+        check_p = 'select id from company where position_id = %d' % int(fobj['position_id'])
+        cur.execute(check_p)
         rst = cur.fetchall()
 
-        fobj['type'] = type
+        if not rst:
+            table_sql = 'select column_name, data_type from information_schema.columns where table_schema="wsgiserver" and table_name="company"'
+            cur.execute(table_sql)
+            rst = cur.fetchall()
 
-        insertsql = ['insert into company(']
-        valuesql = [' values(']
-        valuelst = []
+            fobj['type'] = type
 
-        for item in rst[1:]:
-            insertsql.append(item[0])
-            insertsql.append(',')
-            if item[1] == 'int':
-                valuesql.append('%d')
-                if fobj[item[0]] == '':
-                    valuelst.append(0)
+            insertsql = ['insert into company(']
+            valuesql = [' values(']
+            valuelst = []
+
+            for item in rst[1:]:
+                insertsql.append(item[0])
+                insertsql.append(',')
+                if item[1] == 'int':
+                    valuesql.append('%d')
+                    if fobj[item[0]] == '':
+                        valuelst.append(0)
+                    else:
+                        valuelst.append(int(fobj[item[0]]))
                 else:
-                    valuelst.append(int(fobj[item[0]]))
-            else:
-                valuesql.append('"%s"')
-                valuelst.append(str(fobj[item[0]]).replace('"', '“').replace('\'', '‘'))
-            valuesql.append(',')
-        insertsql.pop()
-        insertsql.append(')')
-        valuesql.pop()
-        valuesql.append(')')
-        allsql = insertsql + valuesql
-        # pdb.set_trace()
-        sql = ''.join(allsql) % tuple(valuelst)
-        try:
-            cur.execute(sql)
-        except:
-            num += 1
-        conn.commit()
-        conn.close()
-        print num
+                    valuesql.append('"%s"')
+                    valuelst.append(str(fobj[item[0]]).replace('"', '“').replace('\'', '‘'))
+                valuesql.append(',')
+            insertsql.pop()
+            insertsql.append(')')
+            valuesql.pop()
+            valuesql.append(')')
+            allsql = insertsql + valuesql
+            # pdb.set_trace()
+            sql = ''.join(allsql) % tuple(valuelst)
+            try:
+                cur.execute(sql)
+            except:
+                num += 1
+            conn.commit()
+            conn.close()
+            print num
     except Exception as e:
         pdb.set_trace()
         traceback.print_exc()

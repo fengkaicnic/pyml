@@ -21,6 +21,7 @@ def get_resume(cur, fname):
 
 def insert_position_resume(cur, pos_id, resume_id):
     try:
+
         prsql = 'insert into pos_resume(pos_id, resume_id) values(%d, %d)' % (int(pos_id), int(resume_id))
         cur.execute(prsql)
 
@@ -194,9 +195,41 @@ def update_profile(body):
     resume_id = body['resume_id']
     flag = body['confirm']
 
+    if flag == 'hunter_read':
+        return
+
     update_sql = 'update pos_resume set %s = 1 where pos_id = %d and resume_id = %d'\
                  % (flag, int(pos_id), int(resume_id))
 
     cur.execute(update_sql)
     conn.commit()
     conn.close()
+
+
+def check_position_resume(body):
+    conn = utils.persist.connection()
+    cur = conn.cursor()
+    pos_id = body['pos_id']
+    resume_id = body['resume_id']
+    po_sql = 'select id from company where position_id = %d' % int(pos_id)
+    cur.execute(po_sql)
+    rst = cur.fetchall()
+    result_dc = {}
+    if not rst:
+        result_dc['need_position'] = 1
+    re_sql = 'select id from profile where resume_id = %d' % int(resume_id)
+    cur.execute(po_sql)
+    rst = cur.fetchall()
+    if not rst:
+        result_dc['need_profile'] = 1
+
+    if len(result_dc) == 2:
+        result_dc['error_code'] = 3
+    elif result_dc['need_position']:
+        result_dc['error_code'] = 1
+    elif result_dc['need_profile']:
+        result_dc['error_code'] = 2
+    else:
+        result_dc['error_code'] = 0
+
+    return result_dc

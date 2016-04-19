@@ -23,7 +23,8 @@ def generate_store_feature(store_code):
         result_lst = []
         for term_id in rst:
             term_id = term_id[0]
-            for num in range(1):
+            # for num in range(5):
+            for num in [4, 5, 6, 7, 8]:
                 rst_ls = []
                 if item_date - datetime.timedelta(num * 14) < start_date:
                     break

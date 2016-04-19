@@ -49,7 +49,10 @@ class PositionResumeHandler(tornado.web.RequestHandler):
     def post(self):
         body = self.request.body
         body = eval(body)
-        handleprofile.update_profile(body)
+        rst = handleprofile.check_position_resume(body)
+        if len(rst) == 0:
+            handleprofile.update_profile(body)
+        self.write(rst)
 
 
 class ModelHandler(tornado.web.RequestHandler):
@@ -58,13 +61,13 @@ class ModelHandler(tornado.web.RequestHandler):
         body = eval(body)
         action = body['action']
         if action == 'train':
-            # generate_feature.generate_train()
+            generate_feature.generate_train()
             gbdt_model.train_model()
         else:
             pos_id = body['pos_id']
             resume_id = body['resume_id']
             score = gbdt_model.predict_data(pos_id, resume_id)
-            self.write(score)
+            self.write(str(score))
 
 
 if __name__ == "__main__":
