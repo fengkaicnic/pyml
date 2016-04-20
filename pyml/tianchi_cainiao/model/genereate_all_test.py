@@ -8,7 +8,7 @@ import time
 
 start = time.time()
 
-period = 7
+period = 14
 
 try:
 

@@ -9,8 +9,8 @@ import time
 
 def predict_data(store_code, period):
 
-    train_path = 'd:/tianchi/model/train_store_%d_%d.csv' % (store_code, period)
-    test_path = 'd:/tianchi/model/test_store_%d_%d.csv' % (store_code, period)
+    train_path = 'd:/tianchi/model/train_store_%s_%d.csv' % (str(store_code), period)
+    test_path = 'd:/tianchi/model/test_store_%s_%d.csv' % (str(store_code), period)
     
     gbdt=GradientBoostingRegressor(
       loss='ls',
@@ -45,7 +45,7 @@ def predict_data(store_code, period):
         lst = []
         lst.append(int(test_item_ids[index]))
         lst.append(store_code)
-        lst.append(int(round(pred_data)))
+        lst.append(int(round(pred_data)) * (14/period))
         result_lst.append(','.join(map(lambda x: str(x), lst)))
     
     return result_lst

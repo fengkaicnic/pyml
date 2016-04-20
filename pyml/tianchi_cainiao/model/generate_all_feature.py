@@ -10,8 +10,10 @@ start = time.time()
 
 store_code = 5
 
-period = 7
+period = 14
 
+period_rst = [4, 5, 6, 7, 8]
+# period_rst = [0, 3, 4, 7, 8, 9, 10]
 try:
 
     conn = utils.persist.connection()

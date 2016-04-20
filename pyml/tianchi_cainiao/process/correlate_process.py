@@ -6,6 +6,8 @@ import time
 import traceback
 import datetime
 
+start = time.time()
+
 def compute_correlate(data1, data2):
     pearson = 0.0
     spearman = 0.0
@@ -102,7 +104,11 @@ if __name__ == '__main__':
     item_id = 24366
     correlate_feature(item_id)
     print '===================='
-    correlate_feature_next(item_id, 1)
+    correlate_feature_next(item_id, 14)
     # lst = [0, 0, 1, 0, 0, 1, 0]
     # lsw = [0, 0, 0, 0, 1, 1, 0]
     # compute_correlate(lst, lsw)
+
+end = time.time()
+
+print end - start

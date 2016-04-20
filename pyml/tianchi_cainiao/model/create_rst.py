@@ -8,7 +8,7 @@ store_code_lst = [1, 2, 3, 4, 5, 'all']
 import store_gbdt
 
 result = []
-period = 7
+period = 14
 
 for code in store_code_lst:
     lst = store_gbdt.predict_data(code, period)

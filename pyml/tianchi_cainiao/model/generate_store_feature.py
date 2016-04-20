@@ -10,7 +10,7 @@ start = time.time()
 
 store_code = 1
 
-period = 7
+period = 14
 
 def generate_store_feature(store_code):
     try:
