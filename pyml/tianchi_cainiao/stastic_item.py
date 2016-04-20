@@ -20,6 +20,7 @@ import time
 
 start = time.time()
 
+period = 7
 try:
 
     conn = utils.persist.connection()
@@ -36,11 +37,11 @@ try:
     start_date = datetime.datetime(2014, 10, 1)
     item_date = datetime.datetime(2015, 12, 27)
     tem_dct = {}
-    for num in range(32):
-        if item_date - datetime.timedelta(num * 14) < start_date:
+    for num in range(70):
+        if item_date - datetime.timedelta(num * period) < start_date:
             break
-        e_date = (item_date - datetime.timedelta(num * 14)).strftime('%Y%m%d')
-        s_date = (item_date - datetime.timedelta((num + 1) * 14)).strftime('%Y%m%d')
+        e_date = (item_date - datetime.timedelta(num * period)).strftime('%Y%m%d')
+        s_date = (item_date - datetime.timedelta((num + 1) * period)).strftime('%Y%m%d')
         for tid in rst:
             if not tem_dct.has_key(tid[0]):
                 tem_dct[tid[0]] = [[] for i in range(5)]
@@ -68,7 +69,7 @@ try:
                     break
             lines.append(','.join(map(lambda x:str(x), tem)))
 
-    with open('d:/tianchi/test_tem', 'wb') as file:
+    with open('d:/tianchi/test_tem_%d' % period, 'wb') as file:
         file.writelines('\n'.join(lines))
 
 

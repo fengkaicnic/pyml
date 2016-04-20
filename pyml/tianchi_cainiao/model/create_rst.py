@@ -8,14 +8,15 @@ store_code_lst = [1, 2, 3, 4, 5, 'all']
 import store_gbdt
 
 result = []
+period = 7
 
 for code in store_code_lst:
-    lst = store_gbdt.predict_data(code)
+    lst = store_gbdt.predict_data(code, period)
     result = result + lst
 
 print len(result)
 
-with open('d:/tianchi/result.csv', 'wb') as file:
+with open('d:/tianchi/result_%d.csv' % period, 'wb') as file:
     file.writelines('\n'.join(result))
     
 end = time.time()

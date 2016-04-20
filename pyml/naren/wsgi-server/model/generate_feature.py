@@ -54,7 +54,6 @@ def get_position_feature(com_position, pro_position):
 
 def get_description_feature(com_description, pro_hisprojects, pro_descriptions, pro_otherinfo, skills):
 
-
     description_feature = []
 
     try:
@@ -125,6 +124,14 @@ def get_description_feature_old(com_description, pro_hisprojects, pro_descriptio
 
     return description_feature
 
+
+def set_train_flg(cur, pos_id, resume_id):
+    setsq = 'update pos_resume set train_flag = 1 where pos_id = %d and resume_id =\
+             %d' % (pos_id, resume_id)
+
+    cur.execute(setsq)
+
+
 def get_feature(cur, feature_lines, flag):
     sql = 'select position_id, low_income, description, low_workage, position_name,\
             workage, degree from company'
@@ -161,7 +168,7 @@ def get_feature(cur, feature_lines, flag):
         try:
             sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, pf.resume_id, workyear, latestdegree, \
                     pr.pos_id, pr.resume_id from pos_resume as pr left join profile as pf on pr.resume_id = pf.resume_id \
-                    where pr.pos_id = %d and pr.hr_confirm = %d' % (term[0], flag)
+                    where pr.train_flag = 0 and pr.pos_id = %d and pr.hr_confirm = %d' % (term[0], flag)
 
             cur.execute(sqlp)
             profile = cur.fetchall()
@@ -227,6 +234,7 @@ def get_feature(cur, feature_lines, flag):
             com_feature += descrip_feature
             com_feature.append(flag)
             feature_lines.append(','.join(map(lambda x: str(x), com_feature)))
+            set_train_flg(cur, term[0], resume_id)
 
 
 def generate_test_feature(cur, pos_id, resume_id):
@@ -365,9 +373,13 @@ def generate_train():
         feature_lines = []
 
         get_feature(cur, feature_lines, 1)
+        conn.commit()
         get_feature(cur, feature_lines, 0)
-        with open('d:/naren/wsgi-server/data', 'wb') as file:
-            file.writelines('\n'.join(feature_lines))
+        conn.commit()
+        if len(feature_lines) > 0:
+            with open('d:/naren/wsgi-server/data', 'a') as file:
+                file.writelines('\n'.join(feature_lines))
+                file.write('\n')
         conn.close()
 
     except:

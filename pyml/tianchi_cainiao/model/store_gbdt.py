@@ -7,10 +7,10 @@ from sklearn import metrics
 
 import time
 
-def predict_data(store_code):
+def predict_data(store_code, period):
 
-    train_path = 'd:/tianchi/model/train_store_%s.csv' % str(store_code)
-    test_path = 'd:/tianchi/model/test_store_%s.csv' % str(store_code)
+    train_path = 'd:/tianchi/model/train_store_%d_%d.csv' % (store_code, period)
+    test_path = 'd:/tianchi/model/test_store_%d_%d.csv' % (store_code, period)
     
     gbdt=GradientBoostingRegressor(
       loss='ls',
