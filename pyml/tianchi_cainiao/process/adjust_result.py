@@ -5,7 +5,7 @@ import time
 
 start = time.time()
 
-fname = 'result_item_7'
+fname = 'result_item_14_zero'
 
 with open('d:/tianchi/%s.csv' % fname, 'r') as file:
     lines = file.readlines()

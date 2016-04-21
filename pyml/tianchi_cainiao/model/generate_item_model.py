@@ -12,8 +12,11 @@ start = time.time()
 
 period = 7
 
-# period_rst = [4, 5, 6, 7, 8]
-period_rst = [0, 3, 4, 7, 8, 9, 10]
+period_lst7 = [0, 3, 4, 7, 8, 9, 10]
+period_lst7 = [8, 9, 10, 11, 12, 13, 14, 15, 16]
+period_lst14 = [4, 5, 6, 7, 8]
+
+period_rst = period_lst7
 
 
 def gbdt_item(train_rst, test_rst, store_code):
