@@ -5,7 +5,7 @@ import time
 
 start = time.time()
 
-fname = 'result_item_14_zero'
+fname = 'result_last_two_week'
 
 with open('d:/tianchi/%s.csv' % fname, 'r') as file:
     lines = file.readlines()
@@ -44,10 +44,10 @@ for line in lines:
 
     if per > 1.5:
         if adj == 'less':
-            lst[2] = float(lst[2]) *(1 - 0.1 * float((per-1)))
+            lst[2] = round(float(lst[2]) * (1 - 0.1 * float((per-1))))
         else:
             # pdb.set_trace()
-            lst[2] = float(lst[2]) *( 1 + 0.1 * float((per-1)))
+            lst[2] = round(float(lst[2]) * (1 + 0.1 * float((per-1))))
     rlines.append(','.join(map(lambda x:str(x), lst)))
 
 with open('d:/tianchi/%s.csv' % (fname+'-adj') ,'wb') as fl:
