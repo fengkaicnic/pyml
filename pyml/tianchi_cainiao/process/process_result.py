@@ -2,6 +2,7 @@
 import os
 import traceback
 import pdb
+from scipy import stats
 
 with open('d:/tianchi/result_last_two_week-adj.csv', 'r') as file:
     lines = file.readlines()

@@ -44,13 +44,13 @@ for line in lines:
 
     if per > 1.5:
         if adj == 'less':
-            lst[2] = round(float(lst[2]) * (1 - 0.2 * float((per-1))))
+            lst[2] = round(float(lst[2]) * (1 - 0.1))
         else:
             # pdb.set_trace()
-            lst[2] = round(float(lst[2]) * (1 + 0.2 * float((per-1))))
+            lst[2] = round(float(lst[2]) * (1 + 0.1))
     rlines.append(','.join(map(lambda x:str(x), lst)))
 
-with open('d:/tianchi/%s.csv' % (fname+'-adj') ,'wb') as fl:
+with open('d:/tianchi/%s.csv' % (fname+'-direct-adj') ,'wb') as fl:
     fl.writelines('\n'.join(rlines))
 
 end = time.time()
