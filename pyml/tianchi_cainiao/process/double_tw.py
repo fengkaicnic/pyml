@@ -43,8 +43,7 @@ def update_config(start_date, end_date, doubles, date_tar, double_mv):
             # print p_value, item_id, store_code
             if normal.cdf(test_dt[0]) > 0.9:
                 up_sql = 'update config set %s = 1, %s = %f where item_id = %d and\
-                          store_code = "%s"' % (doubles, double_mv, round(double_mpv, 1)\
-                                                , item_id, store_code)
+                          store_code = "%s"' % (doubles, double_mv, double_mpv, item_id, store_code)
                 cur.execute(up_sql)
 
         conn.commit()

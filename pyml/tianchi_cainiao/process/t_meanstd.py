@@ -20,6 +20,8 @@ def update_config(start_date, end_date, doubles, date_tar, double_mv):
         for rs in rst:
             item_id = rs[0]
             store_code = rs[1]
+            if item_id == 75871 and store_code == "2":
+                pdb.set_trace()
             if store_code == 'all':
                 p_sql = 'select qty_alipay_njhs, date from item_feature where item_id = %d and date \
                         > "%s" and date <= "%s" ' % (item_id, start_date, end_date)
@@ -33,7 +35,7 @@ def update_config(start_date, end_date, doubles, date_tar, double_mv):
             testarry = [x[0] for x in result]
             
             testary = np.array(testarry)
-            testaryn = (testary - testary.mean())/testary.std()
+            testaryn = (testary - testary.mean())/(testary.std() + 0.001)
             if len(testaryn) > 0:
                 stastic, p_value = stats.kstest(testaryn, 'norm')
             else:
