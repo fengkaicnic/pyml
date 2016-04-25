@@ -40,8 +40,9 @@ def generate_store_feature(store_code):
                 
                 en_date = s_date
                 st_date = (item_date - datetime.timedelta((num + 2) * period)).strftime('%Y%m%d')
-                sql = 'select sum(pv_ipv), sum(pv_uv), sum(cart_ipv), sum(cart_uv), sum(collect_uv), sum(ss_pv_ipv), sum(ss_pv_uv), sum(qty_alipay_njhs), \
-                 sum(jhs_pv_ipv), sum(jhs_pv_uv), sum(qty_alipay) - sum(qty_alipay_njhs) from item_store_feature where store_code = %d and date > "%s" and date <= "%s" and item_id = %d' % (store_code, st_date, en_date, term_id)
+                sql = 'select sum(pv_ipv), sum(pv_uv), sum(cart_ipv), sum(collect_uv), sum(ss_pv_ipv), sum(ss_pv_uv), sum(qty_alipay_njhs), \
+                 sum(jhs_pv_ipv), sum(jhs_pv_uv), sum(qty_alipay) - sum(qty_alipay_njhs), sum(qty_alipay_njhs)/sum(cart_ipv), \
+                 sum(qty_alipay_njhs)/sum(pv_uv) from item_store_feature where store_code = %d and date > "%s" and date <= "%s" and item_id = %d' % (store_code, st_date, en_date, term_id)
                 cur.execute(sql)
                 f_rst = cur.fetchall()
     #             pdb.set_trace()
@@ -56,6 +57,7 @@ def generate_store_feature(store_code):
                 rst_ls.append(f_rst[0][8])
                 rst_ls.append(f_rst[0][9])
                 rst_ls.append(f_rst[0][10])
+                rst_ls.append(f_rst[0][11])
                 rst_ls.append(r_num[0][0])
                 rst_ls.append(term_id)
                 rst_ls = [x or 0 for x in rst_ls]
@@ -64,7 +66,7 @@ def generate_store_feature(store_code):
         conn.commit()
         conn.close()
         
-        with open('d:/tianchi/model/train_store_jhs_%s_%d.csv' % (str(store_code), period), 'wb') as file:
+        with open('d:/tianchi/model/train_store_jhs_per_%s_%d.csv' % (str(store_code), period), 'wb') as file:
             file.writelines('\n'.join(result_lst))
     
     except Exception as e:

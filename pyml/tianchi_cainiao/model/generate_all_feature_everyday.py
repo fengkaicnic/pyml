@@ -42,8 +42,9 @@ try:
 
             en_date = s_date
             st_date = (item_date - datetime.timedelta((num + 2) * period)).strftime('%Y%m%d')
-            sql = 'select sum(pv_ipv), sum(pv_uv), sum(cart_ipv), sum(cart_uv), sum(collect_uv), sum(ss_pv_ipv), sum(ss_pv_uv), sum(qty_alipay_njhs),\
-             sum(jhs_pv_ipv), sum(jhs_pv_uv), sum(qty_alipay) - sum(qty_alipay_njhs) from item_feature where date > "%s" and date <= "%s" and item_id = %d' % (st_date, en_date, term_id)
+            sql = 'select pv_ipv, pv_uv, cart_ipv, cart_uv, collect_uv, ss_pv_ipv, ss_pv_uv, qty_alipay_njhs, jhs_pv_ipv, jhs_pv_uv, \
+                   qty_alipay - qty_alipay_njhs from item_feature where date > "%s" and date <= "%s" and item_id = %d'\
+                   % (st_date, en_date, term_id)
             cur.execute(sql)
             f_rst = cur.fetchall()
 #             pdb.set_trace()
@@ -66,7 +67,7 @@ try:
     conn.commit()
     conn.close()
 
-    with open('d:/tianchi/model/train_store_jhs_all_%d.csv' % period, 'wb') as file:
+    with open('d:/tianchi/model/train_store_jhs_per_all_%d.csv' % period, 'wb') as file:
         file.writelines('\n'.join(result_lst))
 
 except Exception as e:
