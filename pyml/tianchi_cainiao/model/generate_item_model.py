@@ -1,4 +1,5 @@
 #coding:utf8
+#generate model by item, every item create a singla model to predict it score
 
 import utils
 import traceback
@@ -10,13 +11,13 @@ import time
 
 start = time.time()
 
-period = 7
+period = 14
 
 period_lst7 = [0, 3, 4, 7, 8, 9, 10]
 period_lst7 = [8, 9, 10, 11, 12, 13, 14, 15, 16]
 period_lst14 = [4, 5, 6, 7, 8]
 
-period_rst = period_lst7
+period_rst = period_lst14
 
 
 def gbdt_item(train_rst, test_rst, store_code):

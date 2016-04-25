@@ -198,8 +198,8 @@ def update_profile(body):
     if flag == 'hunter_read':
         return
 
-    update_sql = 'update pos_resume set %s = 1 where pos_id = %d and resume_id = %d'\
-                 % (flag, int(pos_id), int(resume_id))
+    update_sql = 'update pos_resume set %s = 1 where pos_id = %d and resume_id = "%s"'\
+                 % (flag, int(pos_id), resume_id)
 
     cur.execute(update_sql)
     conn.commit()
@@ -211,13 +211,13 @@ def check_position_resume(body):
     cur = conn.cursor()
     pos_id = body['pos_id']
     resume_id = body['resume_id']
-    po_sql = 'select id from company where position_id = %d' % int(pos_id)
+    po_sql = 'select id from company where position_id = "%s"' % int(pos_id)
     cur.execute(po_sql)
     rst = cur.fetchall()
     result_dc = {}
     if not rst:
         result_dc['need_position'] = 1
-    re_sql = 'select id from profile where resume_id = %d' % int(resume_id)
+    re_sql = 'select id from profile where resume_id = "%s"' % int(resume_id)
     cur.execute(po_sql)
     rst = cur.fetchall()
     if not rst:

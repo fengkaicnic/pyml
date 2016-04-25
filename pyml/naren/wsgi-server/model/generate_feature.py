@@ -272,7 +272,7 @@ def generate_test_feature(cur, pos_id, resume_id):
 
         try:
             sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id, workyear, latestdegree \
-                    from profile where resume_id = %d' % (resume_id)
+                    from profile where resume_id = "%s"' % (resume_id)
 
             cur.execute(sqlp)
             profile = cur.fetchall()
@@ -286,7 +286,7 @@ def generate_test_feature(cur, pos_id, resume_id):
             try:
                 if not resume_id:
                     continue
-                pos_sql = 'select position_name from work where resume_id = %d order by end_time desc' % resume_id
+                pos_sql = 'select position_name from work where resume_id = "%s" order by end_time desc' % resume_id
                 cur.execute(pos_sql)
                 pos_rst = cur.fetchall()
                 pro_position = pos_rst[0][0]
@@ -301,7 +301,7 @@ def generate_test_feature(cur, pos_id, resume_id):
             pro_otherinfo = pro[4]
             pro_skills = pro[1]
             try:
-                sql_work = 'select description from work where resume_id = %d' % resume_id
+                sql_work = 'select description from work where resume_id = "%s"' % resume_id
             except:
                 traceback.print_exc()
                 pdb.set_trace()
@@ -360,7 +360,7 @@ def generate_test(pos_id, resume_id):
         conn.close()
 
 
-def generate_train():
+def generate_train(data_path):
     try:
         conn = utils.persist.connection()
         cur = conn.cursor()
@@ -377,7 +377,7 @@ def generate_train():
         get_feature(cur, feature_lines, 0)
         conn.commit()
         if len(feature_lines) > 0:
-            with open('d:/naren/wsgi-server/data', 'a') as file:
+            with open(data_path, 'a') as file:
                 file.writelines('\n'.join(feature_lines))
                 file.write('\n')
         conn.close()

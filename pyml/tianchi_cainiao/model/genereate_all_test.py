@@ -1,4 +1,5 @@
 #coding:utf8
+#generate test set by all
 
 import utils
 import traceback
@@ -30,8 +31,8 @@ try:
             en_date = (item_date - datetime.timedelta(num * period)).strftime('%Y%m%d')
             st_date = (item_date - datetime.timedelta((num + 1) * period)).strftime('%Y%m%d')
 
-            sql = 'select sum(pv_ipv), sum(pv_uv), sum(cart_ipv), sum(cart_uv), sum(collect_uv), sum(ss_pv_ipv), sum(ss_pv_uv), sum(qty_alipay_njhs)\
-             from item_feature where date > "%s" and date <= "%s" and item_id = %d' % (st_date, en_date, term_id)
+            sql = 'select sum(pv_ipv), sum(pv_uv), sum(cart_ipv), sum(cart_uv), sum(collect_uv), sum(ss_pv_ipv), sum(ss_pv_uv), sum(qty_alipay_njhs),\
+             sum(jhs_pv_ipv), sum(jhs_pv_uv), sum(qty_alipay) - sum(qty_alipay_njhs) from item_feature where date > "%s" and date <= "%s" and item_id = %d' % (st_date, en_date, term_id)
             cur.execute(sql)
             f_rst = cur.fetchall()
 #             pdb.set_trace()
@@ -43,6 +44,9 @@ try:
             rst_ls.append(f_rst[0][5])
             rst_ls.append(f_rst[0][6])
             rst_ls.append(f_rst[0][7])
+            rst_ls.append(f_rst[0][8])
+            rst_ls.append(f_rst[0][9])
+            rst_ls.append(f_rst[0][10])
             rst_ls.append(term_id)
             rst_ls = [x or 0 for x in rst_ls]
             result_lst.append(','.join(map(lambda x:str(x), rst_ls)))
@@ -50,7 +54,7 @@ try:
     conn.commit()
     conn.close()
     
-    with open('d:/tianchi/model/test_store_all_%d.csv' % period, 'wb') as file:
+    with open('d:/tianchi/model/test_store_jhs_all_%d.csv' % period, 'wb') as file:
         file.writelines('\n'.join(result_lst))
 
 except Exception as e:

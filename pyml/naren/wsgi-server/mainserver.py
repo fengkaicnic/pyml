@@ -5,6 +5,7 @@ import sys
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
+import ConfigParser
 import pdb
 reload(sys)
 import tornado.web
@@ -34,7 +35,7 @@ class ProfileHandler(tornado.web.RequestHandler):
         body = self.request.body
         body = eval(body)
         profile_json = body['profile']
-        company_id = body['pos_id']
+        company_id = body.get('pos_id', None)
         handleprofile.insert_profile(profile_json, company_id)
         self.write({'err_code':0})
 
@@ -59,12 +60,16 @@ class PositionResumeHandler(tornado.web.RequestHandler):
 
 
 class ModelHandler(tornado.web.RequestHandler):
+
+    def __init__(self, data_path):
+        data_path = data_path
+
     def post(self):
         body = self.request.body
         body = eval(body)
         action = body['action']
         if action == 'train':
-            generate_feature.generate_train()
+            generate_feature.generate_train(self.data_path)
             gbdt_model.train_model()
             self.write({'err_code':0})
         else:
@@ -75,15 +80,24 @@ class ModelHandler(tornado.web.RequestHandler):
 
 
 if __name__ == "__main__":
+
+    cf = ConfigParser.ConfigParser()
+
+    cf.read('server.ini')
+
+    data_path = cf.get('servers', 'datapath')
+    port = cf.get('servers', 'port')
+
     tornado.options.parse_command_line()
     app = tornado.web.Application(
         handlers=[
             (r"/profile", ProfileHandler),
             (r"/pos_resume", PositionResumeHandler),
             (r"/position", PositionHandler),
-            (r"/model", ModelHandler)
+            (r"/model", ModelHandler(data_path))
         ]
     )
     http_server = tornado.httpserver.HTTPServer(app)
-    http_server.listen(options.port)
+    pdb.set_trace()
+    http_server.listen(port)
     tornado.ioloop.IOLoop.instance().start()

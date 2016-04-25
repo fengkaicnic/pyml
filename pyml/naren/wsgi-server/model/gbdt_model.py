@@ -47,7 +47,7 @@ def predict_data(pos_id, resume_id):
 if __name__ == '__main__':
 
     train_model()
-    score = predict_data(1049420, 20625150)
+    score = predict_data(1049420, '20625150')
     print score
 
 end = time.time()
