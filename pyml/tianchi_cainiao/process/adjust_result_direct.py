@@ -5,7 +5,7 @@ import time
 
 start = time.time()
 
-fname = 'mean_14_twoweek'
+fname = 'mean_14_jhs_twoweek'
 
 with open('d:/tianchi/%s.csv' % fname, 'r') as file:
     lines = file.readlines()

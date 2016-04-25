@@ -2,7 +2,7 @@ import time
 
 start = time.time()
 
-path1 = 'd:/tianchi/result_14.csv'
+path1 = 'd:/tianchi/result_last_two_week.csv'
 path2 = 'd:/tianchi/result_jhs_14.csv'
 
 with open(path1, 'r') as file:
@@ -33,5 +33,5 @@ for key in linewk_dct.keys():
     print key, line14_dct[key], linewk_dct[key], line14_dct[key] - linewk_dct[key]
     result_lst.append(key.replace('_', ',') + ',' + str(round((line14_dct[key] + linewk_dct[key])/2)))
 
-# with open('d:/tianchi/mean_14_twoweek.csv', 'wb') as file:
-#     file.writelines('\n'.join(result_lst))
+with open('d:/tianchi/mean_14_jhs_twoweek.csv', 'wb') as file:
+    file.writelines('\n'.join(result_lst))
