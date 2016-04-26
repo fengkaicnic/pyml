@@ -49,8 +49,11 @@ class ProfileHandler(tornado.web.RequestHandler):
         profile_json = body['profile']
         company_id = body.get('pos_id', None)
         database = options.database
-        handleprofile.insert_profile(profile_json, database, company_id)
-        self.write({'err_code':0})
+        try:
+            handleprofile.insert_profile(profile_json, database, company_id)
+            self.write({'err_code':0})
+        except:
+            self.write({'err_code':6665})
 
 
 class PositionHandler(tornado.web.RequestHandler):
@@ -59,8 +62,12 @@ class PositionHandler(tornado.web.RequestHandler):
         body = eval(body)
         position_json = body['company']
         database_name = options.database
-        handleposition.insert_company(position_json, database_name)
-        self.write({'err_code':0})
+        try:
+            handleposition.insert_company(position_json, database_name)
+            self.write({'err_code':0})
+        except:
+            self.write({'err_code':6665})
+
 
 
 class PositionResumeHandler(tornado.web.RequestHandler):

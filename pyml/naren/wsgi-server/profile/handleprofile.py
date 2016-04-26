@@ -7,6 +7,7 @@ import utils
 import json
 import traceback
 import pdb
+from nanabase import baseutil as nautil
 
 
 def get_resume(cur, fname):
@@ -28,6 +29,7 @@ def insert_position_resume(cur, pos_id, resume_id):
     except Exception as e:
         # pdb.set_trace()
         traceback.print_exc()
+        nautil.dlog.exception('ModelTrainHandler')
         print e
 
 def update_position_resume(cur, body):
@@ -40,6 +42,7 @@ def update_position_resume(cur, body):
         cur.execute(up_sql)
     except:
         traceback.print_exc()
+        nautil.dlog.exception('ModelTrainHandler')
 
 def insert_education(cur, content, database):
     table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="education"' % database
@@ -78,6 +81,7 @@ def insert_education(cur, content, database):
         except:
             # pdb.set_trace()
             traceback.print_exc()
+            nautil.dlog.exception('ModelTrainHandler')
 
 def insert_work(cur, content, database):
     table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="work"' % database
@@ -114,6 +118,7 @@ def insert_work(cur, content, database):
             cur.execute(sql)
         except:
             traceback.print_exc()
+            nautil.dlog.exception('ModelTrainHandler')
 
 def insert_profile(fobj, database, pos_id=None):
     try:
@@ -130,7 +135,7 @@ def insert_profile(fobj, database, pos_id=None):
 
         resume_id = fobj['resume_id']
 
-        check_r = 'select id from profile where resume_id = "%s"' % int(resume_id)
+        check_r = 'select id from profile where resume_id = "%s"' % resume_id
 
         cur.execute(check_r)
         rst = cur.fetchall()
@@ -172,9 +177,8 @@ def insert_profile(fobj, database, pos_id=None):
                 cur.execute(sql)
             except:
                 num += 1
-                # pdb.set_trace()
                 traceback.print_exc()
-            # pdb.set_trace()
+                nautil.dlog.exception('ModelTrainHandler')
             insert_education(cur, fobj, database)
             insert_work(cur, fobj, database)
         if pos_id:
@@ -184,6 +188,7 @@ def insert_profile(fobj, database, pos_id=None):
     except Exception as e:
         # pdb.set_trace()
         traceback.print_exc()
+        nautil.dlog.exception('ModelTrainHandler')
         conn.close()
         print e
 

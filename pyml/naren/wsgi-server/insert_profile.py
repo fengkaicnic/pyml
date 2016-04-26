@@ -13,9 +13,10 @@ import pdb
 
 import time
 
-path = 'd:/naren/wsgi-server/resumes/recommend/'
+path = 'd:/naren/wsgi-server/resumes/read/'
 company_lst = []
-requrl = 'http://localhost:8000/profile'
+# requrl = 'http://localhost:8000/profile'
+requrl = 'http://121.40.183.7:9801/profile'
 
 start = time.time()
 
@@ -33,6 +34,7 @@ for name in os.listdir(path):
 
         res = res_data.read()
         num += 1
+
         print num
 
 end = time.time()

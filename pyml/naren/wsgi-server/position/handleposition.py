@@ -6,6 +6,7 @@ import re
 import utils
 import json
 import traceback
+from nanabase import baseutil as nautil
 import pdb
 
 
@@ -42,6 +43,8 @@ def insert_company(fobj, database, type=None):
             rst = cur.fetchall()
 
             fobj['type'] = type
+            fobj['degree'] = 0
+            fobj['workage'] = 0
 
             insertsql = ['insert into company(']
             valuesql = [' values(']
@@ -70,6 +73,8 @@ def insert_company(fobj, database, type=None):
             try:
                 cur.execute(sql)
             except:
+                traceback.print_exc()
+                nautil.dlog.exception('ModelTrainHandler')
                 num += 1
             conn.commit()
             conn.close()
@@ -78,4 +83,5 @@ def insert_company(fobj, database, type=None):
         # pdb.set_trace()
         traceback.print_exc()
         conn.close()
-        print e
+        nautil.dlog.exception('ModelTrainHandler')
+        raise e

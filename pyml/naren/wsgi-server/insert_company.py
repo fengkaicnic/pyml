@@ -15,8 +15,8 @@ import time
 
 path = 'd:/naren/new-data/positions/'
 company_lst = []
-requrl = 'http://localhost:8000/position'
-# requrl = 'http://121.40.183.7:9801/position'
+# requrl = 'http://localhost:8000/position'
+requrl = 'http://121.40.183.7:9801/position'
 
 start = time.time()
 
