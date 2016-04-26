@@ -16,7 +16,7 @@ for code in store_code_lst:
 
 print len(result)
 
-with open('d:/tianchi/result_jhs_%d.csv' % period, 'wb') as file:
+with open('d:/tianchi/result_jhs_per_%d.csv' % period, 'wb') as file:
     file.writelines('\n'.join(result))
     
 end = time.time()
