@@ -17,6 +17,18 @@ from model import gbdt_model
 
 from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
+define('path', default='data', help='store the data', type=str)
+define('database', default='fkmodel', help='the database name', type=str)
+
+
+def decode_body(body):
+    try:
+        body = eval(body)
+        return body
+    except:
+        bodys = body.split('&')
+        body_dct = []
+
 
 class ReverseHandler(tornado.web.RequestHandler):
     def get(self, input):
@@ -36,7 +48,8 @@ class ProfileHandler(tornado.web.RequestHandler):
         body = eval(body)
         profile_json = body['profile']
         company_id = body.get('pos_id', None)
-        handleprofile.insert_profile(profile_json, company_id)
+        database = options.database
+        handleprofile.insert_profile(profile_json, database, company_id)
         self.write({'err_code':0})
 
 
@@ -45,7 +58,8 @@ class PositionHandler(tornado.web.RequestHandler):
         body = self.request.body
         body = eval(body)
         position_json = body['company']
-        handleposition.insert_company(position_json)
+        database_name = options.database
+        handleposition.insert_company(position_json, database_name)
         self.write({'err_code':0})
 
 
@@ -61,15 +75,13 @@ class PositionResumeHandler(tornado.web.RequestHandler):
 
 class ModelHandler(tornado.web.RequestHandler):
 
-    def __init__(self, data_path):
-        data_path = data_path
-
     def post(self):
         body = self.request.body
+        pdb.set_trace()
         body = eval(body)
         action = body['action']
         if action == 'train':
-            generate_feature.generate_train(self.data_path)
+            generate_feature.generate_train(options.path)
             gbdt_model.train_model()
             self.write({'err_code':0})
         else:
@@ -80,24 +92,25 @@ class ModelHandler(tornado.web.RequestHandler):
 
 
 if __name__ == "__main__":
-
+    tornado.options.parse_command_line()
     cf = ConfigParser.ConfigParser()
 
     cf.read('server.ini')
 
     data_path = cf.get('servers', 'datapath')
     port = cf.get('servers', 'port')
+    options.port = int(port)
+    options.path = data_path
 
-    tornado.options.parse_command_line()
     app = tornado.web.Application(
         handlers=[
             (r"/profile", ProfileHandler),
             (r"/pos_resume", PositionResumeHandler),
             (r"/position", PositionHandler),
-            (r"/model", ModelHandler(data_path))
+            (r"/model", ModelHandler)
         ]
     )
     http_server = tornado.httpserver.HTTPServer(app)
-    pdb.set_trace()
-    http_server.listen(port)
+    # pdb.set_trace()
+    http_server.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()

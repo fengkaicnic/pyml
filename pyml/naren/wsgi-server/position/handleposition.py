@@ -19,7 +19,7 @@ def get_resume(cur, fname):
     else:
         return False
 
-def insert_company(fobj, type=None):
+def insert_company(fobj, database, type=None):
     try:
         num = 0
         conn = utils.persist.connection()
@@ -37,7 +37,7 @@ def insert_company(fobj, type=None):
         rst = cur.fetchall()
 
         if not rst:
-            table_sql = 'select column_name, data_type from information_schema.columns where table_schema="wsgiserver" and table_name="company"'
+            table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="company"' % database
             cur.execute(table_sql)
             rst = cur.fetchall()
 
@@ -75,7 +75,7 @@ def insert_company(fobj, type=None):
             conn.close()
             print num
     except Exception as e:
-        pdb.set_trace()
+        # pdb.set_trace()
         traceback.print_exc()
         conn.close()
         print e

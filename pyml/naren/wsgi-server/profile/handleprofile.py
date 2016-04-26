@@ -11,7 +11,7 @@ import pdb
 
 def get_resume(cur, fname):
     resume_id = fname.split('-')[1].split('.')[0]
-    sql = 'select id from profile where resume_id = %d' % int(resume_id)
+    sql = 'select id from profile where resume_id = "%s"' % resume_id
     cur.execute(sql)
     rst = cur.fetchall()
     if len(rst) == 0:
@@ -22,7 +22,7 @@ def get_resume(cur, fname):
 def insert_position_resume(cur, pos_id, resume_id):
     try:
 
-        prsql = 'insert into pos_resume(pos_id, resume_id) values(%d, %d)' % (int(pos_id), int(resume_id))
+        prsql = 'insert into pos_resume(pos_id, resume_id) values(%d, "%s")' % (int(pos_id), resume_id)
         cur.execute(prsql)
 
     except Exception as e:
@@ -36,13 +36,13 @@ def update_position_resume(cur, body):
         resume_id = body['resume_id']
         confirm = body['confirm']
         up_sql = 'update pos_resume set %s = 1 where pos_id = %d \
-                  and resume_id = %d' % (confirm, pos_id, resume_id)
+                  and resume_id = "%s"' % (confirm, pos_id, resume_id)
         cur.execute(up_sql)
     except:
         traceback.print_exc()
 
-def insert_education(cur, content):
-    table_sql = 'select column_name, data_type from information_schema.columns where table_schema="wsgiserver" and table_name="education"'
+def insert_education(cur, content, database):
+    table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="education"' % database
     cur.execute(table_sql)
     rst = cur.fetchall()
 
@@ -79,8 +79,8 @@ def insert_education(cur, content):
             # pdb.set_trace()
             traceback.print_exc()
 
-def insert_work(cur, content):
-    table_sql = 'select column_name, data_type from information_schema.columns where table_schema="wsgiserver" and table_name="work"'
+def insert_work(cur, content, database):
+    table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="work"' % database
     cur.execute(table_sql)
     rst = cur.fetchall()
 
@@ -115,7 +115,7 @@ def insert_work(cur, content):
         except:
             traceback.print_exc()
 
-def insert_profile(fobj, pos_id=None):
+def insert_profile(fobj, database, pos_id=None):
     try:
         num = 0
         conn = utils.persist.connection()
@@ -130,12 +130,12 @@ def insert_profile(fobj, pos_id=None):
 
         resume_id = fobj['resume_id']
 
-        check_r = 'select id from profile where resume_id = %d' % int(resume_id)
+        check_r = 'select id from profile where resume_id = "%s"' % int(resume_id)
 
         cur.execute(check_r)
         rst = cur.fetchall()
         if len(rst) == 0:
-            table_sql = 'select column_name, data_type from information_schema.columns where table_schema="wsgiserver" and table_name="profile"'
+            table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="profile"' % database
             cur.execute(table_sql)
             rst = cur.fetchall()
 
@@ -175,8 +175,8 @@ def insert_profile(fobj, pos_id=None):
                 # pdb.set_trace()
                 traceback.print_exc()
             # pdb.set_trace()
-            insert_education(cur, fobj)
-            insert_work(cur, fobj)
+            insert_education(cur, fobj, database)
+            insert_work(cur, fobj, database)
         if pos_id:
             insert_position_resume(cur, pos_id, resume_id)
         conn.commit()
@@ -217,7 +217,7 @@ def check_position_resume(body):
     result_dc = {}
     if not rst:
         result_dc['need_position'] = 1
-    re_sql = 'select id from profile where resume_id = "%s"' % int(resume_id)
+    re_sql = 'select id from profile where resume_id = "%s"' % resume_id
     cur.execute(po_sql)
     rst = cur.fetchall()
     if not rst:
