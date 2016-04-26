@@ -4,7 +4,7 @@ import traceback
 import pdb
 from scipy import stats
 
-with open('d:/tianchi/result_jhs_14_mod-direct-adj.csv', 'r') as file:
+with open('d:/tianchi/last_two_week_zero_adjust.csv', 'r') as file:
     lines = file.readlines()
 
 store = 0.0

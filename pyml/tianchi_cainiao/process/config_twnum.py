@@ -1,3 +1,6 @@
+#add last two week num in the config table
+#
+
 import time
 import utils
 import traceback
