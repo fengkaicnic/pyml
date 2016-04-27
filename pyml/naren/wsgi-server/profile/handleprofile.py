@@ -55,19 +55,20 @@ def insert_education(cur, content, database):
         insertsql = ['insert into education(']
         valuesql = [' values(']
         valuelst = []
+        fobj['resume_id'] = content['resume_id']
 
         for item in rst[1:]:
             insertsql.append(item[0])
             insertsql.append(',')
             if item[1] == 'int':
                 valuesql.append('%d')
-                if fobj[item[0]] == '':
+                if fobj.get(item[0], 0) == '':
                     valuelst.append(0)
                 else:
-                    valuelst.append(int(fobj[item[0]]))
+                    valuelst.append(int(fobj.get(item[0], 0)))
             else:
                 valuesql.append('"%s"')
-                valuelst.append(str(fobj[item[0]]).replace('"', '“').replace('\'', '‘'))
+                valuelst.append(str(fobj.get(item[0], '')).replace('"', '“').replace('\'', '‘'))
             valuesql.append(',')
         insertsql.pop()
         insertsql.append(')')
@@ -78,10 +79,11 @@ def insert_education(cur, content, database):
         sql = ''.join(allsql) % tuple(valuelst)
         try:
             cur.execute(sql)
-        except:
+        except Exception as e:
             # pdb.set_trace()
             traceback.print_exc()
             nautil.dlog.exception('ModelTrainHandler')
+            raise e
 
 def insert_work(cur, content, database):
     table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="work"' % database
@@ -94,19 +96,21 @@ def insert_work(cur, content, database):
         insertsql = ['insert into work(']
         valuesql = [' values(']
         valuelst = []
+        fobj['resume_id'] = content['resume_id']
 
         for item in rst[1:]:
             insertsql.append(item[0])
             insertsql.append(',')
             if item[1] == 'int':
                 valuesql.append('%d')
-                if fobj[item[0]] == '':
+                if fobj.get(item[0], 0) == '':
                     valuelst.append(0)
                 else:
-                    valuelst.append(int(fobj[item[0]]))
+                    print item[0]
+                    valuelst.append(int(fobj.get(item[0], 0)))
             else:
                 valuesql.append('"%s"')
-                valuelst.append(str(fobj[item[0]]).replace('"', '“').replace('\'', '‘'))
+                valuelst.append(str(fobj.get(item[0], '')).replace('"', '“').replace('\'', '‘'))
             valuesql.append(',')
         insertsql.pop()
         insertsql.append(')')
@@ -116,9 +120,10 @@ def insert_work(cur, content, database):
         sql = ''.join(allsql) % tuple(valuelst)
         try:
             cur.execute(sql)
-        except:
+        except Exception as e:
             traceback.print_exc()
             nautil.dlog.exception('ModelTrainHandler')
+            raise e
 
 def insert_profile(fobj, database, pos_id=None):
     try:
@@ -132,15 +137,14 @@ def insert_profile(fobj, database, pos_id=None):
         cur.execute('set character_set_server=utf8')
         conn.commit()
         mode = re.compile(r'\d+')
-
         resume_id = fobj['resume_id']
+        fobj['position_id'] = 0
 
         check_r = 'select id from profile where resume_id = "%s"' % resume_id
-
         cur.execute(check_r)
         rst = cur.fetchall()
         if len(rst) == 0:
-            table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="profile"' % database
+            table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="profile" and column_name != "id"' % database
             cur.execute(table_sql)
             rst = cur.fetchall()
 
@@ -153,36 +157,36 @@ def insert_profile(fobj, database, pos_id=None):
             fobj['pos_id'] = 0
             fobj['recommend'] = 0
 
-            for item in rst[1:]:
+            for item in rst:
                 insertsql.append(item[0])
                 insertsql.append(',')
                 if item[1] == 'int':
                     valuesql.append('%d')
-                    if fobj[item[0]] == '':
+                    if fobj.get(item[0], '') == '':
                         valuelst.append(0)
                     else:
-                        valuelst.append(int(fobj[item[0]]))
+                        valuelst.append(int(fobj.get(item[0], 0)))
                 else:
                     valuesql.append('"%s"')
-                    valuelst.append(str(fobj[item[0]]).replace('"', '“').replace('\'', '‘'))
+                    valuelst.append(str(fobj.get(item[0], '')).replace('"', '“').replace('\'', '‘'))
                 valuesql.append(',')
             insertsql.pop()
             insertsql.append(')')
             valuesql.pop()
             valuesql.append(')')
             allsql = insertsql + valuesql
-            # pdb.set_trace()
             sql = ''.join(allsql) % tuple(valuelst)
             try:
                 cur.execute(sql)
-            except:
+            except Exception as e:
                 num += 1
                 traceback.print_exc()
+                raise e
                 nautil.dlog.exception('ModelTrainHandler')
             insert_education(cur, fobj, database)
             insert_work(cur, fobj, database)
-        if pos_id:
-            insert_position_resume(cur, pos_id, resume_id)
+            if pos_id:
+                insert_position_resume(cur, pos_id, resume_id)
         conn.commit()
         conn.close()
     except Exception as e:
@@ -190,7 +194,8 @@ def insert_profile(fobj, database, pos_id=None):
         traceback.print_exc()
         nautil.dlog.exception('ModelTrainHandler')
         conn.close()
-        print e
+        raise e
+
 
 def update_profile(body):
     conn = utils.persist.connection()
@@ -200,13 +205,20 @@ def update_profile(body):
     resume_id = body['resume_id']
     flag = body['confirm']
 
-    if flag == 'hunter_read':
-        return
-
-    update_sql = 'update pos_resume set %s = 1 where pos_id = %d and resume_id = "%s"'\
+    # if flag == 'hunter_read':
+    #     return
+    check_r = 'select id from pos_resume where pos_id = %d and resume_id = "%s"' % (int(pos_id), resume_id)
+    cur.execute(check_r)
+    rst = cur.fetchall()
+    pdb.set_trace()
+    if not rst:
+        up_sql = 'insert into pos_resume(pos_id, resume_id, %s) value (%d, "%s", %d)' \
+                 % (flag, int(pos_id), resume_id, 1)
+    else:
+        up_sql = 'update pos_resume set %s = 1 where pos_id = %d and resume_id = "%s"'\
                  % (flag, int(pos_id), resume_id)
 
-    cur.execute(update_sql)
+    cur.execute(up_sql)
     conn.commit()
     conn.close()
 
@@ -216,14 +228,14 @@ def check_position_resume(body):
     cur = conn.cursor()
     pos_id = body['pos_id']
     resume_id = body['resume_id']
-    po_sql = 'select id from company where position_id = "%s"' % int(pos_id)
+    po_sql = 'select id from company where position_id = %d' % int(pos_id)
     cur.execute(po_sql)
     rst = cur.fetchall()
     result_dc = {}
     if not rst:
         result_dc['need_position'] = 1
     re_sql = 'select id from profile where resume_id = "%s"' % resume_id
-    cur.execute(po_sql)
+    cur.execute(re_sql)
     rst = cur.fetchall()
     if not rst:
         result_dc['need_profile'] = 1

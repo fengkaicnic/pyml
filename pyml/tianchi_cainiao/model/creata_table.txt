@@ -1,0 +1,20 @@
+CREATE TABLE `config_two` (
+  `id` int(11) NOT NULL auto_increment,
+  `item_id` int(11) default NULL,
+  `store_code` varchar(5) default NULL,
+  `twnum0` float(5,1) default NULL,
+  `twnumd0` int default NULL,
+  `twnum1` float(5,1) default NULL,
+  `twnumd1` int default NULL,
+  `twnum2` float(5,1) default NULL,
+  `twnumd2` int default NULL,
+  `twnum3` float(5,1) default NULL,
+  `twnumd3` int default NULL,
+  `twnum4` float(5,1) default NULL,
+  `twnumd4` int default NULL,
+  `twnum5` float(5,1) default NULL,
+  `twnumd5` int default NULL,
+  `twnum6` float(5,1) default NULL,
+  `twnumd6` int default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

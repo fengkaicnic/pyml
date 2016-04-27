@@ -5,7 +5,7 @@ import time
 
 start = time.time()
 
-fname = 'result_last_two_week'
+fname = 'last_two_week_adjust_four'
 
 with open('d:/tianchi/%s.csv' % fname, 'r') as file:
     lines = file.readlines()
@@ -28,6 +28,7 @@ print len(item_dct)
 rlines = []
 
 for line in lines:
+    line = line.replace('\x00', '')
     lst = line.split(',')
 
     more_s = item_dct[str(lst[0] + '-' + str(lst[1]))]['more']

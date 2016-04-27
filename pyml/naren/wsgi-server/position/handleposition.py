@@ -32,7 +32,7 @@ def insert_company(fobj, database, type=None):
         cur.execute('set character_set_server=utf8')
         conn.commit()
         mode = re.compile(r'\d+')
-
+        pdb.set_trace()
         check_p = 'select id from company where position_id = %d' % int(fobj['position_id'])
         cur.execute(check_p)
         rst = cur.fetchall()

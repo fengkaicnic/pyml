@@ -74,8 +74,9 @@ class PositionResumeHandler(tornado.web.RequestHandler):
     def post(self):
         body = self.request.body
         body = eval(body)
+        pdb.set_trace()
         rst = handleprofile.check_position_resume(body)
-        if len(rst) == 0:
+        if len(rst) == 1:
             handleprofile.update_profile(body)
         self.write(rst)
 

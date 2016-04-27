@@ -4,7 +4,7 @@ import traceback
 import pdb
 from scipy import stats
 
-with open('d:/tianchi/last_two_week_zero_adjust.csv', 'r') as file:
+with open('d:/tianchi/last_two_week_adjust_four-direct-adj.csv', 'r') as file:
     lines = file.readlines()
 
 store = 0.0
@@ -12,6 +12,7 @@ all = 0.0
 
 try:
     for line in lines:
+        line = line.replace('\x00', '')
         resut = line.split(',')
         if resut[1] == 'all':
             if resut[2].strip() != 'None':

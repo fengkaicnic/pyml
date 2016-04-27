@@ -19,5 +19,5 @@ if __name__ == '__main__':
     sql = 'select * from pos_resume where pos_id = 1122334 and resume_id = 3322115'
     cur.execute(sql)
     rst = cur.fetchall()
-
+    print not rst
     print rst
