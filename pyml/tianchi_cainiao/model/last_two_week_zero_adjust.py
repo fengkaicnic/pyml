@@ -6,12 +6,12 @@ import time
 
 start = time.time()
 
-with open('d:/tianchi/result_last_two_week-direct-adj.csv', 'r') as file:
-    lines = file.readlines()
-
 result_lst = [] 
 
 def direct_adjust():
+    
+    with open('d:/tianchi/result_last_two_week-direct-adj.csv', 'r') as file:
+        lines = file.readlines()
     try:
         conn = utils.persist.connection()
         cur = conn.cursor()
@@ -69,7 +69,7 @@ def four_week_adjust():
         conn.close()
 
         with open('d:/tianchi/last_two_week_adjust_four.csv', 'wb') as file:
-            file.writelines('\n'.join(result_lst))
+            file.writelines('\n'.join(result_lst).replace('\x00', ''))
 
     except:
         traceback.print_exc()
