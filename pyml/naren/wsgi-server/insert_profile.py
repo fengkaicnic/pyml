@@ -14,10 +14,10 @@ import pdb
 import time
 
 # path = 'd:/naren/wsgi-server/resumes/read/'
-path = 'D:/naren/new-data/resume1/'
+path = 'D:/naren/new-data/read/'
 company_lst = []
-requrl = 'http://localhost:8000/profile'
-# requrl = 'http://121.40.183.7:9801/profile'
+# requrl = 'http://localhost:8000/profile'
+requrl = 'http://121.40.183.7:9801/profile'
 
 start = time.time()
 
@@ -30,11 +30,13 @@ for name in os.listdir(path):
         resume_dct = eval(''.join(lines))
         # data = {'profile':resume_dct, 'pos_id':pos_id}
         data = resume_dct
-        req = urllib2.Request(url=requrl, data=str(data))
-
-        res_data = urllib2.urlopen(req)
-
-        res = res_data.read()
+        try:
+            req = urllib2.Request(url=requrl, data=str(data))
+            res_data = urllib2.urlopen(req)
+            #
+            # res = res_data.read()
+        except:
+            traceback.print_exc()
         num += 1
 
         print num

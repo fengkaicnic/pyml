@@ -1,6 +1,6 @@
 #coding:utf8
 import textwrap
-
+import os
 import sys
 import tornado.httpserver
 import tornado.ioloop
@@ -14,6 +14,7 @@ from position import handleposition
 from profile import handleprofile
 from model import generate_feature
 from model import gbdt_model
+from nanabase import baseutil as nautil
 
 from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
@@ -28,7 +29,33 @@ def decode_body(body):
     except:
         bodys = body.split('&')
         body_dct = []
+        nautil.dlog.exception('ModelTrainHandler')
 
+class update_restart(tornado.web.RequestHandler):
+    def get(self):
+        try:
+            import subprocess
+            _cur_dir = os.path.realpath(os.curdir)
+            cmdline = "svn up %s" % _cur_dir
+            lines = subprocess.check_output(cmdline, shell=True)
+            return_lines = ["<html><body>"]
+            lines = lines.splitlines()
+            return_lines.extend(lines)
+            if not lines[-1].startswith("Updated"):
+                return_lines.append("NO new code found in SVN, the server will NOT restart")
+                return_lines.append("</body></html>")
+                self.write('<br>'.join(return_lines))
+                return
+            return_lines.append("the server will restart in seconds ..... ")
+            return_lines.append("</body></html>")
+            self.write('<br>'.join(return_lines))
+            self.flush()
+            subprocess.Popen("./restart.sh", shell=True)
+            return
+        except Exception, e:
+            self.write('exception occurred1 %s' % str(e))
+            nautil.dlog.exception('ModelTrainHandler')
+            return
 
 class ReverseHandler(tornado.web.RequestHandler):
     def get(self, input):
@@ -54,6 +81,7 @@ class ProfileHandler(tornado.web.RequestHandler):
             self.write({'err_code':0})
         except:
             self.write({'err_code':6665})
+            nautil.dlog.exception('ModelTrainHandler')
 
 
 class PositionHandler(tornado.web.RequestHandler):
@@ -67,6 +95,7 @@ class PositionHandler(tornado.web.RequestHandler):
             self.write({'err_code':0})
         except:
             self.write({'err_code':6665})
+            nautil.dlog.exception('ModelTrainHandler')
 
 
 
@@ -74,7 +103,6 @@ class PositionResumeHandler(tornado.web.RequestHandler):
     def post(self):
         body = self.request.body
         body = eval(body)
-        pdb.set_trace()
         rst = handleprofile.check_position_resume(body)
         if len(rst) == 1:
             handleprofile.update_profile(body)
@@ -85,7 +113,6 @@ class ModelHandler(tornado.web.RequestHandler):
 
     def post(self):
         body = self.request.body
-        pdb.set_trace()
         body = eval(body)
         action = body['action']
         if action == 'train':
@@ -100,23 +127,29 @@ class ModelHandler(tornado.web.RequestHandler):
 
 
 if __name__ == "__main__":
+    import time
+    print 'time is %s' % time.strftime("%Y-%m-%d %H:%M:%S")
     tornado.options.parse_command_line()
     cf = ConfigParser.ConfigParser()
 
     cf.read('server.ini')
-
     data_path = cf.get('servers', 'datapath')
     port = cf.get('servers', 'port')
     options.port = int(port)
     options.path = data_path
 
+    settings = {
+        "debug": True
+    }
+
     app = tornado.web.Application(
         handlers=[
+            (r'/update_restart', update_restart),
             (r"/profile", ProfileHandler),
             (r"/pos_resume", PositionResumeHandler),
             (r"/position", PositionHandler),
             (r"/model", ModelHandler)
-        ]
+        ], **settings
     )
     http_server = tornado.httpserver.HTTPServer(app)
     # pdb.set_trace()

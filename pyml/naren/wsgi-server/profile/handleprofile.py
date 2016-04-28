@@ -205,20 +205,21 @@ def update_profile(body):
     resume_id = body['resume_id']
     flag = body['confirm']
 
-    # if flag == 'hunter_read':
-    #     return
+    #if flag == 'hunter_read':
+    #    return
+
     check_r = 'select id from pos_resume where pos_id = %d and resume_id = "%s"' % (int(pos_id), resume_id)
     cur.execute(check_r)
     rst = cur.fetchall()
-    pdb.set_trace()
+
     if not rst:
-        up_sql = 'insert into pos_resume(pos_id, resume_id, %s) value (%d, "%s", %d)' \
-                 % (flag, int(pos_id), resume_id, 1)
+        up_sql = 'insert into pos_resume(pos_id, resume_id, %s, %s) value (%d, "%s", %d, curdate())' % (flag, flag+'_time', int(pos_id), resume_id, 1)
     else:
-        up_sql = 'update pos_resume set %s = 1 where pos_id = %d and resume_id = "%s"'\
-                 % (flag, int(pos_id), resume_id)
+        up_sql = 'update pos_resume set %s = 1, %s = curdate() where pos_id = %d and resume_id = "%s"'\
+                 % (flag, flag+'_time', int(pos_id), resume_id)
 
     cur.execute(up_sql)
+
     conn.commit()
     conn.close()
 
