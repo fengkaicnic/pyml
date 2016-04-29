@@ -156,6 +156,8 @@ def insert_profile(fobj, database, pos_id=None):
             fobj['confirm'] = 0
             fobj['pos_id'] = 0
             fobj['recommend'] = 0
+            fobj['degree'] = 0
+            fobj['workage'] = 0
 
             for item in rst:
                 insertsql.append(item[0])
@@ -213,9 +215,9 @@ def update_profile(body):
     rst = cur.fetchall()
 
     if not rst:
-        up_sql = 'insert into pos_resume(pos_id, resume_id, %s, %s) value (%d, "%s", %d, curdate())' % (flag, flag+'_time', int(pos_id), resume_id, 1)
+        up_sql = 'insert into pos_resume(pos_id, resume_id, %s, %s) value (%d, "%s", %d, now())' % (flag, flag+'_time', int(pos_id), resume_id, 1)
     else:
-        up_sql = 'update pos_resume set %s = 1, %s = curdate() where pos_id = %d and resume_id = "%s"'\
+        up_sql = 'update pos_resume set %s = 1, %s = now() where pos_id = %d and resume_id = "%s"'\
                  % (flag, flag+'_time', int(pos_id), resume_id)
 
     cur.execute(up_sql)

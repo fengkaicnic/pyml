@@ -127,7 +127,7 @@ def get_description_feature_old(com_description, pro_hisprojects, pro_descriptio
 
 def set_train_flg(cur, pos_id, resume_id):
     setsq = 'update pos_resume set train_flag = 1 where pos_id = %d and resume_id =\
-             %d' % (pos_id, resume_id)
+             "%s"' % (pos_id, resume_id)
 
     cur.execute(setsq)
 
@@ -143,8 +143,6 @@ def get_feature(cur, feature_lines, flag):
         com_low_income = term[1]
         pro_low_income = 0
         com_position = term[4]
-        com_workage = term[5]
-        com_degree = term[6]
         pro_position = ''
         com_description = term[2]
         pro_decription = ''
@@ -198,7 +196,7 @@ def get_feature(cur, feature_lines, flag):
             pro_otherinfo = pro[4]
             pro_skills = pro[1]
             try:
-                sql_work = 'select description from work where resume_id = %d' % resume_id
+                sql_work = 'select description from work where resume_id = "%s"' % resume_id
             except:
                 traceback.print_exc()
                 pdb.set_trace()
