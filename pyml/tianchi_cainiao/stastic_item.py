@@ -47,13 +47,15 @@ try:
                 tem_dct[tid[0]] = [[] for i in range(5)]
             for lst in tem_dct[tid[0]]:
                 lst.append(0)
-            termsql = 'select amt_alipay, store_code, num_alipay, date, amt_alipay_njhs, qty_alipay_njhs from \
+                # lst.append(0)
+            termsql = 'select amt_alipay, store_code, num_alipay, date, amt_alipay_njhs, qty_alipay_njhs, pv_uv from \
                          item_store_feature where item_id = %d and date > %s and date < %s \
                          ' % (tid[0], s_date, e_date)
             cur.execute(termsql)
             termrst = cur.fetchall()
             for term in termrst:
                 tem_dct[tid[0]][term[1]-1][num] += term[5]
+                # tem_dct[tid[0]][term[1]-1][(num * 2) + 1] += round(term[5]/(term[6]+0.001), 5)
         # pdb.set_trace()
 
     # print tem_dct

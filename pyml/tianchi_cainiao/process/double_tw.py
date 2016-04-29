@@ -24,11 +24,13 @@ def update_config(start_date, end_date, doubles, date_tar, double_mv):
                         > "%s" and date <= "%s" ' % (item_id, start_date, end_date)
             else:
                 p_sql = 'select qty_alipay_njhs, date from item_store_feature where item_id = %d and \
-                         date > "%s" and date <= "%s"' % (item_id, start_date, end_date)
+                         date > "%s" and date <= "%s" and store_code = "%s"' % (item_id, start_date, end_date, store_code)
 
             cur.execute(p_sql)
 
             result = cur.fetchall()
+            if item_id == 36844 and store_code == '4':
+                pdb.set_trace()
             testarry = [x[0] for x in result]
             test_dt = [r[0] for r in result if r[1] == date_tar]
             if not test_dt:
@@ -42,9 +44,13 @@ def update_config(start_date, end_date, doubles, date_tar, double_mv):
             # print normal.cdf(test_dt[0])
             # print p_value, item_id, store_code
             if normal.cdf(test_dt[0]) > 0.9:
-                up_sql = 'update config set %s = 1, %s = %f where item_id = %d and\
-                          store_code = "%s"' % (doubles, double_mv, double_mpv, item_id, store_code)
-                cur.execute(up_sql)
+                try:
+                    up_sql = 'update config set %s = 1, %s = %f where item_id = %d and\
+                              store_code = "%s"' % (doubles, double_mv, double_mpv, item_id, store_code)
+                    cur.execute(up_sql)
+                except:
+                    pdb.set_trace()
+                    traceback.print_exc()
 
         conn.commit()
         conn.close()
