@@ -13,6 +13,7 @@ label_set = np.hstack((label_set, label_set))
 label_set = np.hstack((label_set, label_set))
 label_set = np.hstack((label_set, label_set))
 logistic.fit(train_set, label_set)
+pdb.set_trace()
 
 pred = logistic.predict([80, 30, 40, 50, 60])
 
