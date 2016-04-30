@@ -62,10 +62,13 @@ try:
         normal = stats.norm(mean, std)
         if normal.cdf(term_arry[0]) > 0.9:
             # print term_arry
-            results.append(','.join([str(item_id), store_code, str(term_arry[0] - 1)]))
+            
+            results.append(','.join([str(item_id), store_code, str(term_arry[0] - (term_arry[0] - mean)/10 + 1)]))
+            print item_id, store_code, term_arry[0] - mean
             tgnum +=1
         elif normal.cdf(term_arry[0]) < 0.1:
-            results.append(','.join([str(item_id), store_code, str(term_arry[0] + 1)]))
+            results.append(','.join([str(item_id), store_code, str(term_arry[0] + (term_arry[0] - mean)/10 + 1)]))
+            print item_id, store_code, term_arry[0] - mean
             tonum += 1
         else:
             results.append(','.join([str(item_id), store_code, str(term_arry[0])]))
