@@ -17,6 +17,8 @@ try:
     rst = cur.fetchall()
     tgnum = 0
     tonum = 0
+    tgsum = 0
+    tosum = 0
     results = []
     for rs in rst:
         item_id = rs[0]
@@ -64,11 +66,13 @@ try:
             # print term_arry
             
             results.append(','.join([str(item_id), store_code, str(term_arry[0] - (term_arry[0] - mean)/10 + 1)]))
-            print item_id, store_code, term_arry[0] - mean
+#             print item_id, store_code, (term_arry[0] - mean)/10 + 1
+            tgsum = tgsum + (term_arry[0] - mean)/10 + 1
             tgnum +=1
         elif normal.cdf(term_arry[0]) < 0.1:
-            results.append(','.join([str(item_id), store_code, str(term_arry[0] + (term_arry[0] - mean)/10 + 1)]))
-            print item_id, store_code, term_arry[0] - mean
+            results.append(','.join([str(item_id), store_code, str(term_arry[0] + (mean - term_arry[0])/10 + 1)]))
+            print item_id, store_code, (mean - term_arry[0])/10 + 1
+            tosum = tosum + (mean - term_arry[0])/10 + 1
             tonum += 1
         else:
             results.append(','.join([str(item_id), store_code, str(term_arry[0])]))
@@ -78,6 +82,9 @@ try:
 
     print tgnum
     print tonum
+    print tgsum
+    print tosum
+    
 
 except:
     traceback.print_exc()

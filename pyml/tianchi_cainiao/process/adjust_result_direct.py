@@ -5,10 +5,6 @@ import time
 
 start = time.time()
 
-fname = 'result_last_two_week_sign'
-
-with open('d:/tianchi/%s.csv' % fname, 'r') as file:
-    lines = file.readlines()
 
 try:
     conn = utils.persist.connection()
@@ -25,12 +21,8 @@ for item in item_rst:
 
 print len(item_dct)
 
-rlines = []
 
-for line in lines:
-    line = line.replace('\x00', '')
-    lst = line.split(',')
-
+def judge_more_less(lst):
     more_s = item_dct[str(lst[0] + '-' + str(lst[1]))]['more']
     less_s = item_dct[str(lst[0] + '-' + str(lst[1]))]['less']
     per = 0.0
@@ -45,15 +37,34 @@ for line in lines:
 
     if per > 1.5:
         if adj == 'less':
-            lst[2] = round(float(lst[2]) * (1 - 0.2))
+            lst[2] = round(float(lst[2]) * (1 - 0.25))
         else:
             # pdb.set_trace()
-            lst[2] = round(float(lst[2]) * (1 + 0.2))
-    rlines.append(','.join(map(lambda x:str(x), lst)))
+            lst[2] = round(float(lst[2]) * (1 + 0.25))
+    return lst[2]
 
-with open('d:/tianchi/%s.csv' % (fname+'-direct-adj') ,'wb') as fl:
-    fl.writelines('\n'.join(rlines))
+if __name__ == '__main__':
 
-end = time.time()
 
-print end - start
+    fname = 'result_last_two_week_sign'
+    
+    with open('d:/tianchi/%s.csv' % fname, 'r') as file:
+        lines = file.readlines()
+    
+    rlines = []
+    
+    for line in lines:
+        line = line.replace('\x00', '')
+        lst = line.split(',')
+    
+        num = judge_more_less(lst)
+        lst[2] = num
+        
+        rlines.append(','.join(map(lambda x:str(x), lst)))
+    
+    with open('d:/tianchi/%s.csv' % (fname+'-direct-adj') ,'wb') as fl:
+        fl.writelines('\n'.join(rlines))
+    
+    end = time.time()
+    
+    print end - start
