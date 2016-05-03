@@ -20,7 +20,7 @@ def get_resume(cur, fname):
     else:
         return False
 
-def insert_company(fobj, database, type=None):
+def insert_company(fobj, database, type=None, tablename='company'):
     try:
         num = 0
         conn = utils.persist.connection()
@@ -33,12 +33,12 @@ def insert_company(fobj, database, type=None):
         conn.commit()
         mode = re.compile(r'\d+')
 
-        check_p = 'select id from company where position_id = %d' % int(fobj['position_id'])
+        check_p = 'select id from %s where position_id = %d' % (tablename, int(fobj['position_id']))
         cur.execute(check_p)
         rst = cur.fetchall()
 
         if not rst:
-            table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="company"' % database
+            table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="%s"' % (database, tablename)
             cur.execute(table_sql)
             rst = cur.fetchall()
 
@@ -46,7 +46,7 @@ def insert_company(fobj, database, type=None):
             fobj['degree'] = 0
             fobj['workage'] = 0
 
-            insertsql = ['insert into company(']
+            insertsql = ['insert into %s(' % tablename]
             valuesql = [' values(']
             valuelst = []
 

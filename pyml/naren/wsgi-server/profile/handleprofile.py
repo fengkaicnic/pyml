@@ -44,15 +44,15 @@ def update_position_resume(cur, body):
         traceback.print_exc()
         nautil.dlog.exception('ModelTrainHandler')
 
-def insert_education(cur, content, database):
-    table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="education"' % database
+def insert_education(cur, content, database, test=''):
+    table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="education%s"' % (database, test)
     cur.execute(table_sql)
     rst = cur.fetchall()
 
     fobjlst = eval(content['education_history'])
 
     for fobj in fobjlst:
-        insertsql = ['insert into education(']
+        insertsql = ['insert into education%s(' % test]
         valuesql = [' values(']
         valuelst = []
         fobj['resume_id'] = content['resume_id']
@@ -85,15 +85,15 @@ def insert_education(cur, content, database):
             nautil.dlog.exception('ModelTrainHandler')
             raise e
 
-def insert_work(cur, content, database):
-    table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="work"' % database
+def insert_work(cur, content, database, test=''):
+    table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="work%s"' % (database, test)
     cur.execute(table_sql)
     rst = cur.fetchall()
 
     fobjlst = eval(content['work_history'])
 
     for fobj in fobjlst:
-        insertsql = ['insert into work(']
+        insertsql = ['insert into work%s(' % test]
         valuesql = [' values(']
         valuelst = []
         fobj['resume_id'] = content['resume_id']
@@ -125,7 +125,7 @@ def insert_work(cur, content, database):
             nautil.dlog.exception('ModelTrainHandler')
             raise e
 
-def insert_profile(fobj, database, pos_id=None):
+def insert_profile(fobj, database, pos_id=None, test=''):
     try:
         num = 0
         conn = utils.persist.connection()
@@ -140,15 +140,15 @@ def insert_profile(fobj, database, pos_id=None):
         resume_id = fobj['resume_id']
         fobj['position_id'] = 0
 
-        check_r = 'select id from profile where resume_id = "%s"' % resume_id
+        check_r = 'select id from profile%s where resume_id = "%s"' % (test, resume_id)
         cur.execute(check_r)
         rst = cur.fetchall()
         if len(rst) == 0:
-            table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="profile" and column_name != "id"' % database
+            table_sql = 'select column_name, data_type from information_schema.columns where table_schema="%s" and table_name="profile%s" and column_name != "id"' % (database, test)
             cur.execute(table_sql)
             rst = cur.fetchall()
 
-            insertsql = ['insert into profile(']
+            insertsql = ['insert into profile%s(' % test]
             valuesql = [' values(']
             valuelst = []
 
@@ -185,8 +185,8 @@ def insert_profile(fobj, database, pos_id=None):
                 traceback.print_exc()
                 raise e
                 nautil.dlog.exception('ModelTrainHandler')
-            insert_education(cur, fobj, database)
-            insert_work(cur, fobj, database)
+            insert_education(cur, fobj, database, test=test)
+            insert_work(cur, fobj, database, test=test)
             if pos_id:
                 insert_position_resume(cur, pos_id, resume_id)
         conn.commit()

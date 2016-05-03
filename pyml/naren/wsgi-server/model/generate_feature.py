@@ -32,7 +32,6 @@ with open('dict.txt', 'r') as file:
             num += 1
 
 def get_keywords(content):
-    # pdb.set_trace()
     keywords = [0 for i in range(len(keyword_dct))]
     seglst = jieba.cut(content, cut_all=False)
     for seg in seglst:
@@ -138,7 +137,7 @@ def get_feature(cur, feature_lines, flag):
 
     cur.execute(sql)
     rst = cur.fetchall()
-
+    nummn = 0
     for term in rst:
         com_low_income = term[1]
         pro_low_income = 0
@@ -166,13 +165,15 @@ def get_feature(cur, feature_lines, flag):
         try:
             sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, pf.resume_id, workyear, latestdegree, \
                     pr.pos_id, pr.resume_id from pos_resume as pr left join profile as pf on pr.resume_id = pf.resume_id \
-                    where pr.train_flag = 0 and pr.pos_id = %d and pr.hr_confirm = %d' % (term[0], flag)
+                    where pr.train_flag = 0 and pr.pos_id = %d and pr.hr_confirm = %d limit 5' % (term[0], flag)
 
             cur.execute(sqlp)
             profile = cur.fetchall()
         except:
             pdb.set_trace()
         for pro in profile:
+            nummn += 1
+            print nummn
             if not pro[0]:
                 incomes = salaryp.search('0')
             else:
@@ -237,7 +238,7 @@ def get_feature(cur, feature_lines, flag):
 
 def generate_test_feature(cur, pos_id, resume_id):
     sql = 'select position_id, low_income, description, low_workage, position_name,\
-            workage, degree from company where position_id = %d' % pos_id
+            workage, degree from companytest where position_id = %d' % pos_id
 
     cur.execute(sql)
     rst = cur.fetchall()
@@ -270,7 +271,7 @@ def generate_test_feature(cur, pos_id, resume_id):
 
         try:
             sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id, workyear, latestdegree \
-                    from profile where resume_id = "%s"' % (resume_id)
+                    from profiletest where resume_id = "%s" limit 5' % (resume_id)
 
             cur.execute(sqlp)
             profile = cur.fetchall()
@@ -284,7 +285,7 @@ def generate_test_feature(cur, pos_id, resume_id):
             try:
                 if not resume_id:
                     continue
-                pos_sql = 'select position_name from work where resume_id = "%s" order by end_time desc' % resume_id
+                pos_sql = 'select position_name from worktest where resume_id = "%s" order by end_time desc' % resume_id
                 cur.execute(pos_sql)
                 pos_rst = cur.fetchall()
                 pro_position = pos_rst[0][0]
@@ -299,7 +300,7 @@ def generate_test_feature(cur, pos_id, resume_id):
             pro_otherinfo = pro[4]
             pro_skills = pro[1]
             try:
-                sql_work = 'select description from work where resume_id = "%s"' % resume_id
+                sql_work = 'select description from worktest where resume_id = "%s"' % resume_id
             except:
                 traceback.print_exc()
                 pdb.set_trace()
@@ -369,13 +370,13 @@ def generate_train(data_path):
         cur.execute('set character_set_server=utf8')
         conn.commit()
         feature_lines = []
-
+        # pdb.set_trace()
         get_feature(cur, feature_lines, 1)
         conn.commit()
         get_feature(cur, feature_lines, 0)
         conn.commit()
         if len(feature_lines) > 0:
-            with open(data_path, 'a') as file:
+            with open(data_path.replace("'", '') + '/traindata', 'a') as file:
                 file.writelines('\n'.join(feature_lines))
                 file.write('\n')
         conn.close()
@@ -394,4 +395,4 @@ if __name__ == '__main__':
 
 end = time.time()
 
-# print end - start
+print end - start

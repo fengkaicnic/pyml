@@ -63,21 +63,31 @@ try:
 
         std = term_arry.std()
         normal = stats.norm(mean, std)
+        lst = []
+        lst.append(str(item_id))
+        lst.append(str(store_code))
         if normal.cdf(term_arry[0]) > 0.9:
             # print term_arry
             
-            results.append(','.join([str(item_id), store_code, str(term_arry[0] - (term_arry[0] - mean)/10 + 1)]))
+            # results.append(','.join([str(item_id), store_code, str(term_arry[0] - (term_arry[0] - mean)/10 - 2)]))
+            lst.append(str(term_arry[0] - (term_arry[0] - mean)/10))
+            # results.append(','.join([str(item_id), store_code, str(term_arry[0])]))
 #             print item_id, store_code, (term_arry[0] - mean)/10 + 1
-            tgsum = tgsum + (term_arry[0] - mean)/10 + 1
+            tgsum = tgsum + (term_arry[0] - mean)/10 + 2
             tgnum +=1
         elif normal.cdf(term_arry[0]) < 0.1:
-            results.append(','.join([str(item_id), store_code, str(term_arry[0] + (mean - term_arry[0])/10 + 1)]))
-            print item_id, store_code, (mean - term_arry[0])/10 + 1
+            # results.append(','.join([str(item_id), store_code, str(term_arry[0] + (mean - term_arry[0])/10 + 2)]))
+            lst.append(str(term_arry[0] + (mean - term_arry[0])/10))
+            # results.append(','.join([str(item_id), store_code, str(term_arry[0])]))
+            print item_id, store_code, (mean - term_arry[0])/10 + 2
             tosum = tosum + (mean - term_arry[0])/10 + 1
             tonum += 1
         else:
-            num = judge_more_less([str(item_id), store_code, str(term_arry[0])])
-            results.append(','.join([str(item_id), store_code, str(num)]))
+            num1 = judge_more_less([str(item_id), store_code, str(term_arry[0])])
+            # num = term_arry[0]
+            lst.append(str(num1))
+        # pdb.set_trace()
+        results.append(','.join(lst))
 
     with open('d:/tianchi/result_last_two_week_sign.csv', 'wb') as file:
         file.writelines('\n'.join(results))

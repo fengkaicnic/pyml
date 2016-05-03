@@ -47,16 +47,16 @@ test_id=test_feat[:, test_feat.shape[1]-1]
 test_feat = test_feat[:, :test_feat.shape[1]-1]
 
 cnt = Counter(train_feat[:, -1])
-t_num = cnt[1.0]
-f_num = cnt[0.0]
-train_p = train_feat[:t_num, :]
-train_f = train_feat[t_num:, :]
+p_num = cnt[1.0]
+n_num = cnt[0.0]
+train_p = train_feat[:p_num, :]
+train_f = train_feat[p_num:, :]
 
 pred_lst = []
 pred = []
 
 for i in range(50):
-    train_set = get_sample(train_f, f_num, t_num)
+    train_set = get_sample(train_f, n_num, p_num)
     train_data = np.vstack((train_p, train_set))
     train_id=train_data[:, train_data.shape[1]-1]
     train_data = train_data[:, :train_data.shape[1]-1]

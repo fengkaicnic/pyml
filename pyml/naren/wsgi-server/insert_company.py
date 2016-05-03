@@ -25,7 +25,7 @@ for name in os.listdir(path):
         lines = file.readlines()
         com_dct = eval(''.join(lines))
         data = {'company':com_dct}
-        # data = com_dct
+
         req = urllib2.Request(url=requrl, data=str(data))
 
         res_data = urllib2.urlopen(req)

@@ -120,9 +120,16 @@ class ModelHandler(tornado.web.RequestHandler):
             gbdt_model.train_model()
             self.write({'err_code':0})
         else:
-            pos_id = body['pos_id']
-            resume_id = body['resume_id']
-            score = gbdt_model.predict_data(pos_id, resume_id)
+            database = options.database
+            position_json = body['company']
+            handleposition.insert_company(position_json, database, tablename='companytest')
+            profile_json = body['profile']
+            handleprofile.insert_profile(profile_json, database, test='test')
+            pos_id = position_json['position_id']
+            resume_id = profile_json['resume_id']
+            # pos_id = body['pos_id']
+            # resume_id = body['resume_id']
+            score = gbdt_model.predict_data(int(pos_id), resume_id)
             self.write({'err_code':0, 'predict_score':score})
 
 
