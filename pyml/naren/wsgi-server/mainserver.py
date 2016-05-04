@@ -98,7 +98,6 @@ class PositionHandler(tornado.web.RequestHandler):
             nautil.dlog.exception('ModelTrainHandler')
 
 
-
 class PositionResumeHandler(tornado.web.RequestHandler):
     def post(self):
         body = self.request.body

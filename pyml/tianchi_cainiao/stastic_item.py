@@ -35,7 +35,7 @@ try:
     cur.execute(sql)
     rst = cur.fetchall()
     start_date = datetime.datetime(2014, 10, 1)
-    item_date = datetime.datetime(2015, 12, 27)
+    item_date = datetime.datetime(2015, 1, 10)
     tem_dct = {}
     for num in range(70):
         if item_date - datetime.timedelta(num * period) < start_date:
@@ -62,16 +62,20 @@ try:
     lines = []
     for key in tem_dct.keys():
         tems = tem_dct[key]
-        lines.append(str(key))
-        for tem in tems:
+        # lines.append(str(key))
+        for store, tem in enumerate(tems):
             for index, x in enumerate(tem[::-1]):
                 if type(x) is types.IntType:
                     tem.pop()
                 else:
                     break
+            if not tem:
+                continue
+            tem.append(store + 1)
+            tem.append(key)
             lines.append(','.join(map(lambda x:str(x), tem)))
 
-    with open('d:/tianchi/test_tem_%d' % period, 'wb') as file:
+    with open('d:/tianchi/test_tem_p_%d' % period, 'wb') as file:
         file.writelines('\n'.join(lines))
 
 
