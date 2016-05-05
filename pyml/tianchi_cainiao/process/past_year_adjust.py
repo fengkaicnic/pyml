@@ -29,23 +29,27 @@ try:
 
     num = 0
     results = []
-
+    all_sum = 0
     for line in tlines:
         tlst = line.strip().split(',')
         # pdb.set_trace()
         if past_year_dct.has_key(tlst[0] + '-' + tlst[1]):
             lts = past_year_dct[tlst[0] + '-' + tlst[1]]
             mls = mlct[tlst[0] + '-' + tlst[1]]
+            mlsts = mlct[tlst[0] + '-all']
             if lts[0] > lts[1] and mls[0] > mls[1]:
-                tlst[2] = float(tlst[2]) * 1.1 + 1
-                store_all_dct[tlst[0] + '-all'] += float(tlst[2]) * 0.1 + 1
+                # pdb.set_trace()
+                all_sum += 2 * float(mls[0])
+                tlst[2] = float(tlst[2]) * 0.9 + 1
+                store_all_dct[tlst[0] + '-all'] -= float(tlst[2]) * 0.1 + 1
+                # all_sum += (float(tlst[2]) * 0.1 + 1) * float(mlsts[0])
                 print lts[0],lts[1],mls[0],mls[1],tlst[2]
                 num += 1
                 print num
         if not 'all' in tlst:
             results.append(','.join(map(lambda x:str(x), tlst)))
 
-
+    print all_sum
     for line in tlines:
         tlst = line.strip().split(',')
         if 'all' in tlst:

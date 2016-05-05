@@ -35,9 +35,9 @@ try:
     cur.execute(sql)
     rst = cur.fetchall()
     start_date = datetime.datetime(2014, 10, 1)
-    item_date = datetime.datetime(2015, 1, 10)
+    item_date = datetime.datetime(2015, 12, 27)
     tem_dct = {}
-    for num in range(70):
+    for num in range(3):
         if item_date - datetime.timedelta(num * period) < start_date:
             break
         e_date = (item_date - datetime.timedelta(num * period)).strftime('%Y%m%d')
@@ -69,13 +69,13 @@ try:
                     tem.pop()
                 else:
                     break
-            if not tem:
-                continue
-            tem.append(store + 1)
-            tem.append(key)
+            # if not tem:
+            #     continue
+            tem.insert(0, store + 1)
+            tem.insert(0, key)
             lines.append(','.join(map(lambda x:str(x), tem)))
 
-    with open('d:/tianchi/test_tem_p_%d' % period, 'wb') as file:
+    with open('d:/tianchi/test_tem_5_%d' % period, 'wb') as file:
         file.writelines('\n'.join(lines))
 
 

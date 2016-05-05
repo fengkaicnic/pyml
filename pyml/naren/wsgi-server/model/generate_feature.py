@@ -359,7 +359,7 @@ def generate_test(pos_id, resume_id):
         conn.close()
 
 
-def generate_train(data_path):
+def generate_train(data_path='data'):
     try:
         conn = utils.persist.connection()
         cur = conn.cursor()

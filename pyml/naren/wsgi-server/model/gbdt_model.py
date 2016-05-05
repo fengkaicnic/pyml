@@ -26,8 +26,11 @@ def get_sample(train_data, num1, num2):
     return np.array(train_lst)
 
 
-def train_model():
+def train_model(path=None):
 
+    data_path = 'data/traindata'
+    if path:
+        data_path = path
     gbdt=GradientBoostingRegressor(
       loss='ls',
       learning_rate=0.1,
@@ -45,7 +48,7 @@ def train_model():
       warm_start=False
     )
 
-    train_feat=np.genfromtxt("d:/naren/wsgi-server/data", delimiter=',', dtype=np.float32)
+    train_feat=np.genfromtxt(data_path, delimiter=',', dtype=np.float32)
     train_id=train_feat[:, train_feat.shape[1]-1]
     cnt = Counter(train_feat[:, -1])
     p_num = cnt[1.0]

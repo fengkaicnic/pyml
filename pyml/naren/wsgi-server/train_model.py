@@ -24,6 +24,7 @@ start = time.time()
 def model_predict():
 
     requrl = 'http://localhost:8000/model'
+    # requrl = 'http://121.40.183.7:9801/model'
 
     for name in os.listdir(path):
         with open(path + name) as file:
@@ -55,7 +56,8 @@ def model_predict():
 def model_train():
     data = {}
     data['action'] = 'train'
-    requrl = 'http://localhost:8000/model'
+    # requrl = 'http://localhost:8000/model'
+    requrl = 'http://121.40.183.7:9801/model'
 
     req = urllib2.Request(url=requrl, data=str(data))
     res_data = urllib2.urlopen(req)
@@ -64,7 +66,7 @@ def model_train():
     print res
 
 if __name__ == '__main__':
-    #model_train()
+    # model_train()
     model_predict()
 
 end = time.time()
