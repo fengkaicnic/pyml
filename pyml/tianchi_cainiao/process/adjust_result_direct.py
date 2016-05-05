@@ -36,7 +36,7 @@ def judge_more_less(lst):
         per = less_s/more_s
         adj = 'more'
 
-    if per > 1.0:
+    if per > 1.5:
         if adj == 'less':
             more_sum -= round(float(lst[2]) * 0.25)
             # lst[2] = round(float(lst[2]) * (1 - 0.25))

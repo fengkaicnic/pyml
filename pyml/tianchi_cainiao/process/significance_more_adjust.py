@@ -70,17 +70,17 @@ try:
             # print term_arry
             
             # results.append(','.join([str(item_id), store_code, str(term_arry[0] - (term_arry[0] - mean)/10 - 2)]))
-            lst.append(str(term_arry[0] - (term_arry[0] - mean)/10))
+            lst.append(str(term_arry[0] - (term_arry[0] - mean)/15))
             # results.append(','.join([str(item_id), store_code, str(term_arry[0])]))
 #             print item_id, store_code, (term_arry[0] - mean)/10 + 1
-            tgsum = tgsum + (term_arry[0] - mean)/10 + 2
+            tgsum = tgsum + (term_arry[0] - mean)/7
             tgnum +=1
         elif normal.cdf(term_arry[0]) < 0.1:
             # results.append(','.join([str(item_id), store_code, str(term_arry[0] + (mean - term_arry[0])/10 + 2)]))
-            lst.append(str(term_arry[0] + (mean - term_arry[0])/10))
+            lst.append(str(term_arry[0] + (mean - term_arry[0])/15))
             # results.append(','.join([str(item_id), store_code, str(term_arry[0])]))
-            print item_id, store_code, (mean - term_arry[0])/10 + 2
-            tosum = tosum + (mean - term_arry[0])/10 + 1
+            print item_id, store_code, (mean - term_arry[0])/15
+            tosum = tosum + (mean - term_arry[0])/7
             tonum += 1
         else:
             num1 = judge_more_less([str(item_id), store_code, str(term_arry[0])])
