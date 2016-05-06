@@ -29,8 +29,10 @@ try:
         cur.execute(psql)
         prst = cur.fetchall()
         lst = []
+        lst.append(item_id)
+        lst.append(store_code)
 
-        if prst and prst[0][0] <= 10000 and  prst[0][0] > 1000:
+        if prst and prst[0][0] <= 10000 and prst[0][0] >= 1000:
             lst.append(item_id)
             lst.append(store_code)
 
@@ -40,6 +42,8 @@ try:
                 lst.append(pr[0])
             print lst
             num += 1
+        # elif prst[0][0] == None:
+        #     print lst
         # if not prst:
         #     num += 1
     print num

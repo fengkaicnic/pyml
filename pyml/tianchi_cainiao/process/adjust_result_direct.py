@@ -36,16 +36,16 @@ def judge_more_less(lst):
         per = less_s/more_s
         adj = 'more'
 
-    if per > 1.0:
+    if per >= 1.4:
         if adj == 'less':
             more_sum -= round(float(lst[2]) * 0.25)
-#             lst[2] = round(float(lst[2]) * (1 - 0.25))
-            lst[2] = float(lst[2]) + more_sum
+            lst[2] = round(float(lst[2]) * (1 - 0.25))
+            # lst[2] = float(lst[2]) + more_sum
         else:
             # pdb.set_trace()
             less_sum += round(float(lst[2]) * 0.25)
-#             lst[2] = round(float(lst[2]) * (1 + 0.25))
-            lst[2] = float(lst[2]) + less_sum
+            lst[2] = round(float(lst[2]) * (1 + 0.25))
+            # lst[2] = float(lst[2]) + less_sum
 
     return lst[2], more_sum, less_sum
 

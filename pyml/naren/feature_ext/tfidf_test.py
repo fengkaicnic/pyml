@@ -4,22 +4,26 @@ import jieba
 import jieba.posseg as pseg
 import os
 from sklearn import feature_extraction
+import pdb
 from sklearn.feature_extraction.text import TfidfTransformer
 import utils
 from sklearn.feature_extraction.text import CountVectorizer
 import string
 import traceback
+from sklearn.externals import joblib
 import sys
+import time
 reload(sys)
 sys.setdefaultencoding( "utf-8" )
 from numpy import *
 
+start = time.time()
 
 data = []
 try:
     conn = utils.persist.connection()
     cur = conn.cursor()
-    sql = 'select description from mail_work limit 300'
+    sql = 'select description from mail_work limit 500'
     cur.execute(sql)
     rst = cur.fetchall()
 
@@ -41,6 +45,10 @@ tfidf = transformer.fit_transform(freWord.fit_transform(data))
 word = freWord.get_feature_names()
 #得到权重
 weight = tfidf.toarray()
+
+joblib.dump(tfidf, 'tfidf')
+# pdb.set_trace()
+
 tfidfDict = {}
 for i in range(len(weight)):
   for j in range(len(word)):
@@ -56,3 +64,6 @@ sorted_tfidf = sorted(tfidfDict.iteritems(),
 fw = open('result.txt','w')
 for i in sorted_tfidf:
   fw.write(i[0] + '\t' + str(i[1]) +'\n')
+
+end = time.time()
+print end - start

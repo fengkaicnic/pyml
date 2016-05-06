@@ -56,8 +56,8 @@ def model_predict():
 def model_train():
     data = {}
     data['action'] = 'train'
-    # requrl = 'http://localhost:8000/model'
-    requrl = 'http://121.40.183.7:9801/model'
+    requrl = 'http://localhost:8000/model'
+    # requrl = 'http://121.40.183.7:9801/model'
 
     req = urllib2.Request(url=requrl, data=str(data))
     res_data = urllib2.urlopen(req)
