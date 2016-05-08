@@ -19,6 +19,7 @@ try:
     past_year_dct = {}
     with open('d:/tianchi/test_tem_p_14', 'r') as file:
         lines = file.readlines()
+    pdb.set_trace()
     for line in lines:
         lst = line.strip().split(',')
         past_year_dct[lst[-1] + '-' + lst[-2]] = lst
@@ -30,6 +31,7 @@ try:
     num = 0
     results = []
     all_sum = 0
+    pdb.set_trace()
     for line in tlines:
         tlst = line.strip().split(',')
         # pdb.set_trace()
@@ -37,15 +39,39 @@ try:
             lts = past_year_dct[tlst[0] + '-' + tlst[1]]
             mls = mlct[tlst[0] + '-' + tlst[1]]
             mlsts = mlct[tlst[0] + '-all']
-            if lts[0] > lts[1] and mls[0] > mls[1]:
-                # pdb.set_trace()
-                # all_sum += 2 * float(mls[0])
-                tlst[2] = float(tlst[2]) * 1.2 + 1
-                store_all_dct[tlst[0] + '-all'] += float(tlst[2]) * 0.2 + 1
-                all_sum += (float(tlst[2]) * 0.1 + 1) * float(mlsts[0])
-                print lts[0],lts[1],mls[0],mls[1],tlst[2]
-                num += 1
-                print num
+            
+            if lts[0] > lts[1] :
+                if mls[0]/mls[1] >= 1.8:
+                    # pdb.set_trace()
+                    # all_sum += 2 * float(mls[0])
+                    tlst[2] = float(tlst[2]) * 1.5 + 1
+                    store_all_dct[tlst[0] + '-all'] += float(tlst[2]) * 0.5 + 1
+                    all_sum += (float(tlst[2]) * 0.1 + 1) * float(mlsts[0])
+                    print lts[0],lts[1],mls[0],mls[1],tlst[2]
+                    num += 1
+                    print num
+                else:
+                    tlst[2] = float(tlst[2]) + 2
+                    store_all_dct[tlst[0] + '-all'] += 2
+                    all_sum += 2
+                    print lts[0],lts[1],mls[0],mls[1],tlst[2]
+                    num += 1
+                    print num
+            elif lts[0] < lts[1] :
+                if mls[1]/mls[0] >= 1.8:
+                    tlst[2] = float(tlst[2]) * 0.75 + 1
+                    store_all_dct[tlst[0] + '-all'] -= float(tlst[2]) * 0.25 + 1
+                    all_sum += (float(tlst[2]) * 0.1 + 1) * float(mlsts[0])
+                    print lts[0],lts[1],mls[0],mls[1],tlst[2]
+                    num += 1
+                    print num
+                else:
+                    tlst[2] = float(tlst[2]) * 0.75
+                    store_all_dct[tlst[0] + '-all'] -= float(tlst[2]) * 0.25
+                    all_sum += (float(tlst[2]) * 0.1 + 1) * float(mlsts[0])
+                    print lts[0],lts[1],mls[0],mls[1],tlst[2]
+                    num += 1
+                    print num
         if not 'all' in tlst:
             results.append(','.join(map(lambda x:str(x), tlst)))
 
