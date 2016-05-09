@@ -163,7 +163,7 @@ def get_feature(cur, feature_lines, flag):
         com_description = term[2]
 
         try:
-            sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, pf.resume_id, workyear, latestdegree, \
+            sqlp = 'select dessalary, skills, latesttitle, hisprojects, otherinfo, pf.resume_id, workyear, latestdegree, \
                     pr.pos_id, pr.resume_id from pos_resume as pr left join profile as pf on pr.resume_id = pf.resume_id \
                     where pr.train_flag = 0 and pr.pos_id = %d and pr.hr_confirm = %d limit 5' % (term[0], flag)
 

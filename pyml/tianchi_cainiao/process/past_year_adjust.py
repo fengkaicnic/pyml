@@ -77,14 +77,13 @@ try:
         if not 'all' in tlst:
             results.append(','.join(map(lambda x:str(x), tlst)))
 
-    print all_sum
+    print round(all_sum)
     for line in tlines:
         tlst = line.strip().split(',')
         if 'all' in tlst:
             if store_all_dct.has_key(tlst[0] + '-all'):
                 tlst[2] = float(tlst[2]) + store_all_dct[tlst[0] + '-all']
             results.append(','.join(map(lambda x:str(x), tlst)))
-
 
     with open('d:/tianchi/past_year_adjust1.csv', 'wb') as file:
         file.writelines('\n'.join(results))
