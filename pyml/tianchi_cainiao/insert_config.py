@@ -22,11 +22,11 @@ try:
     cur.execute('set character_set_server=utf8')
     conn.commit()
     mode = re.compile(r'\d+')
-    with open('d:/tianchi/cainiao/config1.csv') as file:
+    with open('d:/tianchi/cainiao/newdata/config2.csv') as file:
         lines = file.readlines()
 
     table_sql = 'select column_name, data_type from information_schema.columns where \
-                  table_schema="test" and table_name="config" and column_name != "id"'
+                  table_schema="test" and table_name="config" and column_name != "id" limit 3'
     cur.execute(table_sql)
     rst = cur.fetchall()
 

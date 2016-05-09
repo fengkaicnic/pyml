@@ -1,5 +1,6 @@
 import os
 import utils
+import traceback
 import pdb
 import time
 
@@ -36,11 +37,15 @@ def judge_more_less(lst):
         per = less_s/more_s
         adj = 'more'
 
-    if per >= 1.8:
+    if per >= 1.7:
         if adj == 'less':
-            more_sum -= round(float(lst[2]) * 0.3)
-            lst[2] = round(float(lst[2]) * (1 - 0.3))
-            # lst[2] = float(lst[2]) + more_sum
+            try:
+                more_sum -= round(float(lst[2]) * 0.3)
+                lst[2] = round(float(lst[2]) * (1 - 0.3))
+                # lst[2] = float(lst[2]) + more_sum
+            except:
+                pdb.set_trace()
+                traceback.print_exc()
         else:
             # pdb.set_trace()
             less_sum += round(float(lst[2]) * 0.3)

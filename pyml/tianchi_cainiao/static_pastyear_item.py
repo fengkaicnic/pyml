@@ -69,8 +69,8 @@ try:
                     tem.pop()
                 else:
                     break
-            # if not tem:
-            #     continue
+            if not tem:
+                continue
             tem.insert(0, store + 1)
             tem.insert(0, key)
             lines.append(','.join(map(lambda x:str(x), tem)))

@@ -8,8 +8,11 @@ reload(sys)
 sys.setdefaultencoding('utf8')
 import utils
 import traceback
+import time
 import pdb
 
+
+start = time.time()
 
 try:
 
@@ -22,7 +25,7 @@ try:
     cur.execute('set character_set_server=utf8')
     conn.commit()
     mode = re.compile(r'\d+')
-    with open('d:/tianchi/cainiao/item_feature1.csv') as file:
+    with open('d:/tianchi/cainiao/newdata/item_feature2.csv') as file:
         lines = file.readlines()
 
     table_sql = 'select column_name, data_type from information_schema.columns where \
@@ -35,6 +38,7 @@ try:
         valuesql = [' values(']
         valuelst = line.split(',')
         valuelst = map(lambda x: x.strip(), valuelst)
+        valuelst.append(10000)
         for index, term in enumerate(rst):
             insertsql.append(term[0])
             insertsql.append(',')
@@ -68,3 +72,7 @@ except Exception as e:
     pdb.set_trace()
     conn.close()
     print e
+
+end = time.time()
+
+print end - start

@@ -32,7 +32,7 @@ try:
         lst.append(item_id)
         lst.append(store_code)
 
-        if prst and prst[0][0] <= 10000 and prst[0][0] >= 1000:
+        if prst and prst[0][0] > 1000:
             lst.append(item_id)
             lst.append(store_code)
 
