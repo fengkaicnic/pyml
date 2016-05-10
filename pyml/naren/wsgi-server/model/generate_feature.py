@@ -141,9 +141,9 @@ def get_feature(cur, feature_lines, flag):
     for term in rst:
         com_low_income = term[1]
         pro_low_income = 0
-        com_position = term[4]
+        com_position = term[4].replace('u', '\u').decode('unicode-escape')
         pro_position = ''
-        com_description = term[2]
+        com_description = term[2].replace('u', '\u').decode('unicode-escape')
         pro_decription = ''
         pro_hisprojects = ''
         pro_otherinfo = ''
@@ -159,8 +159,8 @@ def get_feature(cur, feature_lines, flag):
         com_workage = term[5]
         com_degree = term[6]
 
-        keywords = get_keywords(term[2])
-        com_description = term[2]
+        keywords = get_keywords(term[2].replace('u', '\u').decode('unicode-escape'))
+        com_description = term[2].replace('u', '\u').decode('unicode-escape')
 
         try:
             sqlp = 'select dessalary, skills, latesttitle, hisprojects, otherinfo, pf.resume_id, workyear, latestdegree, \
@@ -185,17 +185,17 @@ def get_feature(cur, feature_lines, flag):
                 pos_sql = 'select position_name from work where resume_id = %d order by end_time desc' % resume_id
                 cur.execute(pos_sql)
                 pos_rst = cur.fetchall()
-                pro_position = pos_rst[0][0]
+                pro_position = pos_rst[0][0].replace('u', '\u').decode('unicode-escape')
             except:
-                pro_position = pro[2]
+                pro_position = pro[2].replace('u', '\u').decode('unicode-escape')
             if incomes:
                 low_income = incomes.group(0)
             else:
                 low_income = 0
             pro_low_income = int(low_income) / 5000
-            pro_hisprojects = pro[3]
-            pro_otherinfo = pro[4]
-            pro_skills = pro[1]
+            pro_hisprojects = pro[3].replace('u', '\u').decode('unicode-escape')
+            pro_otherinfo = pro[4].replace('u', '\u').decode('unicode-escape')
+            pro_skills = pro[1].replace('u', '\u').decode('unicode-escape')
             try:
                 sql_work = 'select description from work where resume_id = "%s"' % resume_id
             except:
@@ -218,7 +218,7 @@ def get_feature(cur, feature_lines, flag):
                 pro_workage = int(workage.group(0))
             else:
                 pro_workage = 0
-            pro_degree = pro[7]
+            pro_degree = pro[7].replace('u', '\u').decode('unicode-escape')
             if '科' in pro_degree or '学' in pro_degree:
                 pro_degree = 1
             elif '硕' in pro_degree or '士' in pro_degree:
@@ -246,11 +246,11 @@ def generate_test_feature(cur, pos_id, resume_id):
     for term in rst:
         com_low_income = term[1]
         pro_low_income = 0
-        com_position = term[4]
+        com_position = term[4].replace('u', '\u').decode('unicode-escape')
         com_workage = term[5]
         com_degree = term[6]
         pro_position = ''
-        com_description = term[2]
+        com_description = term[2].replace('u', '\u').decode('unicode-escape')
         pro_decription = ''
         pro_hisprojects = ''
         pro_otherinfo = ''
@@ -266,8 +266,8 @@ def generate_test_feature(cur, pos_id, resume_id):
         com_workage = term[5]
         com_degree = term[6]
 
-        keywords = get_keywords(term[2])
-        com_description = term[2]
+        keywords = get_keywords(term[2].replace('u', '\u').decode('unicode-escape'))
+        com_description = term[2].replace('u', '\u').decode('unicode-escape')
 
         try:
             sqlp = 'select dessalary, skills, destitle, hisprojects, otherinfo, resume_id, workyear, latestdegree \
@@ -296,9 +296,9 @@ def generate_test_feature(cur, pos_id, resume_id):
             else:
                 low_income = 0
             pro_low_income = int(low_income) / 5000
-            pro_hisprojects = pro[3]
-            pro_otherinfo = pro[4]
-            pro_skills = pro[1]
+            pro_hisprojects = pro[3].replace('u', '\u').decode('unicode-escape')
+            pro_otherinfo = pro[4].replace('u', '\u').decode('unicode-escape')
+            pro_skills = pro[1].replace('u', '\u').decode('unicode-escape')
             try:
                 sql_work = 'select description from worktest where resume_id = "%s"' % resume_id
             except:

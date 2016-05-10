@@ -40,40 +40,40 @@ try:
             mls = mlct[tlst[0] + '-' + tlst[1]]
             mlsts = mlct[tlst[0] + '-all']
             # pdb.set_trace()
-            if len(lts) > 4 and lts[2] > lts[3] :
-                if mls[0]/mls[1] >= 1.7 and float(lts[2])/(float(lts[3])+0.001) >= 1.2:
+            if len(lts) >= 7 and lts[2] > lts[3]:
+                if mls[0]/mls[1] >= 1.7:
                     # pdb.set_trace()
                     # all_sum += 2 * float(mls[0])
-                    tlst[2] = float(tlst[2]) * 1.5 + 1
                     store_all_dct[tlst[0] + '-all'] += float(tlst[2]) * 0.5 + 1
+                    tlst[2] = float(tlst[2]) * 1.5 + 1
                     all_sum += (float(tlst[2]) * 0.5 + 1) * float(mlsts[0])
                     print lts[0],lts[1],mls[0],mls[1],tlst[2]
                     num += 1
                     print num
                     print float(lts[2])/(float(lts[3])+0.001)
-                # else:
-                #     tlst[2] = float(tlst[2]) + 1
-                #     store_all_dct[tlst[0] + '-all'] += 1
-                #     all_sum += 2
-                #     print lts[0],lts[1],mls[0],mls[1],tlst[2]
-                #     num += 1
-                #     print num
-            elif len(lts) > 4 and lts[2] < lts[3] :
-                if mls[1]/mls[0] >= 1.7 and float(lts[3])/(float(lts[2])+0.001) >= 1.2:
-                    tlst[2] = float(tlst[2]) * 0.8
+                elif float(lts[2])/(float(lts[3]) + 0.0001) > 1.3:
+                    store_all_dct[tlst[0] + '-all'] += float(tlst[2]) * 0.1
+                    tlst[2] = float(tlst[2]) + float(tlst[2]) * 0.1
+                    all_sum += float(mlsts[0]) * 1
+                    print lts[0],lts[1],mls[0],mls[1],tlst[2]
+                    num += 1
+                    print num
+            elif len(lts) >= 7 and lts[2] < lts[3]:
+                if mls[1]/mls[0] >= 1.7:
                     store_all_dct[tlst[0] + '-all'] -= float(tlst[2]) * 0.2
+                    tlst[2] = float(tlst[2]) * 0.8
                     all_sum += (float(tlst[2]) * 0.2) * float(mlsts[1])
                     print lts[0],lts[1],mls[0],mls[1],tlst[2]
                     num += 1
                     print num
                     print float(lts[2])/(float(lts[3])+0.001)
-                # else:
-                #     tlst[2] = float(tlst[2]) - min(float(tlst[2])*0.1, 2)
-                #     store_all_dct[tlst[0] + '-all'] -= min(float(tlst[2]) * 0.1, 2)
-                #     all_sum += (float(tlst[2]) * 0.1 + 1) * float(mlsts[0])
-                #     print lts[0],lts[1],mls[0],mls[1],tlst[2]
-                #     num += 1
-                #     print num
+                elif float(lts[3])/(float(lts[2]) + 0.0001) > 1.3:
+                    store_all_dct[tlst[0] + '-all'] -= float(tlst[2]) * 0.1
+                    tlst[2] = float(tlst[2]) * 0.9
+                    all_sum += float(mlsts[1]) * float(tlst[2]) * 0.9
+                    print lts[0],lts[1],mls[0],mls[1],tlst[2]
+                    num += 1
+                    print num
         if not 'all' in tlst:
             results.append(','.join(map(lambda x:str(x), tlst)))
 
