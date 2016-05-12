@@ -69,7 +69,7 @@ def train_model(path=None):
 
 
 def predict_data(pos_id, resume_id):
-
+    # pdb.set_trace()
     test_feat = generate_feature.generate_test(pos_id, resume_id)
     pred_lst = []
 
