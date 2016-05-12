@@ -12,7 +12,7 @@ try:
     cur = conn.cursor()
     end1 = end_date + 14
     start1 = end_date + 14 * 2
-    sql = 'select item_id, store_code from config limit 1'
+    sql = 'select item_id, store_code from config limit 10'
     cur.execute(sql)
 
     rst = cur.fetchall()
@@ -39,6 +39,10 @@ try:
         cur.execute(sql_label)
         label = cur.fetchall()
 
+        # print item_id
+        # print store_code
+        print feature
+        print label
 
     print num
 

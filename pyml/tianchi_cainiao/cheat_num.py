@@ -1,12 +1,12 @@
-# num = 264630
-# more = 10.62
-# less = 41.76
-# c_num = 20102
+# num = 42868
+# more = 10.66
+# less = 40.14
+# c_num = 5835
 
-num = 25961
-more = 4.24
-less = 16.72
-c_num = 8012
+num = 5931
+more = 4.68
+less = 16.04
+c_num = 1823
 
 rst = (num + more * c_num)/(more + less)
 
