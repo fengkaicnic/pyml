@@ -63,7 +63,7 @@ def check_data():
 
 if __name__ == '__main__':
     check_store_data()
-
+    # check_data()
 end = time.time()
 
 print end - start

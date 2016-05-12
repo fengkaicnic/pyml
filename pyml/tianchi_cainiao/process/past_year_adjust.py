@@ -44,9 +44,9 @@ try:
                 if mls[0]/mls[1] >= 1.7:
                     # pdb.set_trace()
                     # all_sum += 2 * float(mls[0])
-                    store_all_dct[tlst[0] + '-all'] += float(tlst[2]) * 0.5 + 1
-                    tlst[2] = float(tlst[2]) * 1.5 + 1
-                    all_sum += (float(tlst[2]) * 0.5 + 1) * float(mlsts[0])
+                    store_all_dct[tlst[0] + '-all'] += float(tlst[2]) * 0.3 + 1
+                    tlst[2] = float(tlst[2]) * 1.3 + 1
+                    all_sum += (float(tlst[2]) * 0.3 + 1) * float(mlsts[0])
                     print lts[0],lts[1],mls[0],mls[1],tlst[2]
                     num += 1
                     print num

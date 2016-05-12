@@ -40,16 +40,16 @@ def judge_more_less(lst):
     if per >= 1.7:
         if adj == 'less':
             try:
-                more_sum -= round(float(lst[2]) * 0.3)
-                lst[2] = round(float(lst[2]) * (1 - 0.3))
+                more_sum -= round(float(lst[2]) * 0.2)
+                lst[2] = round(float(lst[2]) * (1 - 0.2))
                 # lst[2] = float(lst[2]) + more_sum
             except:
                 pdb.set_trace()
                 traceback.print_exc()
         else:
             # pdb.set_trace()
-            less_sum += round(float(lst[2]) * 0.3)
-            lst[2] = round(float(lst[2]) * (1 + 0.3))
+            less_sum += round(float(lst[2]) * 0.2)
+            lst[2] = round(float(lst[2]) * (1 + 0.2))
             # lst[2] = float(lst[2]) + less_sum
 
     return lst[2], more_sum, less_sum
