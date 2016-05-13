@@ -37,7 +37,7 @@ try:
                 break
             # pdb.set_trace()
             if store_code == 'all':
-                sql_feature = 'select sum(qty_alipay_njhs), sum(pv_ipv), sum(pv_uv), sum(ss_pv_ipv), \
+                sql_feature = 'select sum(qty_alipay_njhs) as qty, sum(pv_ipv), sum(pv_uv), sum(ss_pv_ipv), \
                             sum(ss_pv_uv), sum(collect_uv), sum(qty_alipay - qty_alipay_njhs), sum(ztc_pv_uv),\
                              sum(tbk_pv_uv) from item_feature where item_id = %d \
                           and dateid < %d and dateid >= %d' % (item_id, end1 + period, end1)
