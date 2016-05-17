@@ -29,10 +29,10 @@ try:
                 stw = ''.join(delst[num:])
                 segs = jieba.cut(stw, cut_all=False)
                 for seg in segs:
-                    if not stopword.has_key(seg):
-                        stopword[seg] = 1
+                    if not stopword.has_key(seg.lower()):
+                        stopword[seg.lower()] = 1
                     else:
-                        stopword[seg] += 1
+                        stopword[seg.lower()] += 1
                 break
     pdb.set_trace()
     for key in stopword.keys():
