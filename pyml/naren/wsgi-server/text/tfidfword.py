@@ -45,6 +45,7 @@ try:
 
     for wg in weight:
         topsn = [(0, 0) for i in range(15)]
+
         for i in range(len(wg)):
             topsn = sorted(topsn, key= lambda x:x[0], reverse=True)
             if topsn[-1][0] < wg[i]:
@@ -54,8 +55,10 @@ try:
         for tp in topsn:
             print word[tp[1]]
             tfidfwords[word[tp[1]].lower()] = 0
-    tfidfwords['java'] = 0
-    tfidfwords['c++'] = 0
+    with open('dict.txt', 'r') as file:
+        lines = file.readlines()
+        for line in lines:
+            tfidfwords[line.strip().lower()] = 0
     tfidfwd = open('tfidfwords', 'wb')
 
     pickle.dump(tfidfwords, tfidfwd)

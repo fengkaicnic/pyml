@@ -2,7 +2,6 @@
 .Net
 c#
 C#
-C++
 ASP.NET
 ASP.net
 lucene

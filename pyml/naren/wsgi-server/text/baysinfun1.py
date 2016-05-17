@@ -14,6 +14,8 @@ start = time.time()
 
 comma_tokenizer = lambda x: jieba.cut(x, cut_all=True)
 
+jieba.load_userdict('dict.txt')
+
 def vectorize(train_words):
     v = HashingVectorizer(tokenizer=comma_tokenizer, n_features=30000, non_negative=True)
     train_data = v.fit_transform(train_words)
@@ -39,19 +41,20 @@ try:
     train_tags = []
     for rs in rst:
         desc = rs[0]
-        segs = jieba.cut(utils.discrement_unicode(desc), cut_all=False)
+        segs = jieba.cut(utils.discrement_unicode(desc).lower(), cut_all=False)
         tpword = copy.deepcopy(topic_words)
         train_words = []
         for seg in segs:
             if tpword.has_key(seg.lower()):
                 tpword[seg.lower()] += 1
-        segs = jieba.cut(utils.discrement_unicode(rs[2]), cut_all=False)
+        segs = jieba.cut(utils.discrement_unicode(rs[2]).lower(), cut_all=False)
 
         for seg in segs:
             if tpword.has_key(seg.lower()):
                 tpword[seg.lower()] += 1
-
-        for key in sorted(tpword.keys()):
+        # pdb.set_trace()
+        # for key in sorted(tpword.keys()):
+        for key in tpword.keys():
             train_words.append(tpword[key])
 
         train_data.append(train_words)
@@ -69,7 +72,7 @@ try:
     cur.execute(sqll)
     rst = cur.fetchall()
 
-    pdb.set_trace()
+    # pdb.set_trace()
     for rs in rst:
         desc = rs[0]
         segs = jieba.cut(utils.discrement_unicode(desc), cut_all=False)
@@ -78,7 +81,7 @@ try:
             if tpword.has_key(seg.lower()):
                 tpword[seg.lower()] += 1
         test_words = []
-        for key in sorted(tpword.keys()):
+        for key in tpword.keys():
             test_words.append(tpword[key])
 
         test_data = np.array(test_words)
