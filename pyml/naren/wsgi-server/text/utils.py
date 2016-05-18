@@ -18,7 +18,10 @@ digitlst = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd'
 
 
 def discrement_unicode(stw):
-    strs = stw.replace('u', '\u')
+    try:
+        strs = stw.replace('u', '\u')
+    except:
+        return stw
     sls = strs.split('\\')
     change = 0
     for index, sl in enumerate(sls):
