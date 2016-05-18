@@ -4,7 +4,7 @@ import traceback
 try:
     conn = utils.persist.connection()
     cur = conn.cursor()
-    sql = 'select description, position_name from company where id = %d' % 40
+    sql = 'select description, position_name from company where id = %d' % 433
 
     cur.execute(sql)
 

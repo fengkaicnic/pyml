@@ -29,7 +29,7 @@ def get_sample(train_data, num1, num2):
 def train_model(path=None):
 
     data_path = 'data/traindata'
-    if path:
+    if not path:
         data_path = path
     gbdt=GradientBoostingRegressor(
       loss='ls',
