@@ -6,7 +6,7 @@ try:
     conn = utils.persist.connection()
     cur = conn.cursor()
 
-    resume_id = '10898194-2'
+    resume_id = '1171630-2'
 
     sql = 'select resumekeywords, dessalary, latestmajor, latestcollege,\
             latestdegree, workyear, latestcompany, latesttitle from profile where \
@@ -19,7 +19,7 @@ try:
         for tem in rs:
             print utils.discrement_unicode(tem)
 
-    sql = 'select start_time, end_time, position_name, description from work where\
+    sql = 'select unit_name, start_time, end_time, position_name, description from work where\
                                       resume_id = "%s"' % resume_id
 
     cur.execute(sql)

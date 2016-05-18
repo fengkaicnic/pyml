@@ -74,7 +74,7 @@ if __name__ == '__main__':
 
     train_data = [data for data in pos_data]
     for data in neg_data:
-        if np.random.randint(len(neg_data)) < 50:
+        if np.random.randint(len(neg_data)) < len(pos_data):
             train_data.append(data)
 
     svm_model(train_data, 10)
