@@ -6,7 +6,7 @@ try:
     conn = utils.persist.connection()
     cur = conn.cursor()
 
-    resume_id = '1171630-2'
+    resume_id = '12227125-2'
 
     sql = 'select resumekeywords, dessalary, latestmajor, latestcollege,\
             latestdegree, workyear, latestcompany, latesttitle from profile where \
