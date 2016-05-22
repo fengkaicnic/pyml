@@ -10,6 +10,7 @@ try:
     
     for line in lines:
         lst = line.split('\t')
+        lst = map(lambda x:x.strip(), lst)
         sql = 'insert into cluster_map_test(district_hash, district_id) values("%s", "%s")' % (lst[0], lst[1])
         cur.execute(sql)
     

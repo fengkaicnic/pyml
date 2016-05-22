@@ -16,6 +16,7 @@ try:
                 lines = file.readlines()
                 for line in lines:
                     lst = line.split('\t')
+                    lst = map(lambda x:x.strip(), lst)
                     for tline in lst[1:-1]:
                         sql = 'insert into weather_test values("%s", %d, %f, %f)' % (lst[0], int(lst[1]), float(lst[2]), float(lst[3]))
                     

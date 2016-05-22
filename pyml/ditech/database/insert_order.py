@@ -16,6 +16,7 @@ try:
                 lines = file.readlines()
                 for line in lines:
                     lst = line.split('\t')
+                    lst = map(lambda x:x.strip(), lst)
                     sql = 'insert into order_data_test(order_id, driver_id, passenger_id, start_district_hash, dest_district_hash, price, time) \
                              values("%s", "%s", "%s", "%s", "%s", %f, "%s")' % (lst[0], lst[1], lst[2], lst[3], lst[4], float(lst[5]), lst[6])
                     

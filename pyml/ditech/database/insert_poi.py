@@ -14,6 +14,7 @@ try:
         lines = file.readlines()
         for line in lines:
             lst = line.split('\t')
+            lst = map(lambda x:x.strip(), lst)
             for tline in lst[1:]:
                 sql = 'insert into poi_test values("%s", "%s")' % (lst[0], tline)
             
