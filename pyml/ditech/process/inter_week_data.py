@@ -34,6 +34,7 @@ try:
         print num
         line = line.strip()
         lst = line.split('-')
+        # pdb.set_trace()
         splice1 = int(lst[-1])
         datestr = '-'.join(lst[:-1])
         nm = 0

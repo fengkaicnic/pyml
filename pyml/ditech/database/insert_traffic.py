@@ -6,7 +6,7 @@ import pdb
 
 start = time.time()
 try:
-    path = 'D:/ditech/citydata/season_1/test_set_1/traffic_data'
+    path = 'D:/ditech/citydata/season_1/training_data/traffic_data'
     conn = utils.persist.connection()
     cur = conn.cursor()
     num = 0
@@ -18,7 +18,7 @@ try:
                     lst = line.split('\t')
                     lst = map(lambda x:x.strip(), lst)
                     for tline in lst[1:-1]:
-                        sql = 'insert into traffic_test values("%s", "%s", "%s")' % (lst[0], tline, lst[-1])
+                        sql = 'insert into traffic values("%s", "%s", "%s")' % (lst[0], tline, lst[-1])
                     
                         cur.execute(sql)
                     

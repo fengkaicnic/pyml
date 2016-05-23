@@ -9,7 +9,7 @@ start = time.time()
 try:
     conn = utils.persist.connection()
     cur = conn.cursor()
-    table = 'order_data_test'
+    table = 'order_data'
     sql = 'select id, time from %s' % table
     
     cur.execute(sql)
@@ -24,7 +24,7 @@ try:
         num = int(tm[0]) * 60 + int(tm[1])
         splice = num/10 + 1
         
-        dssql = 'update order_data_test set date = "%s" , splice = %d where id = %d' % (datestr, splice, id)
+        dssql = 'update %s set date = "%s" , splice = %d where id = %d' % (table, datestr, splice, id)
         
         cur.execute(dssql)
 
