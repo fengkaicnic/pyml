@@ -1,4 +1,5 @@
 #supplement splice zero
+import pdb
 
 def add_zero():
     with open('d:/ditech/splice_series.csv', 'r') as file:
@@ -48,5 +49,49 @@ def sorted_splice():
         file.writelines('\n'.join(results))
 
 
+def split_by_week():
+    with open('d:/ditech/citydata/read_me_1.txt', 'r') as file:
+        tlines = file.readlines()
+    with open('d:/ditech/splice_sor_series.csv', 'r') as file:
+        lines = file.readlines()
+    tdctt = {}
+    for line in tlines:
+        line = line.strip()
+        lst = line.split('-')
+        if not tdctt.has_key(int(lst[-2])):
+            # pdb.set_trace()
+            tdctt[int(lst[-2])] = [int(lst[-1])]
+        else:
+            tdctt[int(lst[-2])].append(int(lst[-1]))
+
+    splice_dct = {}
+    for line in lines:
+        line = line.strip()
+        lst = line.split(',')
+        if not splice_dct.has_key(lst[0]):
+            splice_dct[lst[0]] = {int(lst[2]):lst[2:]}
+        else:
+            splice_dct[lst[0]][int(lst[2])] = lst[2:]
+
+    results = []
+    for key in tdctt.keys():
+        for splice in tdctt[key]:
+            for skey in splice_dct.keys():
+                rst = []
+                rst.append(skey)
+                rst.append(key)
+                rst.append(splice)
+                num = key
+                while num > 0:
+                    if num <= len(splice_dct[skey][splice]):
+                        rst.append(splice_dct[skey][splice][num-1])
+                    num -= 7
+                results.append(','.join(map(lambda x:str(x), rst)))
+
+    with open('d:/ditech/split_by_week.csv', 'wb') as file:
+        file.writelines('\n'.join(results))
+
+
 if __name__ == '__main__':
-    sorted_splice()
+    # sorted_splice()
+    split_by_week()
