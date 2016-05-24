@@ -5,7 +5,7 @@ import generate_feature1
 
 try:
 
-    generate_feature1.generate_train(data_path='test', position_name=u'招聘主管(有猎头经验优先)')
+    generate_feature1.generate_train(data_path='test', typen=u'Java')
 
 except:
     traceback.print_exc()

@@ -46,7 +46,7 @@ def svm_model(trains, fold):
 
     trains = np.array(trains)
     # cv = cross_validation.ShuffleSplit(trains.shape[0], n_iter=3, test_size=0.1, random_state=0)
-    k_fold = cross_validation.KFold(n=trains.shape[0], n_folds=10)
+    k_fold = cross_validation.KFold(n=trains.shape[0], n_folds=fold)
 
 
     train_set = trains[:, :-1]
@@ -77,4 +77,4 @@ if __name__ == '__main__':
         if np.random.randint(len(neg_data)) < len(pos_data):
             train_data.append(data)
 
-    svm_model(train_data, 10)
+    svm_model(train_data, 5)

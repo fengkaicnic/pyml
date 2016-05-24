@@ -131,9 +131,9 @@ def set_train_flg(cur, pos_id, resume_id):
     cur.execute(setsq)
 
 
-def get_feature(cur, feature_lines, flag, position_name):
+def get_feature(cur, feature_lines, flag, typen):
     sql = 'select position_id, low_income, description, low_workage, position_name,\
-            workage, degree from company where position_name = "%s"' % position_name
+            workage, degree from company where type = "%s"' % typen
 
     cur.execute(sql)
     rst = cur.fetchall()
@@ -165,7 +165,7 @@ def get_feature(cur, feature_lines, flag, position_name):
         try:
             sqlp = 'select dessalary, skills, latesttitle, hisprojects, otherinfo, pf.resume_id, workyear, latestdegree, \
                     pr.pos_id, pr.resume_id from pos_resume as pr left join profile as pf on pr.resume_id = pf.resume_id \
-                    where pr.train_flag = 0 and pr.pos_id = %d and pr.hr_confirm = %d' % (term[0], flag)
+                    where pr.pos_id = %d and pr.hunter_confirm = %d' % (term[0], flag)
 
             cur.execute(sqlp)
             profile = cur.fetchall()
@@ -359,7 +359,7 @@ def generate_test(pos_id, resume_id):
         conn.close()
 
 
-def generate_train(data_path='data', position_name = ''):
+def generate_train(data_path='data', typen=''):
     try:
         conn = utils.persist.connection()
         cur = conn.cursor()
@@ -371,9 +371,9 @@ def generate_train(data_path='data', position_name = ''):
         conn.commit()
         feature_lines = []
         # pdb.set_trace()
-        get_feature(cur, feature_lines, 1, position_name)
+        get_feature(cur, feature_lines, 1, typen)
         conn.commit()
-        get_feature(cur, feature_lines, 0, position_name)
+        get_feature(cur, feature_lines, 0, typen)
         conn.commit()
         if len(feature_lines) > 0:
             with open(data_path.replace("'", '') + '/traindata', 'a') as file:

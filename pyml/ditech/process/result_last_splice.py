@@ -12,11 +12,11 @@ try:
         rst = []
         rst.append(lst[1])
         rst.append(lst[2])
-        rst.append(lst[4])
+        rst.append(int(lst[4])/5 + 1)
         
-        results.append(','.join(rst))
+        results.append(','.join(map(lambda x:str(x), rst)))
         
-    with open('d:/ditech/result_last.csv', 'wb') as file:
+    with open('d:/ditech/result_last_5.csv', 'wb') as file:
         file.writelines('\n'.join(results))
     
 except:
