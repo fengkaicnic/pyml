@@ -21,6 +21,15 @@ def get_all_hash():
         traceback.print_exc()
         conn.close()
 
+def handle_rsult(splice, lsplit, rsult):
+    if splice < lsplit:
+        num = lsplit - splice
+        while num > 0:
+            rsult.append(0)
+            num -= 1
+            splice += 1
+    return splice
+
 def generate_one_hash(hasho):
     try:
         start_district_hash = hasho
@@ -35,27 +44,69 @@ def generate_one_hash(hasho):
 
         conn = utils.persist.connection()
         cur = conn.cursor()
-        sql = 'select date, splice, count(*) from order_data where start_district_hash = "%s" \
+        sql = 'select date, splice, count(*) from order_data where start_district_hash = "%s" and driver_id = "NULL" \
                 group by date, splice order by date, splice' % start_district_hash
         cur.execute(sql)
         rst = cur.fetchall()
         results = []
         rsult = []
         datestr = ''
+        splice = 0
         for rs in rst:
             if datestr != rs[0]:
                 if not rsult:
                     datestr = rs[0]
+                    splice = 1
                     rsult.append(start_district_hash)
                     rsult.append(rs[0])
+                    splice = handle_rsult(splice, rs[1], rsult)
+                    # if splice < rs[1]:
+                    #     num = rs[1] - splice
+                    #     while num > 0:
+                    #         rsult.append(0)
+                    #         num -= 1
+                    #         splice += 1
                     rsult.append(rs[2])
+                    splice += 1
                 else:
+                    # pdb.set_trace()
+                    handle_rsult(splice, 145, rsult)
+                    # if splice < 145:
+                    #     num = 145 - splice
+                    #     while num > 0:
+                    #         rsult.append(0)
+                    #         num -= 1
+                    print len(rsult)
                     results.append(','.join(map(lambda x:str(x), rsult)))
-                    rsult = [start_district_hash, rs[0], rs[2]]
+                    rsult = [start_district_hash, rs[0]]
+                    splice = 1
+                    splice = handle_rsult(splice, rs[1], rsult)
+                    # if splice < rs[1]:
+                    #     num = rs[1] - splice
+                    #     while num > 0:
+                    #         rsult.append(0)
+                    #         num -= 1
+                    #         splice += 1
+                    rsult.append(rs[2])
+                    splice += 1
                     datestr = rs[0]
             else:
+                splice = handle_rsult(splice, rs[1], rsult)
+                # if splice < rs[1]:
+                #     num = rs[1] - splice
+                #     while num > 0:
+                #         rsult.append(0)
+                #         num -= 1
+                #         splice += 1
                 rsult.append(rs[2])
-
+                splice += 1
+        handle_rsult(splice, 145, rsult)
+        # if splice < 145:
+        #     num = 145 - splice
+        #     while num > 0:
+        #         rsult.append(0)
+        #         num -= 1
+        print len(rsult)
         results.append(','.join(map(lambda x:str(x), rsult)))
         # with open('d:/ditech/all_date_splice.csv', 'wb') as file:
         #     file.writelines('\n'.join(results))
@@ -69,11 +120,11 @@ if __name__ == '__main__':
     hsh_lst = get_all_hash()
     results = []
     num = 0
-    for hasho in hsh_lst:
+    for index, hasho in enumerate(hsh_lst):
         num += 1;print num
         rst = generate_one_hash(hasho)
         results += rst
-    with open('d:/ditech/all_date_splice.csv', 'wb') as file:
+    with open('d:/ditech/all_date_gap_splice.csv', 'wb') as file:
         file.writelines('\n'.join(results))
 
 end = time.time()
