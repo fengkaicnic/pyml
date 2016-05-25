@@ -1,6 +1,25 @@
 #supplement splice zero
 import pdb
 
+def remove_enter():
+    with open('d:/ditech/splice_series.csv', 'r') as file:
+        lines = file.readlines()
+    num = 0
+    results = []
+    strws = ''
+    for line in lines:
+        num += 1
+        line = line.strip()
+        strws = strws + line
+        if num%2 != 0:
+            continue
+        else:
+            results.append(strws)
+            strws = ''
+    
+    with open('d:/ditech/splice_series1.csv', 'wb') as file:
+        file.writelines('\n'.join(results))
+
 def add_zero():
     with open('d:/ditech/splice_series.csv', 'r') as file:
         lines = file.readlines()
@@ -93,5 +112,6 @@ def split_by_week():
 
 
 if __name__ == '__main__':
-    # sorted_splice()
-    split_by_week()
+    remove_enter()
+#     sorted_splice()
+#     split_by_week()
