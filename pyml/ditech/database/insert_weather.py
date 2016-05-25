@@ -6,7 +6,7 @@ import pdb
 
 start = time.time()
 try:
-    path = 'D:/ditech/citydata/season_1/training_data/weather_data'
+    path = 'D:/ditech/citydata/season_1/test_set_1/weather_data'
     conn = utils.persist.connection()
     cur = conn.cursor()
     num = 0
@@ -17,10 +17,9 @@ try:
                 for line in lines:
                     lst = line.split('\t')
                     lst = map(lambda x:x.strip(), lst)
-                    for tline in lst[1:-1]:
-                        sql = 'insert into weather values("%s", %d, %f, %f)' % (lst[0], int(lst[1]), float(lst[2]), float(lst[3]))
+                    sql = 'insert into weather_test values("%s", %d, %f, %f)' % (lst[0], int(lst[1]), float(lst[2]), float(lst[3]))
                     
-                        cur.execute(sql)
+                    cur.execute(sql)
                     
     conn.commit()
     conn.close()
