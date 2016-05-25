@@ -88,9 +88,9 @@ def split_by_week():
         line = line.strip()
         lst = line.split(',')
         if not splice_dct.has_key(lst[0]):
-            splice_dct[lst[0]] = {int(lst[2]):lst[2:]}
+            splice_dct[lst[0]] = {int(lst[2]):lst[3:]}
         else:
-            splice_dct[lst[0]][int(lst[2])] = lst[2:]
+            splice_dct[lst[0]][int(lst[2])] = lst[3:]
 
     results = []
     for key in tdctt.keys():
@@ -102,6 +102,7 @@ def split_by_week():
                 rst.append(splice)
                 num = key
                 while num > 0:
+                    # pdb.set_trace()
                     if num <= len(splice_dct[skey][splice]):
                         rst.append(splice_dct[skey][splice][num-1])
                     num -= 7

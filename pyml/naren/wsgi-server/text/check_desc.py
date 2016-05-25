@@ -5,7 +5,7 @@ try:
     conn = utils.persist.connection()
     cur = conn.cursor()
     sql = 'select low_income, high_income, low_workage, high_workage, description, \
-                                position_name from company where position_id = %d' % 133064
+               position_name, naren_created from company where position_id = %d' % 96721
 
     cur.execute(sql)
 
