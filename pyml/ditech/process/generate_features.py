@@ -11,6 +11,7 @@ all_date_splice_gap_dct = {}
 tem_one_hot = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 week_hot = [0, 0, 0, 0, 0, 0, 0]
 skip_day = ['2016-01-01', '2016-01-02', '2016-01-03']
+traffic_hot = [0, 0, 0, 0]
 
 def get_all_splice():
     with open('d:/ditech/all_date_splice.csv', 'r') as file:
@@ -59,9 +60,12 @@ def generate_hash_feature(hash_id, splice):
             feature = feature + weeklst
             sqltra = 'select * from traffic where district_hash = "%s" and date = "%s" and\
                                                   splice = %d' % (hash_id, key, splice)
+            print sqltra
             cur.execute(sqltra)
             tra = cur.fetchall()
-            tralst = [tr[1].split(':')[1] for tr in tra]
+            tralst = copy.deepcopy(traffic_hot)
+            for tr in tra:
+                tralst[int(tr[1].split(':')[0]) - 1] += int(tr[1].split(':')[1])
             feature += tralst
             for i in range(3):
                 feature.append(splice_lst[splice+i-4])
@@ -87,7 +91,7 @@ if __name__ == '__main__':
         cur.execute(sql)
         rst = cur.fetchall()
         district_hash_lst = [rs[0] for rs in rst]
-        features = generate_hash_feature(district_hash_lst[0], 58)
+        features = generate_hash_feature(district_hash_lst[0], 118)
 
         for feature in features:
             print feature
