@@ -6,7 +6,7 @@ import MySQLdb
 try:
     conn = utils.persist.connection()
     cur = conn.cursor()
-    companysql = 'create table poi(district_hash varchar(64), poi_class varchar(64))'
+    companysql = 'create table poi(id int primary key not null auto_increment, district_hash varchar(64), poi_class varchar(64))'
 
     scoretol = cur.execute(companysql)
     conn.commit()

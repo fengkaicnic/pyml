@@ -9,7 +9,7 @@ start = time.time()
 try:
     conn = utils.persist.connection()
     cur = conn.cursor()
-    table = 'order_data'
+    table = 'weather'
     sql = 'select id, time from %s' % table
     
     cur.execute(sql)
