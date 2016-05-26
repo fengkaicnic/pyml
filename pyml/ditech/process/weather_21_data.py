@@ -2,7 +2,7 @@ import utils
 import traceback
 import pdb
 
-date = '2016-01-10'
+date = '2016-01-15'
 try:
     weatct = {}
     conn = utils.persist.connection()
@@ -11,7 +11,7 @@ try:
     cur.execute(spsql)
     sprst = cur.fetchall()
     for sp in sprst:
-        weatct[int(sp[-2])] = [int(sp[1]), float(sp[2]), float(sp[3])]
+        weatct[int(sp[-1])] = [int(sp[2]), float(sp[3]), float(sp[4])]
 
     sql = 'select distinct(splice) from weather where date = "%s" order by splice' % date
     cur.execute(sql)

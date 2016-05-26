@@ -5,6 +5,7 @@ import utils
 import traceback
 import copy
 import datetime
+import pdb
 
 all_date_splice_dct = {}
 all_date_splice_gap_dct = {}
@@ -54,9 +55,9 @@ def generate_hash_feature(hash_id, splice):
             print sqltem
             cur.execute(sqltem)
             tem = cur.fetchall()
-
-            feature[tem[-1][1]-1] += 1
-            feature.append(tem[-1][2]);feature.append(tem[-1][3])
+#             pdb.set_trace()
+            feature[tem[-1][2]-1] += 1
+            feature.append(tem[-1][3]);feature.append(tem[-1][4])
             feature = feature + weeklst
             sqltra = 'select * from traffic where district_hash = "%s" and date = "%s" and\
                                                   splice = %d' % (hash_id, key, splice)
@@ -65,12 +66,12 @@ def generate_hash_feature(hash_id, splice):
             tra = cur.fetchall()
             tralst = copy.deepcopy(traffic_hot)
             for tr in tra:
-                tralst[int(tr[1].split(':')[0]) - 1] += int(tr[1].split(':')[1])
+                tralst[int(tr[2].split(':')[0]) - 1] += int(tr[2].split(':')[1])
             feature += tralst
             for i in range(3):
                 feature.append(splice_lst[splice+i-4])
                 feature.append(splice_gap_lst[splice+i-4])
-            feature.append(splice_lst[-1])
+            feature.append(splice_gap_lst[-1])
 
             features.append(','.join(map(lambda x:str(x), feature)))
 
