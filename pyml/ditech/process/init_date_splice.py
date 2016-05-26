@@ -9,8 +9,8 @@ start = time.time()
 try:
     conn = utils.persist.connection()
     cur = conn.cursor()
-    table = 'order_data'
-    sql = 'select id, time from %s' % table
+    table = 'traffic_test'
+    sql = 'select id, tj_time from %s' % table
     
     cur.execute(sql)
     
