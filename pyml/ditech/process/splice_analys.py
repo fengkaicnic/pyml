@@ -2,7 +2,7 @@ import utils
 import traceback
 
 splice_lst = []
-with open('d:/ditech/citydata/read_me_1', 'r') as file:
+with open('d:/ditech/citydata/read_me_1.txt', 'r') as file:
     slines = file.readlines()
     for line in slines:
         splice_lst.append(line.strip().split('-')[-1])

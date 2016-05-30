@@ -4,8 +4,8 @@ import pdb
 
 def statstic_num():
     result_dct = {}
-#     with open('d:/ditech/result_last.csv', 'r') as file:
-    with open('d:/ditech/gbdt_model_result.csv', 'r') as file:
+    with open('d:/ditech/result_last.csv', 'r') as file:
+    # with open('d:/ditech/gbdt_model_result.csv', 'r') as file:
         lines = file.readlines()
 
         for line in lines:

@@ -12,11 +12,14 @@ try:
         rst = []
         rst.append(lst[1])
         rst.append(lst[2])
-        rst.append((int(lst[4])+int(lst[6])+int(lst[8]))/9 + 18)
+        if int(lst[4]) < 20:
+            rst.append(int(lst[4])/3 + 1)
+        else:
+            rst.append(int(lst[4]))
         
         results.append(','.join(map(lambda x:str(x), rst)))
         
-    with open('d:/ditech/result_last_33.csv', 'wb') as file:
+    with open('d:/ditech/result_last_32.csv', 'wb') as file:
         file.writelines('\n'.join(results))
     
 except:
