@@ -1,5 +1,7 @@
 eclipse.preferences.version=1
 encoding//ann/Bp.py=gbk
+encoding//ditech/database/utils.py=utf8
+encoding//ditech/process/utils.py=utf8
 encoding//em/EM.py=gbk
 encoding//jobs/create_year_age.py=gb2312
 encoding//jobs/generate_result.py=gb2312

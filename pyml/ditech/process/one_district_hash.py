@@ -45,7 +45,7 @@ def generate_one_hash(hasho):
         conn = utils.persist.connection()
         cur = conn.cursor()
         sql = 'select date, splice, count(*) from order_data where start_district_hash = "%s" \
-                group by date, splice order by date, splice' % start_district_hash
+                and driver_id = "NULL" group by date, splice order by date, splice' % start_district_hash
         cur.execute(sql)
         rst = cur.fetchall()
         results = []
@@ -97,7 +97,7 @@ if __name__ == '__main__':
         num += 1;print num
         rst = generate_one_hash(hasho)
         results += rst
-    with open('d:/ditech/all_date_splice.csv', 'wb') as file:
+    with open('d:/ditech/all_date_gap_splice.csv', 'wb') as file:
         file.writelines('\n'.join(results))
 
 end = time.time()

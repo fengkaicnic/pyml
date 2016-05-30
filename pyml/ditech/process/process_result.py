@@ -4,15 +4,16 @@ import pdb
 
 def statstic_num():
     result_dct = {}
-    with open('d:/ditech/result_last.csv', 'r') as file:
+#     with open('d:/ditech/result_last.csv', 'r') as file:
+    with open('d:/ditech/gbdt_model_result.csv', 'r') as file:
         lines = file.readlines()
 
         for line in lines:
-            rst = line.split(',')
-            if not result_dct.has_key(int(rst[-1])):
-                result_dct[int(rst[-1])] = 1
+            rst = line.strip().split(',')
+            if not result_dct.has_key(float(rst[-1])):
+                result_dct[float(rst[-1])] = 1
             else:
-                result_dct[int(rst[-1])] += 1
+                result_dct[float(rst[-1])] += 1
 
     results = sorted(result_dct.items(), key=lambda x:x[0])
 

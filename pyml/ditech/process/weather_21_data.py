@@ -2,7 +2,7 @@ import utils
 import traceback
 import pdb
 
-date = '2016-01-15'
+date = '2016-01-11'
 try:
     weatct = {}
     conn = utils.persist.connection()
@@ -10,9 +10,10 @@ try:
     spsql = 'select * from weather where weather is not null and date = "%s"' % date
     cur.execute(spsql)
     sprst = cur.fetchall()
+#     pdb.set_trace()
     for sp in sprst:
         weatct[int(sp[-1])] = [int(sp[2]), float(sp[3]), float(sp[4])]
-
+#     pdb.set_trace()
     sql = 'select distinct(splice) from weather where date = "%s" order by splice' % date
     cur.execute(sql)
     rst = cur.fetchall()
@@ -47,7 +48,7 @@ try:
     while splice < 145:
         total = 145 - splice
         tsplice = splice
-        # pdb.set_trace()
+#         pdb.set_trace()
         num = total
         while num > 0:
             weather = weatct[tsplice - 1][0]
