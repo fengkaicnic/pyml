@@ -70,11 +70,11 @@ if __name__ == '__main__':
                 for date in date_splice[splice]:
                     test_features = generate_features.generate_test_feature(hash_id, splice, date)
                     pred = gbdt.predict(test_features)
-                    if pred[0] < 0.5:
-                        num = 0
+                    if pred[0] < 1:
+                        num = 1
                     else:
                         num = round(pred[0])
-                    results.append(','.join([hash_dct[hash_id], date+'-'+str(splice), str(num)]))
+                    results.append(','.join([str(hash_dct[hash_id]), date+'-'+str(splice), str(num)]))
                     
         with open('d:/ditech/gbdt_model_result.csv', 'wb') as file:
             file.writelines('\n'.join(results))
