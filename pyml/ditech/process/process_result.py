@@ -31,6 +31,15 @@ def simulate_one(results):
         # allnum += rs[1]/rs[0]
     print (2838 - allnum)/2838.0
 
+
+def compare_last_result():
+    with open('d:/ditech/gbdt_model_result.csv', 'r') as file:
+        lines = file.readlines()
+
+    with open('d:/ditech/result_3_inter', 'r') as file:
+        rlines = file.readlines()
+
+
 if __name__ == '__main__':
 
     results = statstic_num()
