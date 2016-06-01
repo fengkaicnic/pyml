@@ -88,11 +88,12 @@ def generate_hash_feature(hash_id, splice):
                 tralst[int(tr[2].split(':')[0]) - 1] += int(tr[2].split(':')[1])
             feature += tralst
             ##############################################
+            # pdb.set_trace()
             for i in range(3):
                 # feature.append(float(splice_lst[splice+i-4]))
                 feature.append(float(splice_gap_lst[splice+i-4]))
                 # feature.append(float(splice_gap_lst[splice+i-4]) - float(splice_gap_lst[splice+i-5]))
-            feature.append(float(splice_gap_lst[-1]))
+            feature.append(float(splice_gap_lst[splice-1]))
 
             features.append(feature)
 
@@ -165,7 +166,7 @@ if __name__ == '__main__':
         cur.execute(sql)
         rst = cur.fetchall()
         district_hash_lst = [rs[0] for rs in rst]
-        features = generate_hash_feature('d4ec2125aff74eded207d2d915ef682f', 130)
+        features = generate_hash_feature('82cc4851f9e4faa4e54309f8bb73fd7c', 94)
 #         features = generate_test_feature('f47f35242ed40655814bc086d7514046', 46, '2016-01-22')
         for feature in features:
             print feature
