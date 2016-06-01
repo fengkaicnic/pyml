@@ -131,8 +131,8 @@ def generate_test_feature(hash_id, splice, date):
         feature.append(tem[-1][3]);feature.append(tem[-1][4])
         feature = feature + weeklst
         #######################################################
-        sqltra = 'select * from traffic where district_hash = "%s" and date = "%s" and\
-                                              splice = %d' % (hash_id, key, splice)
+        sqltra = 'select * from traffic_test where district_hash = "%s" and date = "%s" and\
+                                              splice = %d' % (hash_id, date, splice-1)
         print sqltra
         cur.execute(sqltra)
         tra = cur.fetchall()
@@ -143,7 +143,7 @@ def generate_test_feature(hash_id, splice, date):
         #################################################
         splice_lst = splice_lst[::-1]
         # splice_lst = splice_lst[:2][::-1] + splice_lst[2:4][::-1] + splice_lst[4:][::-1]
-        splice_lst = splice_lst[1::2]
+        splice_lst = splice_lst[::2]
         # splice_lst
         feature = feature + map(lambda x:float(x), splice_lst)
 
@@ -158,6 +158,8 @@ def generate_test_feature(hash_id, splice, date):
 if __name__ == '__main__':
     get_all_splice()
     get_all_test_splice()
+    hash_id = '4725c39a5e5f4c188d382da3910b3f3f'
+    splice = 94
     try:
         conn = utils.persist.connection()
         cur = conn.cursor()
@@ -166,8 +168,8 @@ if __name__ == '__main__':
         cur.execute(sql)
         rst = cur.fetchall()
         district_hash_lst = [rs[0] for rs in rst]
-        features = generate_hash_feature('82cc4851f9e4faa4e54309f8bb73fd7c', 94)
-#         features = generate_test_feature('f47f35242ed40655814bc086d7514046', 46, '2016-01-22')
+        # features = generate_hash_feature(hash_id, splice)
+        features = generate_test_feature(hash_id, splice, '2016-01-26')
         for feature in features:
             print feature
         conn.close()

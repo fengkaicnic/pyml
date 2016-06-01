@@ -5,8 +5,8 @@ import pdb
 def statstic_num():
     result_dct = {}
     # with open('d:/ditech/compare_result_53.csv', 'r') as file:
-    with open('d:/ditech/result_last.csv', 'r') as file:
-    # with open('d:/ditech/gbdt_model_result.csv', 'r') as file:
+    # with open('d:/ditech/result_last.csv', 'r') as file:
+    with open('d:/ditech/gbdt_model_result.csv', 'r') as file:
         lines = file.readlines()
 
         for line in lines:
@@ -46,13 +46,13 @@ def compare_last_result():
         lst = line.split(',')
         result_dct[lst[1]+'-'+lst[2]] = lst[4]
 
-
     num = 0
     results = []
     for line in lines:
         line = line.strip()
         lst = line.split(',')
-        if int(result_dct[lst[0]+'-'+lst[1]]) / float(lst[2]) > 3:
+        # if int(result_dct[lst[0]+'-'+lst[1]]) / float(lst[2]) < 1 and float(lst[2]) > 1:
+        if int(result_dct[lst[0]+'-'+lst[1]]) / float(lst[2]) > 2:
             print lst[0]+'-'+lst[1],lst[2],result_dct[lst[0]+'-'+lst[1]]
             if not float(result_dct[lst[0]+'-'+lst[1]]) < 5:
                 lst[2] = float(result_dct[lst[0]+'-'+lst[1]])*2/3
@@ -69,3 +69,4 @@ if __name__ == '__main__':
     # results = statstic_num()
     # simulate_one(results)
     compare_last_result()
+    pdb.set_trace()
