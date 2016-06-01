@@ -84,8 +84,12 @@ def generate_hash_feature(hash_id, splice):
             cur.execute(sqltra)
             tra = cur.fetchall()
             tralst = copy.deepcopy(traffic_hot)
+            if tra:
+                total = int(tra[0][2].split(':')[1]) + int(tra[1][2].split(':')[1]) + int(tra[2][2].split(':')[1]) + int(tra[3][2].split(':')[1])
+            else:
+                total = 1
             for tr in tra:
-                tralst[int(tr[2].split(':')[0]) - 1] += int(tr[2].split(':')[1])
+                tralst[int(tr[2].split(':')[0]) - 1] += round(float(tr[2].split(':')[1])/total, 3)
             feature += tralst
             ##############################################
             # pdb.set_trace()
@@ -137,8 +141,13 @@ def generate_test_feature(hash_id, splice, date):
         cur.execute(sqltra)
         tra = cur.fetchall()
         tralst = copy.deepcopy(traffic_hot)
+        # pdb.set_trace()
+        if tra:
+            total = int(tra[0][2].split(':')[1]) + int(tra[1][2].split(':')[1]) + int(tra[2][2].split(':')[1]) + int(tra[3][2].split(':')[1])
+        else:
+            total = 1
         for tr in tra:
-            tralst[int(tr[2].split(':')[0]) - 1] += int(tr[2].split(':')[1])
+            tralst[int(tr[2].split(':')[0]) - 1] += round(float(tr[2].split(':')[1])/total, 3)
         feature += tralst
         #################################################
         splice_lst = splice_lst[::-1]
@@ -169,7 +178,7 @@ if __name__ == '__main__':
         rst = cur.fetchall()
         district_hash_lst = [rs[0] for rs in rst]
         # features = generate_hash_feature(hash_id, splice)
-        features = generate_test_feature(hash_id, splice, '2016-01-26')
+        features = generate_test_feature(hash_id, splice, '2016-01-28')
         for feature in features:
             print feature
         conn.close()

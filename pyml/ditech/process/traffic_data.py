@@ -1,10 +1,11 @@
 import utils
 import traceback
 import pdb
+import datetime
 
-date = '2016-01-20'
+# date = '2016-01-20'
 
-def suppliment_traffic(hash_id):
+def suppliment_traffic(hash_id, date):
     try:
         tratct = {}
         conn = utils.persist.connection()
@@ -13,10 +14,11 @@ def suppliment_traffic(hash_id):
         cur.execute(spsql)
         sprst = cur.fetchall()
         for sp in sprst:
-            if tratct.has_key(sp[-1]):
-                tratct[sp[-1]].append(sp[2])
+            # pdb.set_trace()
+            if tratct.has_key(sp[-2]):
+                tratct[sp[-2]].append(sp[2])
             else:
-                tratct[sp[-1]] = [sp[2]]
+                tratct[sp[-2]] = [sp[2]]
     
         sql = 'select distinct(splice) from traffic where date = "%s" and district_hash = "%s" order by splice' % (date, hash_id)
         cur.execute(sql)
@@ -26,7 +28,7 @@ def suppliment_traffic(hash_id):
         splice = 1
         # pdb.set_trace()
         for rs in rst:
-            if splice == rs[0]:
+            if splice >= rs[0]:
                 splice += 1
                 continue
             total = rs[0] - splice
@@ -36,21 +38,27 @@ def suppliment_traffic(hash_id):
             while num > 0:
                 if total/num < 2 and tsplice - 1 > 0 :
                     trafficlst = tratct[tsplice - 1]
+                    # pdb.set_trace()
                     for tra in trafficlst:
                         sql = 'insert into traffic(district_hash, tj_level, date, splice) values ("%s", "%s", "%s", %d)' % (hash_id, tra, date, splice)
                         cur.execute(sql)
+                        print sql
                 else:
+                    # pdb.set_trace()
                     trafficlst = tratct[rs[0]]
                     for tra in trafficlst:
                         sql = 'insert into traffic(district_hash, tj_level, date, splice) values ("%s", "%s", "%s", %d)' % (hash_id, tra, date, splice)
                         cur.execute(sql)
+                        print sql
                 tnum += 1
-                cur.execute(sql)
+                # cur.execute(sql)
                 num -= 1
                 splice += 1
             splice += 1
-    
+
+        # pdb.set_trace()
         while splice < 145:
+            # pdb.set_trace()
             total = 145 - splice
             tsplice = splice
             # pdb.set_trace()
@@ -73,7 +81,7 @@ def suppliment_traffic(hash_id):
         conn.close()
 
 
-def all_suppliment():
+def all_suppliment(date):
     try:
         conn = utils.persist.connection()
         cur = conn.cursor()
@@ -81,7 +89,7 @@ def all_suppliment():
         cur.execute(sql)
         rst = cur.fetchall()
         for rs in rst:
-            suppliment_traffic(rs[0])
+            suppliment_traffic(rs[0], date)
         
         conn.close()
     except:
@@ -89,4 +97,8 @@ def all_suppliment():
         conn.close()
         
 if __name__ == '__main__':
-    all_suppliment()
+    dateste = '2016-01-01'
+    for i in range(21):
+        # pdb.set_trace()
+        datestr = datetime.datetime.strptime(dateste, '%Y-%m-%d') + datetime.timedelta(i)
+        all_suppliment(datestr.strftime('%Y-%m-%d'))

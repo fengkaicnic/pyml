@@ -28,8 +28,8 @@ def gbdt_model(trains):
       max_features=None,
       alpha=0.9,
       verbose=0,
-#       max_leaf_nodes=None,
-#       warm_start=False
+      max_leaf_nodes=None,
+      warm_start=False
     )
 
 #     pdb.set_trace()

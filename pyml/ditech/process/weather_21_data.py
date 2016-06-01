@@ -24,8 +24,8 @@ def suppliment_weather(date):
         splice = 1
         # pdb.set_trace()
         for rs in rst:
-            if splice == rs[0]:
-                splice += 1
+            if splice >= rs[0]:
+                splice = rs[0] + 1
                 continue
             total = rs[0] - splice
             tsplice = splice
