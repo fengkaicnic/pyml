@@ -73,7 +73,7 @@ if __name__ == '__main__':
                     if pred[0] < 1:
                         num = 1
                     else:
-                        num = round(pred[0])
+                        num = round(pred[0], 1)
                     results.append(','.join([str(hash_dct[hash_id]), date+'-'+str(splice), str(num)]))
                     
         with open('d:/ditech/gbdt_model_result.csv', 'wb') as file:

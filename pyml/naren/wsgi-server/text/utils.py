@@ -1,6 +1,9 @@
 #coding:utf8
 import sys
 from DBUtils import PersistentDB
+import traceback
+
+import pdb
 reload(sys)
 import MySQLdb
 
@@ -32,11 +35,33 @@ def discrement_unicode(stw):
         for s in sl[1:5]:
             if not s in digitlst:
                 flag = False
+
         if flag:
             sls[index] = '\\' + sls[index]
             change = 1
 
     if change:
+        # sls = filter(lambda x:len(x) < 7, sls)
         return ''.join(sls).decode('unicode-escape')
 
+
     return stw
+
+def convert_code(com_lines):
+    com_lines = com_lines.replace('": "', "''':'''")
+    com_lines = com_lines.replace('"], "', "'''],'''")
+    com_lines = com_lines.replace('", "', "''','''")
+    com_lines = com_lines.replace(', "', ",'''")
+    com_lines = com_lines.replace('": {"', "''':{'''")
+    com_lines = com_lines.replace('": [{"', "''':[{'''")
+    com_lines = com_lines.replace('"}], "', "'''}],'''")
+    com_lines = com_lines.replace('": ["', "''':['''")
+    com_lines = com_lines.replace('"}', "'''}")
+    com_lines = com_lines.replace('":', "''':")
+    com_lines = com_lines.replace('{"', "{'''")
+    com_lines = com_lines.replace(u"”,'''", u"”，“")
+
+    com_lines = com_lines.replace('"', u'“')
+    com_lines = com_lines.replace('\\', '/')
+
+    return com_lines
