@@ -6,7 +6,8 @@ def statstic_num():
     result_dct = {}
     # with open('d:/ditech/compare_result_53.csv', 'r') as file:
     # with open('d:/ditech/result_last.csv', 'r') as file:
-    with open('d:/ditech/gbdt_model_result.csv', 'r') as file:
+    # with open('d:/ditech/gbdt_model_result.csv', 'r') as file:
+    with open('d:/ditech/gbdt_result_3nt.csv', 'r') as file:
         lines = file.readlines()
 
         for line in lines:
@@ -66,7 +67,7 @@ def compare_last_result():
 
 if __name__ == '__main__':
 
-    # results = statstic_num()
-    # simulate_one(results)
-    compare_last_result()
+    results = statstic_num()
+    simulate_one(results)
+    # compare_last_result()
     # pdb.set_trace()
