@@ -14,7 +14,7 @@ try:
         rst.append(lst[1])
         rst.append(lst[2])
 
-        rst.append(max((int(lst[4])*0.65 + int(lst[6])*0.2 + int(lst[8])*0.15), 1))
+        rst.append(int(max((int(lst[4])*0.65 + int(lst[6])*0.25 + int(lst[8])*0.15)/2, 1)))
 #         else:
 #             rst.append(int(lst[4]))
 #             print lst[3:]

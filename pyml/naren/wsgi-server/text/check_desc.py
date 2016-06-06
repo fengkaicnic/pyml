@@ -11,7 +11,7 @@ try:
     cur = conn.cursor()
     # sql = 'select low_income, high_income, low_workage, high_workage, description, \
                # position_name, naren_created from company where id > %d' % 459
-    sql = 'select id, latesttitle from profile where id > %d' % 803205
+    sql = 'select id, latesttitle from profile where id > %d' % 811283
     cur.execute(sql)
 
     rst = cur.fetchall()

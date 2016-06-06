@@ -65,9 +65,20 @@ def compare_last_result():
 
     print num
 
+
+def all_date_check():
+    with open('d:/ditech/all_date_gap_splice.csv', 'r') as file:
+        lines = file.readlines()
+
+    for line in lines:
+        lst = line.strip().split(',')
+        print len(lst)
+
+
 if __name__ == '__main__':
 
-    results = statstic_num()
-    simulate_one(results)
+    # results = statstic_num()
+    # simulate_one(results)
     # compare_last_result()
     # pdb.set_trace()
+    all_date_check()
