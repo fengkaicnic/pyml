@@ -16,8 +16,8 @@ try:
         rst.append(lst[1])
         rst.append(lst[2])
 
-        # if (lst[2].split('-')[-1] == '46' or lst[2].split('-')[-1] == '106') and np.mean([int(lst[4]), int(lst[6]), int(lst[8])]) > 5:
-        if lst[2].split('-')[-1] == '46' or lst[2].split('-')[-1] == '106':
+        if (lst[2].split('-')[-1] == '46' or lst[2].split('-')[-1] == '106') and np.mean([int(lst[4]), int(lst[6]), int(lst[8])]) > 5:
+        # if lst[2].split('-')[-1] == '46' or lst[2].split('-')[-1] == '106':
             rst.append(max(int(lst[4]), 1))
             print lst[8], lst[6], lst[4]
             tnum += 1
@@ -31,7 +31,7 @@ try:
 #             print lst[3:]
         
         results.append(','.join(map(lambda x:str(x), rst)))
-    with open('d:/ditech/result_last_94_weight.csv', 'wb') as file:
+    with open('d:/ditech/result_last_46106_weight.csv', 'wb') as file:
         file.writelines('\n'.join(results))
 
     print num

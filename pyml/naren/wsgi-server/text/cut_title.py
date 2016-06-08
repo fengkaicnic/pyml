@@ -6,7 +6,7 @@ import jieba
 try:
     conn = utils.persist.connection()
     cur = conn.cursor()
-    sql = 'select latesttitle from profile'
+    sql = 'select position_name from work'
     cur.execute(sql)
     rst = cur.fetchall()
     worddct= {}
