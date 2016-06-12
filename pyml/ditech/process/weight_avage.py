@@ -16,14 +16,15 @@ try:
         rst.append(lst[1])
         rst.append(lst[2])
 
-        if (lst[2].split('-')[-1] == '146' or lst[2].split('-')[-1] == '106') and np.mean([int(lst[4]), int(lst[6]), int(lst[8])]) > 50:
-        # if lst[2].split('-')[-1] == '46' or lst[2].split('-')[-1] == '106':
-            rst.append(max(int(lst[4]), 1))
-            print lst[8], lst[6], lst[4]
-            tnum += 1
+#         if (lst[2].split('-')[-1] == '146' or lst[2].split('-')[-1] == '106') and np.mean([int(lst[4]), int(lst[6]), int(lst[8])]) > 50:
+#         # if lst[2].split('-')[-1] == '46' or lst[2].split('-')[-1] == '106':
+#             rst.append(max(int(lst[4]), 1))
+#             print lst[8], lst[6], lst[4]
+#             tnum += 1
 
-        elif lst[2].split('-')[-1] == '94':
-            rst.append(max(int(lst[4])/5, 1))
+        if lst[2].split('-')[-1] == '94':
+#             rst.append(max(int(lst[4])/5, 1))
+            rst.append(int(max((int(lst[4])*0.65 + int(lst[6])*0.25 + int(lst[8])*0.15)/6, 1)))
         else:
             rst.append(int(max((int(lst[4])*0.65 + int(lst[6])*0.25 + int(lst[8])*0.15)/2, 1)))
 #         else:
