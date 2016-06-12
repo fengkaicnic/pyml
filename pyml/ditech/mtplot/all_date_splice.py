@@ -21,7 +21,7 @@ for line in lines:
     else:
         splice_dct[lst[0]] = [map(lambda x:int(x), lst[2:])]
 
-show_hash = '929ec6c160e6f52c20a4217c7978f681'
+show_hash = 'd4ec2125aff74eded207d2d915ef682f'
 
 works = [4, 5, 6, 7, 10, 11, 12, 13, 14, 17, 18, 19, 20, 21]
 weeks = [8, 9, 15, 16]
@@ -29,9 +29,9 @@ weeks = [8, 9, 15, 16]
 x_label = [i for i in range(1, 145)]
 plt.figure(figsize=(144, 5))
 for index, rs in enumerate(splice_dct[show_hash]):
-    if index not in works:
+    if index+1 not in works:
         continue
-    plt.plot(x_label, rs)
+    plt.plot(x_label, rs, label=index+1)
 
 plt.xlabel('time')
 plt.ylabel('Num')
