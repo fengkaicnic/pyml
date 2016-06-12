@@ -7,7 +7,7 @@ start = time.time()
 clf = linear_model.LinearRegression()
 
 splice_lst = []
-with open('d:/ditech/citydata/read_me_1.txt', 'r') as file:
+with open('d:/ditech/citydata/read_me_2.txt', 'r') as file:
     lines = file.readlines()
     for line in lines:
         splice_lst.append(int(line.strip().split('-')[-1]))

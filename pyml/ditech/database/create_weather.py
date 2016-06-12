@@ -6,7 +6,7 @@ import MySQLdb
 try:
     conn = utils.persist.connection()
     cur = conn.cursor()
-    companysql = 'create table weather_test(id int primary key not null auto_increment, \
+    companysql = 'create table weather_test2(id int primary key not null auto_increment, \
                   time varchar(64), weather int, temperature decimal(5, 2), \
                    pm25 decimal(5, 2), date varchar(12), splice int)'
 

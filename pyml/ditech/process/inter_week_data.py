@@ -8,9 +8,9 @@ import copy
 start = time.time()
 
 try:
-    table = 'order_data_test'
+    table = 'order_data_test2'
     conn = utils.persist.connection()
-    path = 'D:/ditech/citydata/read_me_1.txt'
+    path = 'D:/ditech/citydata/read_me_2.txt'
     cur = conn.cursor()
     with open(path, 'r') as file:
         lines = file.readlines()
@@ -63,7 +63,7 @@ try:
 #             pdb.set_trace()
             results.append(','.join(map(lambda x:str(x), rstlst)))
     
-    with open('d:/ditech/result_3_inter', 'wb') as file:
+    with open('d:/ditech/result_3_inter_test', 'wb') as file:
         file.writelines('\n'.join(results))
     
     conn.close()
