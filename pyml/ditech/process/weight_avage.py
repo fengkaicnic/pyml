@@ -3,7 +3,7 @@ import traceback
 import numpy as np
 
 try:
-    with open('d:/ditech/result_3_inter', 'r') as file:
+    with open('d:/ditech/result_3_inter_test', 'r') as file:
         lines = file.readlines()
     
     results = []

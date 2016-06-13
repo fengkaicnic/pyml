@@ -17,7 +17,7 @@ def get_mape(splice):
 #             mape += abs(max(int(lst[splice])/5.0, 1) - int(lst[splice+1]))/int(lst[splice+1])
             total += 1
         else:
-            mape += abs(max((int(lst[splice - 2])*0.1 + int(lst[splice - 1])*0.25 + int(lst[splice])*0.65)/3, 1) - int(lst[splice + 1]))/int(lst[splice + 1])
+            mape += abs(max((int(lst[splice - 2])*0.15 + int(lst[splice - 1])*0.25 + int(lst[splice])*0.65)/2, 1) - int(lst[splice + 1]))/int(lst[splice + 1])
             total += 1
 
     print splice, mape, total, mape/total
