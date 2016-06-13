@@ -41,7 +41,7 @@ class dorm:
             if not rs[-1]:
                 total += 1
             else:
-                mape += max(abs((rs[0]*vec[0] + rs[1]*vec[1] + rs[2]*vec[2]) - rs[3])/2, 1)/rs[3]
+                mape += abs(max(((rs[0]*vec[0] + rs[1]*vec[1] + rs[2]*vec[2])/2), 1) - rs[3])/float(rs[3])
                 total += 1
 
         return mape/total
@@ -52,10 +52,10 @@ class dorm:
     """
     # 搜索方法1: 随机搜索算法
     # 函数会作1000次随机猜测，记录总代价最低的方法. domain为航班号的范围（0-9），共有5个人，因此共有10项
-    def randomoptimize(self):
+    def randomoptimize(self, num):
         best_sol = []
         bestcost = 99999
-        for i in range(20000):
+        for i in range(num):
             sol = [random.random(), random.random(), random.random()]
 
             # print sol[:]
@@ -116,7 +116,7 @@ class dorm:
     # 注意：算法总会接受一个更优的解，而且在退火的开始阶段会接受较差的解，随着退火的不断进行，算法
     #      原来越不能接受较差的解，直到最后，它只能接受更优的解。
     # 算法接受较差解的概率 P = exp[-(highcost-lowcost)/temperature]
-    def annealingoptimize(self, T=10000.0, cool=0.99, step=1):
+    def annealingoptimize(self, T=10000.0, cool=0.99, step=10):
         # 随机初始化值
         # vec = [random.randint(domain[i][0], domain[i][1]) for i in range(len(domain))]
         vec = [random.random(), random.random(), random.random()]
@@ -126,17 +126,18 @@ class dorm:
             # 选择一个索引值
             i = random.randint(0, 2)
             # 选择一个改变索引值的方向
-            c = random.randint(-step, step) * 0.1  # -1 or 0 or 1
+            c = random.randint(-step, step) * 0.015  # -1 or 0 or 1
             # 构造新的解
             vecb = vec[:]
             vecb[i] += c
+            vecb[i] = max(vecb[i], 0)
 
             # 计算当前成本和新的成本
             cost1 = self.dormcost(vec)
             cost2 = self.dormcost(vecb)
 
             # 判断新的解是否优于原始解 或者 算法将以一定概率接受较差的解
-            if cost2 < cost1 or random.random() < math.exp(-(cost2 - cost1)*15 / T):
+            if cost2 < cost1 or random.random() < math.exp(-(cost2 - cost1)*25 / T):
             # if cost2 < cost1:
                 vec = vecb
 
@@ -227,22 +228,26 @@ class dorm:
         return scores[0][1]
 
 if __name__ == '__main__':
-    dormsol = dorm(46)
+    dormsol = dorm(142)
     #sol = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     #dormsol.printsolution(sol)
     #dormsol.dormcost(sol)
 
     # 方法1：随机猜测
-    # dormsol.randomoptimize()
+    dormsol.randomoptimize(50000)
 
     # 方法2：爬山法
     # dormsol.hillclimb(domain)
 
     # 方法3：模拟退火法
-    dormsol.annealingoptimize()
+    # dormsol.annealingoptimize()
 
     # 方法4：遗传算法
-    # dormsol.geneticoptimize(mutprob=0.8, maxiter=500)
+    # vec = dormsol.geneticoptimize(mutprob=0.8, maxiter=1000)
+    # vec = [0.17, 0.34, 0.34]
+    # vec1 = [0.15809659303455248, 0.31596469436756436, 0.3890133104417647]
+    #
+    # print dormsol.dormcost(vec)
 
 ed = time.time()
 print ed - st
