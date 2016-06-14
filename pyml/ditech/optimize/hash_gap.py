@@ -46,6 +46,8 @@ class dorm:
 
             # self.rst.append([int(lst[splice-2]), int(lst[splice-1]), int(lst[splice]), int(lst[splice+1])])
 
+        file = open('hash_splice_dct', 'wb')
+        pickle.dump(self.hash_splice_dct, file)
 
     def train(self, method='hillclimb'):
         methods = {'hillclimb':self.hillclimb}
@@ -68,6 +70,9 @@ class dorm:
         for key in hash_splice_param.keys():
             for key1 in hash_splice_param[key].keys():
                 print key, key1, hash_splice_param[key][key1]
+
+        file = open('hash_splice_param', 'wb')
+        pickle.dump(hash_splice_param, file)
 
         print totalcost / total
 
