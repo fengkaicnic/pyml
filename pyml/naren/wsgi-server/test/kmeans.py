@@ -7,6 +7,8 @@ import jieba
 import numpy as np
 import random
 import pdb
+sys.setdefaultencoding('utf8')
+import pickle
 
 with open('d:/naren/latesttitle.txt', 'r') as file:
     lines = file.readlines()
@@ -20,7 +22,7 @@ for line in lines:
 
 worddct = {}
 for index, word in enumerate(wordlst):
-    worddct[word] = index
+    worddct[word.decode('gbk')] = index
 
 try:
     conn = utils.persist.connection()
@@ -29,20 +31,25 @@ try:
     cur.execute(sql)
     rst = cur.fetchall()
     titleall = []
+    # pdb.set_trace()
     for rs in rst:
         titlelst = [0 for i in range(len(worddct))]
+        # pdb.set_trace()
         seglst = jieba.cut(rs[0], cut_all=False)
         for seg in seglst:
             if not worddct.has_key(seg):
                 continue
             titlelst[worddct[seg]] += 1
+        titlelst.append(rs[0])
         titleall.append(titlelst)
-
-    nums = 10
+    # pdb.set_trace()
+    nums = 15
     numlst = []
     for i in range(nums):
-        lst = [0 for i in range(len(worddct))]
-        lst[random.randint(0, len(worddct))] = 5
+        # lst = [0 for i in range(len(worddct))]
+        # lst[random.randint(0, len(worddct))] = 5
+        lst = titleall[random.randint(0, len(titleall))][:-1]
+        lst[random.randint(0, len(lst))] += 1
         numlst.append(lst)
     total_distance = 99999999
 
@@ -53,37 +60,48 @@ try:
         result_dct = {}
         for i in range(len(numlst)):
             result_dct[i] = []
+        # pdb.set_trace()
         for title in titleall:
             results = []
             for index, numt in enumerate(numlst):
-                title = np.array(title)
+                title1 = np.array(title[:-1])
                 numt = np.array(numt)
-                results.append((index, np.sum((title - numt) ** 2)))
-                results = sorted(results, key=lambda x:x[1])
-                result_dct[results[0][0]].append(results[0][1])
-        pdb.set_trace()
+                results.append((index, np.sum((title1 - numt) ** 2)))
+            results = sorted(results, key=lambda x:x[1])
+            result_dct[results[0][0]].append(title)
+        # pdb.set_trace()
         distance = 0
         newnumlst = []
         for key in result_dct.keys():
             nums = np.array([0.0 for i in range(len(worddct))])
-            pdb.set_trace()
+            # pdb.set_trace()
             for lst in result_dct[key]:
-                lst = np.array(lst)
+                lst = np.array(lst[:-1])
                 nums = nums + lst
                 num = np.array(numlst[key])
                 distance += np.sum((lst - num) ** 2)
+            # pdb.set_trace()
             newnumlst.append(nums/len(result_dct[key]))
-        pdb.set_trace()
+        # pdb.set_trace()
 
-        if distance - total_distance < 100:
+        if total_distance - distance < 100:
             break
         total_distance = distance
         print total_distance
         numlst = newnumlst
         result_class = result_dct
+    pdb.set_trace()
+
+    file = open('result_class', 'wb')
+    pickle.dump(result_class, file)
 
     for key in result_class.keys():
+        titles = []
         print len(result_class[key])
+        for result in result_class[key]:
+            titles.append(result[-1])
+        with open('d:/naren/result'+str(key), 'wb') as file:
+            file.writelines(u'\n'.join(titles))
 
     conn.close()
 except:
