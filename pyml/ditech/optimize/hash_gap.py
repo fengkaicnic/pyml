@@ -36,6 +36,8 @@ class dorm:
 
         for line in lines:
             lst = line.strip().split(',')
+            if int(lst[1].split('-')[-1]) in [1, 2, 3]:
+                continue
             if not self.hash_splice_dct.has_key(lst[0]):
                 self.hash_splice_dct[lst[0]] = {}
                 for splice in splice_lst:
@@ -49,6 +51,33 @@ class dorm:
         file = open('hash_splice_dct', 'wb')
         pickle.dump(self.hash_splice_dct, file)
 
+    def train_hash(self, method='hillclimb', hash_id=None):
+        if not hash_id:
+            return
+        methods = {'hillclimb':self.hillclimb}
+        method = methods[method]
+        hash_splice_param = {}
+        num = 0
+        total = 0
+        totalcost = 0.0
+
+        hash_splice_param[hash_id] = {}
+        # pdb.set_trace()
+        for key1 in self.hash_splice_dct[hash_id].keys():
+            rst = self.hash_splice_dct[hash_id][key1]
+            weg, cost = method(rst)
+            print hash_id, key1, weg, cost
+            total += 1
+            totalcost += cost
+            hash_splice_param[hash_id][key1] = weg
+        num += 1
+        print num
+        # for key in hash_splice_param.keys():
+        #     for key1 in hash_splice_param[key].keys():
+        #         print key, key1, hash_splice_param[key][key1]
+
+        print totalcost / total
+
     def train(self, method='hillclimb'):
         methods = {'hillclimb':self.hillclimb}
         method = methods[method]
@@ -56,23 +85,33 @@ class dorm:
         num = 0
         total = 0
         totalcost = 0.0
+        results = []
         for key in self.hash_splice_dct.keys():
             hash_splice_param[key] = {}
             # pdb.set_trace()
+            keytotal = 0
+            keycost = 0.0
             for key1 in self.hash_splice_dct[key].keys():
                 rst = self.hash_splice_dct[key][key1]
                 weg, cost = method(rst)
+                # print key, key1, weg, cost
                 total += 1
+                keytotal += 1
                 totalcost += cost
+                keycost += cost
                 hash_splice_param[key][key1] = weg
             num += 1
-            print num
-        for key in hash_splice_param.keys():
-            for key1 in hash_splice_param[key].keys():
-                print key, key1, hash_splice_param[key][key1]
+            results.append((num, key, keycost/keytotal))
+        # for key in hash_splice_param.keys():
+        #     for key1 in hash_splice_param[key].keys():
+        #         print key, key1, hash_splice_param[key][key1]
 
         file = open('hash_splice_param', 'wb')
         pickle.dump(hash_splice_param, file)
+
+        results = sorted(results, key=lambda x:x[2])
+        for result in results:
+            print result
 
         print totalcost / total
 
@@ -144,8 +183,8 @@ class dorm:
             seed = neighbor_cost[0][0]
             # print "newseed = ", seed[:], " 代价：", self.dormcost(seed, rst)
 
-        self.printsolution(seed)
-        print "爬山法得到的解的最小代价是", self.dormcost(seed, rst)
+        # self.printsolution(seed)
+        # print "爬山法得到的解的最小代价是", self.dormcost(seed, rst)
         return seed, self.dormcost(seed, rst)
 
 
@@ -271,10 +310,12 @@ class dorm:
 
 if __name__ == '__main__':
     dormsol = dorm()
-    dormsol.train()
+    # dormsol.train()
     #sol = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     #dormsol.printsolution(sol)
     #dormsol.dormcost(sol)
+
+    dormsol.train_hash(hash_id='2407d482f0ffa22a947068f2551fe62c')
 
     # 方法1：随机猜测
     # dormsol.randomoptimize(50000)

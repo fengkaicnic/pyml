@@ -23,7 +23,7 @@ for line in lines:
 worddct = {}
 for index, word in enumerate(wordlst):
     worddct[word.decode('gbk')] = index
-
+    # worddct[word.decode('gbk')] = 10
 try:
     conn = utils.persist.connection()
     sql = 'select latesttitle from profile'
@@ -33,17 +33,19 @@ try:
     titleall = []
     # pdb.set_trace()
     for rs in rst:
-        titlelst = [0 for i in range(len(worddct))]
+        titlelst = [10 for i in range(len(worddct))]
         # pdb.set_trace()
+        if not rs[0]:
+            continue
         seglst = jieba.cut(rs[0], cut_all=False)
         for seg in seglst:
             if not worddct.has_key(seg):
                 continue
-            titlelst[worddct[seg]] += 1
+            titlelst[worddct[seg]] -= 2
         titlelst.append(rs[0])
         titleall.append(titlelst)
     # pdb.set_trace()
-    nums = 15
+    nums = 50
     numlst = []
     for i in range(nums):
         # lst = [0 for i in range(len(worddct))]
@@ -92,16 +94,16 @@ try:
         result_class = result_dct
     pdb.set_trace()
 
-    file = open('result_class', 'wb')
-    pickle.dump(result_class, file)
+    # file = open('result_class', 'wb')
+    # pickle.dump(result_class, file)
 
     for key in result_class.keys():
         titles = []
         print len(result_class[key])
         for result in result_class[key]:
-            titles.append(result[-1])
+            titles.append(result[-1].decode('utf8').encode('gbk'))
         with open('d:/naren/result'+str(key), 'wb') as file:
-            file.writelines(u'\n'.join(titles))
+            file.writelines('\n'.join(titles))
 
     conn.close()
 except:
