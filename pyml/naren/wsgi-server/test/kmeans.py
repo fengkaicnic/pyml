@@ -10,13 +10,21 @@ import pdb
 sys.setdefaultencoding('utf8')
 import pickle
 
+stopwords = {}
+with open('d:/naren/stopwords.txt', 'r') as file:
+    tlines = file.readlines()
+    for line in tlines:
+        stopwords[line.lower().strip().decode('gbk')] = 1
+
 with open('d:/naren/latesttitle.txt', 'r') as file:
     lines = file.readlines()
 
 wordlst = []
 for line in lines:
-    lst = line.strip().split(' ')
+    lst = line.lower().strip().split(' ')
     if int(lst[-1]) < 10:
+        continue
+    if stopwords.has_key(lst[0].decode('gbk')):
         continue
     wordlst.append(lst[0])
 
@@ -37,7 +45,7 @@ try:
         # pdb.set_trace()
         if not rs[0]:
             continue
-        seglst = jieba.cut(rs[0], cut_all=False)
+        seglst = jieba.cut(rs[0].lower(), cut_all=False)
         for seg in seglst:
             if not worddct.has_key(seg):
                 continue
@@ -45,12 +53,13 @@ try:
         titlelst.append(rs[0])
         titleall.append(titlelst)
     # pdb.set_trace()
-    nums = 50
+    nums = 35
     numlst = []
     for i in range(nums):
         # lst = [0 for i in range(len(worddct))]
         # lst[random.randint(0, len(worddct))] = 5
         lst = titleall[random.randint(0, len(titleall))][:-1]
+        # pdb.set_trace()
         lst[random.randint(0, len(lst))] += 1
         numlst.append(lst)
     total_distance = 99999999
@@ -101,7 +110,10 @@ try:
         titles = []
         print len(result_class[key])
         for result in result_class[key]:
-            titles.append(result[-1].decode('utf8').encode('gbk'))
+            try:
+                titles.append(result[-1].decode('utf8').encode('gbk'))
+            except:
+                traceback.print_exc()
         with open('d:/naren/result'+str(key), 'wb') as file:
             file.writelines('\n'.join(titles))
 
