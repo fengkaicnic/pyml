@@ -158,7 +158,8 @@ def generate_test_feature(hash_id, splice, date):
 
         features.append(feature)
 
-        return features
+        # return features
+        return feature
         conn.close()
     except:
         traceback.print_exc()
@@ -178,9 +179,18 @@ if __name__ == '__main__':
         rst = cur.fetchall()
         district_hash_lst = [rs[0] for rs in rst]
         # features = generate_hash_feature(hash_id, splice)
-        features = generate_test_feature(hash_id, splice, '2016-01-28')
+        features = []
+        for hash in district_hash_lst:
+            feature = generate_test_feature(hash, splice, '2016-01-28')
+            features.append(feature)
+        feature_result = []
         for feature in features:
             print feature
+            feature = map(lambda x:float(x), feature)
+            feature_result.append(','.join(map(lambda x:str(x), feature)))
+
+        with open('d:/ditech/feature_result', 'wb') as file:
+            file.writelines('\n'.join(feature_result))
         conn.close()
     except:
         traceback.print_exc()
@@ -188,5 +198,4 @@ if __name__ == '__main__':
 
 end = time.time()
 print end - start
-
 
