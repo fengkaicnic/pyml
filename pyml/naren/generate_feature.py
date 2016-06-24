@@ -150,7 +150,7 @@ def get_feature(cur, feature_lines, flag):
             pro_hisprojects = pro[3]
             pro_otherinfo = pro[4]
             resume_id = pro[5]
-            sql_work = 'select description from work where pos_id = %d and resume_id = %d' % (term[0], resume_id)
+            sql_work = 'select description, unit_name, start_time, end_time from work where pos_id = %d and resume_id = %d' % (term[0], resume_id)
             cur.execute(sql_work)
 
             pro_decription = cur.fetchall()
