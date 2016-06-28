@@ -231,9 +231,11 @@ def get_feature(cur, feature_lines, flag):
             com_feature.append(pro_degree - com_degree)
             com_feature.append(round(position_feature, 3))
             com_feature += descrip_feature
-            com_feature.append(flag)
-            feature = utils.get_work_feature(cur, term[0])
+            # pdb.set_trace()
+            feature = utils.get_work_feature(cur, resume_id)
             com_feature = com_feature + feature
+            com_feature.append(flag)
+
             feature_lines.append(','.join(map(lambda x: str(x), com_feature)))
             set_train_flg(cur, term[0], resume_id)
 
