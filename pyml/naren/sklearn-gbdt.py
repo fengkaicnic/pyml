@@ -34,7 +34,9 @@ test_feat = test_feat[:, :test_feat.shape[1]-1]
 print train_feat.shape, train_id.shape, test_feat.shape, test_id.shape
 gbdt.fit(train_feat, train_id)
 joblib.dump(gbdt, 'model')
+pdb.set_trace()
 pred=gbdt.predict(test_feat)
+
 total_err=0
 num = 0.0
 tf_num = 0

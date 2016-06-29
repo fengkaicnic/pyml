@@ -2,14 +2,16 @@
 import random
 
 tests = []
-with open('d:/naren/recommend/data', 'r') as file:
+with open('data/traindata', 'r') as file:
     lines = file.readlines()
 
 trains = []
 
 num = 0
 
-for line in lines:
+for index, line in enumerate(lines):
+    if index > 192:
+        break
     num += 1
     # if num == 5721:
     #     break

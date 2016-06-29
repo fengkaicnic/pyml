@@ -131,9 +131,14 @@ def set_train_flg(cur, pos_id, resume_id):
     cur.execute(setsq)
 
 
-def get_feature(cur, feature_lines, flag):
-    sql = 'select position_id, low_income, description, low_workage, position_name,\
+def get_feature(cur, feature_lines, flag, pos_id):
+
+    if not pos_id:
+        sql = 'select position_id, low_income, description, low_workage, position_name,\
             workage, degree from company'
+    else:
+        sql = 'select position_id, low_income, description, low_workage, position_name,\
+            workage, degree from company where position_id = %d' % pos_id
 
     cur.execute(sql)
     rst = cur.fetchall()
@@ -165,7 +170,7 @@ def get_feature(cur, feature_lines, flag):
         try:
             sqlp = 'select dessalary, skills, latesttitle, hisprojects, otherinfo, pf.resume_id, workyear, latestdegree, \
                     pr.pos_id, pr.resume_id from pos_resume as pr left join profile as pf on pr.resume_id = pf.resume_id \
-                    where pr.train_flag = 0 and pr.pos_id = %d and pr.hr_confirm = %d limit 5' % (term[0], flag)
+                    where pr.train_flag = 0 and pr.pos_id = %d and pr.hr_confirm = %d' % (term[0], flag)
 
             cur.execute(sqlp)
             profile = cur.fetchall()
@@ -237,7 +242,7 @@ def get_feature(cur, feature_lines, flag):
             com_feature.append(flag)
 
             feature_lines.append(','.join(map(lambda x: str(x), com_feature)))
-            set_train_flg(cur, term[0], resume_id)
+            # set_train_flg(cur, term[0], resume_id)
 
 
 def generate_test_feature(cur, pos_id, resume_id):
@@ -363,7 +368,7 @@ def generate_test(pos_id, resume_id):
         conn.close()
 
 
-def generate_train(data_path='data'):
+def generate_train(data_path='data', pos_id = None):
     try:
         conn = utils.persist.connection()
         cur = conn.cursor()
@@ -375,9 +380,10 @@ def generate_train(data_path='data'):
         conn.commit()
         feature_lines = []
         # pdb.set_trace()
-        get_feature(cur, feature_lines, 1)
+        get_feature(cur, feature_lines, 1, pos_id)
         conn.commit()
-        get_feature(cur, feature_lines, 0)
+        pdb.set_trace()
+        get_feature(cur, feature_lines, 0, pos_id)
         conn.commit()
         if len(feature_lines) > 0:
             with open(data_path.replace("'", '') + '/traindata', 'a') as file:
@@ -391,10 +397,10 @@ def generate_train(data_path='data'):
 
 
 if __name__ == '__main__':
-    pos_id = 1012931
+    pos_id = 59702
     resume_id = 21991437
 
-    generate_train()
+    generate_train(pos_id = pos_id)
     # generate_test(pos_id, resume_id)
 
 end = time.time()
