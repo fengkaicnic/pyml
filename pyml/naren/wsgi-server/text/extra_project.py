@@ -9,7 +9,7 @@ tm = time.time()
 try:
     conn = utils.persist.connection()
     cur = conn.cursor()
-    sql = 'select resume_id, hisprojects, id from profile where id > 810312 order by id limit 1000'
+    sql = 'select resume_id, hisprojects, id from profile where id > 816878 order by id limit 1000'
     cur.execute(sql)
     rst = cur.fetchall()
     # pdb.set_trace()

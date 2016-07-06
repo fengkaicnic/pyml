@@ -22,6 +22,7 @@ digitlst = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd'
 
 def discrement_unicode(stw):
     try:
+        stw = stw.replace(u'\u201c', "'")
         strs = stw.replace('u', '\u')
     except:
         return stw
@@ -49,16 +50,30 @@ def discrement_unicode(stw):
 
 def convert_code(com_lines):
     com_lines = com_lines.replace('": "', "''':'''")
+    com_lines = com_lines.replace("': '", "''':'''")
     com_lines = com_lines.replace('"], "', "'''],'''")
+    com_lines = com_lines.replace("'], '", "'''],'''")
     com_lines = com_lines.replace('", "', "''','''")
+    com_lines = com_lines.replace("', '", "''','''")
     com_lines = com_lines.replace(', "', ",'''")
+    com_lines = com_lines.replace(", '", ",'''")
     com_lines = com_lines.replace('": {"', "''':{'''")
+    com_lines = com_lines.replace("': {'", "''':{'''")
     com_lines = com_lines.replace('": [{"', "''':[{'''")
+    com_lines = com_lines.replace("': [{'", "''':[{'''")
     com_lines = com_lines.replace('"}], "', "'''}],'''")
+    com_lines = com_lines.replace("'}], '", "'''}],'''")
     com_lines = com_lines.replace('": ["', "''':['''")
+    com_lines = com_lines.replace("': ['", "''':['''")
     com_lines = com_lines.replace('"}', "'''}")
+    com_lines = com_lines.replace("'}", "'''}")
     com_lines = com_lines.replace('":', "''':")
+    com_lines = com_lines.replace("':", "''':")
     com_lines = com_lines.replace('{"', "{'''")
+    com_lines = com_lines.replace("{'", "{'''")
+    com_lines = com_lines.replace("'''''", "'''''''")
+    com_lines = com_lines.replace("'''''''", "'''")
+    com_lines = com_lines.replace("''''''''", "''''''")
     com_lines = com_lines.replace(u"”,'''", u"”，“")
 
     com_lines = com_lines.replace('"', u'“')

@@ -11,7 +11,7 @@ try:
     cur = conn.cursor()
     # sql = 'select low_income, high_income, low_workage, high_workage, description, \
                # position_name, naren_created from company where id > %d' % 459
-    sql = 'select id, latesttitle from profile where id > %d' % 816789
+    sql = 'select id, hisprojects from profile where id > %d ' % 811134
     cur.execute(sql)
 
     rst = cur.fetchall()
@@ -20,10 +20,12 @@ try:
         # print utils.discrement_unicode(rs[1])
         print rs[0]
         try:
-            uq = 'update profile set latesttitle = "%s" where id = %d' % (utils.discrement_unicode(rs[1]), rs[0])
+            usql = '''update profile set hisprojects = "%s" where id = %d''' % (utils.discrement_unicode(rs[1]), rs[0])
+            cur.execute(usql)
         except:
+            pdb.set_trace()
             traceback.print_exc()
-        cur.execute(uq)
+
 
     conn.commit()
     conn.close()
