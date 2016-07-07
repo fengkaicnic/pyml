@@ -5,7 +5,7 @@ import pdb
 from theano import tensor as T
 from collections import OrderedDict
 
-class model(object):
+class RNNmodel(object):
 
     def __init__(self, nh, nc, ne, de, cs):
         '''
@@ -67,3 +67,8 @@ class model(object):
     def save(self, folder):
         for param, name in zip(self.params, self.names):
             numpy.save(os.path.join(folder, name + '.npy'), param.get_value())
+
+
+if __name__ == '__main__':
+    pdb.set_trace()
+    rnn = RNNmodel(10, 15, 20, 25, 30)

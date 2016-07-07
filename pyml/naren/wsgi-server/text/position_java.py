@@ -17,14 +17,17 @@ cur = conn.cursor()
 sql = 'select latestsalary, latesttitle, latestdegree, latestcollege, dessalary, \
                               resume_id from profile where latesttitle like "%java%"'
 
+pdb.set_trace()
 cur.execute(sql)
 
 rst = cur.fetchall()
 work_lst = []
+# pdb.set_trace()
 for rs in rst:
     works = [x for x in rs[:-1]]
     resume_id = rs[5]
     sqlw = 'select unit_name, start_time, end_time from work where resume_id = "%s"' % resume_id
+    pdb.set_trace()
     cur.execute(sqlw)
     rstw = cur.fetchall()
 
