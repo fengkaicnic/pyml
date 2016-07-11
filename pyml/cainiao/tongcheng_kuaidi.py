@@ -64,5 +64,9 @@ for tme in range(210, 630):
             continue
         kuaidiyuan_dct[max(kuaidiyuan_dct.keys()) + 1] = [o2osong, tme + o2o[1] + o2o[2]]
 
+timecnt = 0
 for key in kuaidiyuan_dct.keys():
-    print key
+    print key, kuaidiyuan_dct[key]
+    timecnt += kuaidiyuan_dct[key][-1]
+
+print timecnt
