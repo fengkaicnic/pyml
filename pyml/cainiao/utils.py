@@ -47,3 +47,19 @@ def get_didian():
 def encode_didian():
 
     pass
+
+def stats_dian():
+    num = 0
+    with open('d:/cainiao/dianshang.csv', 'r') as file:
+        lines = file.readlines()
+        lines = lines[0].split('\r')
+
+        for line in lines[1:]:
+            lst = line.split(',')
+            num += int(lst[-1])
+
+    print num
+
+
+if __name__ == '__main__':
+    stats_dian()

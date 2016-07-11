@@ -44,7 +44,7 @@ for tc in tclst:
 tcsrt = sorted(tc_dct.items(), key=lambda x:x[0])
 num = 0
 for tc in tcsrt:
-    # print tc[0], tc[1]
+    print tc[0], tc[1]
 
     num += 1
 print num
