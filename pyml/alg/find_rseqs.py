@@ -39,7 +39,7 @@ def find_num(seq, num):
 
 
 if __name__ == '__main__':
-    seq = [6, 7, 7, 7, 8, 1, 2, 3, 4, 5]
+    seq = [6, 7, 7, 7, 8, 1, 2, 2, 3, 4, 5]
     find_split(seq)
-    index = find_num(seq, 7)
+    index = find_num(seq, 3)
     print index
