@@ -9,9 +9,11 @@ zh_font = matplotlib.font_manager.FontProperties(fname=r'c:\windows\fonts\simsun
 #调节图形大小，宽，高
 plt.figure(figsize=(12,12))
 #定义饼状图的标签，标签是列表
-labels = [u'销售',u'猎头',u'Java', u'测试', u'市场', u'项目', u'行政', u'前端', u'产品', u'Python', u'Andriod']
+labels = [u'销售',u'猎头',u'Java', u'测试', u'市场', u'项目', u'前端', u'产品', u'Python', \
+          u'Andriod', u'PHP', u'运营', u'视觉设计', \
+          u'文案', u'财务']
 #每个标签占多大，会自动去算百分比
-sizes = [24, 6, 17, 9, 8, 4, 4, 8, 13, 6, 5]
+sizes = [76, 30, 37, 21, 16, 12, 20, 31, 7, 34, 12, 16, 16, 8, 7]
 # colors = ['red','yellowgreen','lightskyblue']
 #将某部分爆炸出来， 使用括号，将第一块分割出来，数值的大小是分割出来的与其他两块的间隙
 # explode = (0,0,0)

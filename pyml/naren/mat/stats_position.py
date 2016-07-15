@@ -6,7 +6,7 @@ try:
     conn = utils.persist.connection()
     cur = conn.cursor()
 
-    sql = 'select pos_id, sum(hunter_read), sum(hunter_confirm) as nm, sum(hr_confirm) from pos_resume group by pos_id having nm > 0 order by nm'
+    sql = 'select pos_id, sum(hunter_read) as nm, sum(hunter_confirm), sum(hr_confirm) from pos_resume group by pos_id having nm > -1 order by nm'
     cur.execute(sql)
     rst = cur.fetchall()
 
