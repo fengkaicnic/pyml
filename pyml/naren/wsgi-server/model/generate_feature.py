@@ -359,8 +359,11 @@ def generate_test(pos_id, resume_id):
         conn.close()
 
 
-def generate_train(data_path='data'):
+def generate_train(data_path='data', ptype=''):
     try:
+        if ptype:
+            data_path = data_path+'/'+ptype
+            os.mkdir(data_path)
         conn = utils.persist.connection()
         cur = conn.cursor()
         cur.execute('set character_set_client=utf8')

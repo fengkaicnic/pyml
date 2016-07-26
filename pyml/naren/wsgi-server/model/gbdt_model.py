@@ -26,7 +26,7 @@ def get_sample(train_data, num1, num2):
     return np.array(train_lst)
 
 
-def train_model(path=None):
+def train_model(path=None, ptype=''):
 
     data_path = 'data/traindata'
     if not path:
@@ -62,19 +62,19 @@ def train_model(path=None):
         train_id=train_data[:, train_data.shape[1]-1]
         train_data = train_data[:, :train_data.shape[1]-1]
         gbdt.fit(train_data, train_id)
-        joblib.dump(gbdt, 'gbdt-model'+str(i))
+        joblib.dump(gbdt, 'gbdt-model'+ptype+str(i))
 
     # gbdt.fit(train_feat, train_id)
     # joblib.dump(gbdt, 'gbdt-model')
 
 
-def predict_data(pos_id, resume_id):
+def predict_data(pos_id, resume_id, ptype=''):
     # pdb.set_trace()
     test_feat = generate_feature.generate_test(pos_id, resume_id)
     pred_lst = []
 
     for i in range(50):
-        gbdt = joblib.load('gbdt-model' + str(i))
+        gbdt = joblib.load('gbdt-model' + ptype + str(i))
         pred=gbdt.predict(test_feat)
         pred_lst.append(pred)
     lst = map(lambda tem:tem[0], pred_lst)

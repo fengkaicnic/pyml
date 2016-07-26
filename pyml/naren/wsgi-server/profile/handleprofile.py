@@ -206,7 +206,7 @@ def update_profile(body):
     pos_id = body['pos_id']
     resume_id = body['resume_id']
     flag = body['confirm']
-    introduce = body['introduce']
+    introduce = body.get('introduce', 1)
 
 
     #if flag == 'hunter_read':
@@ -217,7 +217,7 @@ def update_profile(body):
     rst = cur.fetchall()
 
     if not rst:
-        up_sql = 'insert into pos_resume(pos_id, resume_id, %s, %s, %d) value (%d, "%s", %d, now())' % (flag, flag+'_time', int(pos_id), resume_id, 1, introduce % 2)
+        up_sql = 'insert into pos_resume(pos_id, resume_id, %s, %s, %s) value (%d, "%s", %d, now(), %d)' % (flag, flag+'_time', 'introduce', int(pos_id), resume_id, 1, introduce % 2)
     else:
         up_sql = 'update pos_resume set %s = 1, %s=%d, %s = now() where pos_id = %d and resume_id = "%s"'\
                  % (flag, 'introduce', introduce % 2,  flag+'_time', int(pos_id), resume_id)
