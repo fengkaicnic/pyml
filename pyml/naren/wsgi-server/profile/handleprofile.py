@@ -178,6 +178,7 @@ def insert_profile(fobj, database, pos_id=None, test=''):
             valuesql.append(')')
             allsql = insertsql + valuesql
             sql = ''.join(allsql) % tuple(valuelst)
+            # pdb.set_trace()
             try:
                 cur.execute(sql)
             except Exception as e:

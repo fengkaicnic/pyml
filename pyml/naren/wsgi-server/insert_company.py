@@ -3,6 +3,7 @@
 import os
 import json
 import sys
+import ConfigParser
 import re
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -13,27 +14,40 @@ import pdb
 
 import time
 
-path = 'd:/naren/new-data/company/'
-company_lst = []
-requrl = 'http://localhost:8000/position'
-# requrl = 'http://121.40.183.7:9801/position'
 
-start = time.time()
+if __name__ == '__main__':
 
-for name in os.listdir(path):
-    with open(path + name) as file:
-        lines = file.readlines()
-        com_dct = eval(''.join(lines))
-        data = {'company':com_dct}
+    cf = ConfigParser.ConfigParser()
 
-        req = urllib2.Request(url=requrl, data=str(data))
+    cf.read('insert_company.ini')
 
-        res_data = urllib2.urlopen(req)
+    secs = cf.sections()
+    print 'setction:', secs
+    sec = secs[0]
 
-        res = res_data.read()
+    path = cf.get(sec, 'path')
+    requrl = cf.get(sec, 'requrl')
 
-        print res
+    # path = 'd:/naren/new-data/positions/'
+    # company_lst = []
+    # requrl = 'http://localhost:8000/position'
+    # requrl = 'http://121.40.183.7:9801/position'
 
-end = time.time()
+    start = time.time()
 
-print (end - start)
+    for name in os.listdir(path):
+        with open(path + name) as file:
+            lines = file.readlines()
+            com_dct = eval(''.join(lines))
+            data = {'company':com_dct}
+
+            req = urllib2.Request(url=requrl, data=str(data))
+
+            res_data = urllib2.urlopen(req)
+            res = res_data.read()
+
+            print res
+
+    end = time.time()
+
+    print (end - start)

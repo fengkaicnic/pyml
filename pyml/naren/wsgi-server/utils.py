@@ -9,11 +9,11 @@ import pdb
 sys.setdefaultencoding='utf8'
 
 
-# persist = PersistentDB.PersistentDB(MySQLdb, host='127.0.0.1', port=3306, user='root',\
-#                                     passwd='123456', db='fkmodel', charset='utf8')
+persist = PersistentDB.PersistentDB(MySQLdb, host='127.0.0.1', port=3306, user='root',\
+                                    passwd='123456', db='fkmodelt', charset='utf8')
 
-persist = PersistentDB.PersistentDB(MySQLdb, host='121.40.183.7', port=3306, user='fengkai',\
-                                    passwd='8e1c7d52557b', db='fkmodel', charset='utf8')
+# persist = PersistentDB.PersistentDB(MySQLdb, host='121.40.183.7', port=3306, user='fengkai',\
+#                                     passwd='8e1c7d52557b', db='fkmodel', charset='utf8')
 
 digitlst = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
 def discrement_unicode(stw):

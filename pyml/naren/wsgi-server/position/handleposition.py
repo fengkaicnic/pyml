@@ -60,7 +60,7 @@ def insert_company(fobj, database, type=None, tablename='company'):
                     else:
                         valuelst.append(int(fobj[item[0]]))
                 else:
-                    pdb.set_trace()
+                    # pdb.set_trace()
                     valuesql.append('"%s"')
                     valuelst.append(str(fobj[item[0]]).replace('"', '“').replace('\'', '‘'))
                 valuesql.append(',')

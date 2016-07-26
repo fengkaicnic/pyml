@@ -9,32 +9,46 @@ sys.setdefaultencoding('utf8')
 import utils
 import traceback
 import urllib2
+import ConfigParser
 import pdb
 
 import time
 
-path = 'd:/naren/wsgi-server/resumes/recommend/'
-company_lst = []
-requrl = 'http://localhost:8000/pos_resume'
-confirm = 'hunter_confirm'
+if __name__ == '__main__':
+    cf = ConfigParser.ConfigParser()
 
-start = time.time()
+    cf.read('update_pos_resume.ini')
 
-num = 0
-for name in os.listdir(path):
-    pos_id = name.split('-')[0]
-    resume_id = name.split('-')[1].split('.')[0]
+    secs = cf.sections()
+    print 'setction:', secs
+    sec = secs[0]
 
-    data = {'pos_id':pos_id, 'resume_id':resume_id, 'confirm':confirm}
+    path = cf.get(sec, 'path')
+    requrl = cf.get(sec, 'requrl')
+    confirm = cf.get(sec, 'confirm')
 
-    req = urllib2.Request(url=requrl, data=str(data))
+    # path = 'd:/naren/new-data/recommend/'
+    # company_lst = []
+    # requrl = 'http://localhost:8000/pos_resume'
+    # confirm = 'hunter_confirm'
 
-    res_data = urllib2.urlopen(req)
+    start = time.time()
 
-    res = res_data.read()
-    num += 1
-    print num
+    num = 0
+    for name in os.listdir(path):
+        pos_id = name.split('-')[0]
+        resume_id = name.split('-')[1].split('.')[0]
 
-end = time.time()
+        data = {'pos_id':pos_id, 'resume_id':resume_id, 'confirm':confirm}
 
-print (end - start)
+        req = urllib2.Request(url=requrl, data=str(data))
+
+        res_data = urllib2.urlopen(req)
+
+        res = res_data.read()
+        num += 1
+        print num
+
+    end = time.time()
+
+    print (end - start)

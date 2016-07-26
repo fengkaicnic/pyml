@@ -19,7 +19,7 @@ from nanabase import baseutil as nautil
 from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
 define('path', default='data', help='store the data', type=str)
-define('database', default='fkmodel', help='the database name', type=str)
+define('database', default='fkmodelt', help='the database name', type=str)
 
 
 def decode_body(body):
@@ -76,6 +76,7 @@ class ProfileHandler(tornado.web.RequestHandler):
         profile_json = body['profile']
         company_id = body.get('pos_id', None)
         database = options.database
+        # pdb.set_trace()
         try:
             handleprofile.insert_profile(profile_json, database, company_id)
             self.write({'err_code':0})
