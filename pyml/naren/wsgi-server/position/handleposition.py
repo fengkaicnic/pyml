@@ -22,6 +22,7 @@ def get_resume(cur, fname):
 
 def insert_company(fobj, database, type=None, tablename='company'):
     try:
+        # pdb.set_trace()
         num = 0
         conn = utils.persist.connection()
         cur = conn.cursor()

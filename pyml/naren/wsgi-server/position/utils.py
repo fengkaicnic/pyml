@@ -3,12 +3,26 @@ import sys
 from DBUtils import PersistentDB
 reload(sys)
 import MySQLdb
-
+import pdb
+import ConfigParser
 sys.setdefaultencoding='utf8'
 
+# pdb.set_trace()
 
-persist = PersistentDB.PersistentDB(MySQLdb, host='127.0.0.1', port=3306, user='root',\
-                                    passwd='123456', db='fkmodelt', charset='utf8')
+cf = ConfigParser.ConfigParser()
+
+cf.read('database.ini')
+host = cf.get('database', 'host')
+port = cf.get('database', 'port')
+user = cf.get('database', 'user')
+db = cf.get('database', 'db')
+passwd = cf.get('database', 'passwd')
+
+persist = PersistentDB.PersistentDB(MySQLdb, host=host, port=int(port), user=user,\
+                                    passwd=passwd, db=db, charset='utf8')
+
+# persist = PersistentDB.PersistentDB(MySQLdb, host='127.0.0.1', port=3306, user='root',\
+#                                     passwd='123456', db='fkmodelt', charset='utf8')
 
 
 # persist = PersistentDB.PersistentDB(MySQLdb, host='121.40.183.7', port=3306, user='fengkai',\
