@@ -23,7 +23,7 @@ def get_resume(cur, fname):
 def insert_position_resume(cur, pos_id, resume_id):
     try:
 
-        prsql = 'insert into pos_resume(pos_id, resume_id) values(%d, "%s")' % (int(pos_id), resume_id)
+        prsql = 'insert into pos_resume(pos_id, resume_id, hunter_confirm) values(%d, "%s", 1)' % (int(pos_id), resume_id)
         cur.execute(prsql)
 
     except Exception as e:
