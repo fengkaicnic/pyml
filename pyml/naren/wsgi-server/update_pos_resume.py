@@ -25,7 +25,7 @@ if __name__ == '__main__':
 
     path = cf.get(sec, 'path')
     requrl = cf.get(sec, 'requrl')
-    confirm = cf.get(sec, 'confirm')
+    # confirm = cf.get(sec, 'confirm')
 
     # path = 'd:/naren/new-data/recommend/'
     # company_lst = []
@@ -35,19 +35,20 @@ if __name__ == '__main__':
     start = time.time()
 
     num = 0
-    for name in os.listdir(path):
-        pos_id = name.split('-')[0]
-        resume_id = name.split('-')[1].split('.')[0]
+    for resume_type in os.listdir(path):
+        for name in os.listdir(path+resume_type):
+            pos_id = name.split('-')[0]
+            resume_id = name.split('-')[1].split('.')[0]
 
-        data = {'pos_id':pos_id, 'resume_id':resume_id, 'confirm':confirm}
+            data = {'pos_id':pos_id, 'resume_id':resume_id, 'confirm':resume_type}
 
-        req = urllib2.Request(url=requrl, data=str(data))
+            req = urllib2.Request(url=requrl, data=str(data))
 
-        res_data = urllib2.urlopen(req)
+            res_data = urllib2.urlopen(req)
 
-        res = res_data.read()
-        num += 1
-        print num
+            res = res_data.read()
+            num += 1
+            print num
 
     end = time.time()
 
