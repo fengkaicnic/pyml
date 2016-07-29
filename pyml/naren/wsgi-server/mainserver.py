@@ -115,7 +115,7 @@ class ModelHandler(tornado.web.RequestHandler):
         body = self.request.body
         body = eval(body)
         action = body['action']
-        pdb.set_trace()
+        # pdb.set_trace()
         if action == 'train':
             generate_feature.generate_train(options.path)
             gbdt_model.train_model()
