@@ -29,7 +29,7 @@ def get_sample(train_data, num1, num2):
 def train_model(path=None, ptype=''):
 
     data_path = 'data/traindata'
-    if not path:
+    if path:
         data_path = path
     gbdt=GradientBoostingRegressor(
       loss='ls',
@@ -88,8 +88,9 @@ def predict_data(pos_id, resume_id, ptype=''):
 if __name__ == '__main__':
 
     train_model()
-    score = predict_data(1049420, '20625150')
-    print score
+    # train_feat=np.genfromtxt(data_path, delimiter=',', dtype=np.float32)
+    # score = predict_data(1049420, '20625150')
+    # print score
 
 end = time.time()
 # print end - start
